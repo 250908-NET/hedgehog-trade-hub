@@ -1,5 +1,6 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
+using TradeHub.Api.Models;
 
 namespace TradeHub.Api;
 
@@ -15,7 +16,7 @@ public class Program
         // this code runs before Moq is able to intercept it in tests, so it needs to be skipped when in testing environment
         if (!builder.Environment.IsEnvironment("Testing"))
         {
-            builder.Services.AddDbContext<TradePoolContext>(options =>
+            builder.Services.AddDbContext<TradeHubContext>(options =>
             {
                 // load connection string from environment variable
                 string? connectionString = builder.Configuration.GetValue<string>(
