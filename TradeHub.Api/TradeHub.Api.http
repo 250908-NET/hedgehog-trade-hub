@@ -1,0 +1,6 @@
+@TradeHub.Api_HostAddress = http://localhost:5047
+
+GET {{TradeHub.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
