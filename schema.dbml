@@ -1,0 +1,60 @@
+// visualization: https://dbdiagram.io/d
+// docs: https://dbml.dbdiagram.io/docs
+
+Table Users {
+  Id bigint 
+  Username varchar(32) 
+  Description text
+  Email varchar
+  PasswordHash char(60) // idk the length, depends on hash
+  Role byte // enum, TBD
+}
+
+
+Table Items {
+  Id bigint
+  Description text
+  Image text // ?
+  Value decimal(18,2) // approx. monetary value
+  Owner bigint 
+  Tags varchar(MAX) // json array? use pivot table? idk
+}
+
+Ref: Items.Owner > Users.Id
+
+
+Table Trades {
+  Id bigint
+  CreatedAt datetime
+  InitiatorId bigint
+  RecieverId bigint
+  Status byte // enum, TBD
+
+  // --- meeting stuff ---
+//   Location string // ?
+//   MeetingTime datetime // ?
+}
+
+Ref: Trades.InitiatorId > Users.Id
+Ref: Trades.RecieverId > Users.Id
+
+
+Table Pools {
+  TradeId bigint
+  ItemId bigint
+  Owner byte // enum(sender, reciever)
+}
+
+Ref: Pools.TradeId > Trades.Id
+Ref: Pools.ItemId > Items.Id
+
+
+// Table Messages {
+//   Id bigint // snowflake id?
+//   SenderId bigint
+//   TradeId bigint
+//   Content string
+// }
+
+// Ref: Messages.SenderId > Users.Id
+// Ref: Messages.TradeId > Trades.Id
