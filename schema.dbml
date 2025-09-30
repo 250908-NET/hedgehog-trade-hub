@@ -27,26 +27,45 @@ Table Trades {
   Id bigint
   CreatedAt datetime
   InitiatorId bigint
-  RecieverId bigint
+  RecieverId bigint // can be null
   Status byte // enum, TBD
 
   // --- meeting stuff ---
-//   Location string // ?
-//   MeetingTime datetime // ?
+  //   Location string // ?
+  //   MeetingTime datetime // ?
 }
 
 Ref: Trades.InitiatorId > Users.Id
 Ref: Trades.RecieverId > Users.Id
 
 
-Table Pools {
+Table TradeItems {
   TradeId bigint
   ItemId bigint
-  Owner byte // enum(sender, reciever)
 }
 
-Ref: Pools.TradeId > Trades.Id
-Ref: Pools.ItemId > Items.Id
+Ref: TradeItems.TradeId > Trades.Id
+Ref: TradeItems.ItemId > Items.Id
+
+
+Table Offers {
+  Id bigint
+  UserId bigint
+  TradeId bigint
+  CreatedAt datetime
+}
+
+Ref: Offers.UserId > Users.Id
+Ref: Offers.TradeId > Trades.Id
+
+
+Table OfferItems {
+  OfferId bigint
+  ItemId bigint
+}
+
+Ref: OfferItems.OfferId > Offers.Id
+Ref: OfferItems.ItemId > Items.Id
 
 
 // Table Messages {
