@@ -1,8 +1,9 @@
 using TradeHub.Api.Models;
+using TradeHub.Api.Repository.Interfaces;
 
 namespace TradeHub.Api.Repository;
 
-public class ItemRepository(TradeHubContext context)
+public class ItemRepository(TradeHubContext context) // : IItemRepository
 {
     private readonly TradeHubContext _context = context;
 

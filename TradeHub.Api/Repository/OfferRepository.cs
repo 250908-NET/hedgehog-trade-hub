@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TradeHub.Api.Models;
+using TradeHub.Api.Repository.Interfaces;
 using TradeHub.Api.Utilities;
 
 namespace TradeHub.Api.Repository;
