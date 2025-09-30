@@ -1,6 +1,6 @@
 using TradeHub.Api.Models;
 
-namespace TradeHub.Api.Repository;
+namespace TradeHub.Api.Repository.Interfaces;
 
 public interface IItemRepository
 {
