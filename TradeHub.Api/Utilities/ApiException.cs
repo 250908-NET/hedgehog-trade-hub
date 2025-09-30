@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace TradeHub.Api.Exceptions;
+namespace TradeHub.Api.Utilities;
 
 /// <summary>
 /// Base class for API exceptions with HTTP status codes.

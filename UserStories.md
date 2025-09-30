@@ -54,7 +54,7 @@ Parking Lot [   ]
 
 2. As an admin, I want to place and lift restrictions on users so that bad user behavior can be prevented.
 
-3. As an admin, I want to modify and delete items so that disallowed items can be removed.
+3. x
 
 4. As an admin, I want to modify and delete trades so that trades of disallowed items can be stopped.
 

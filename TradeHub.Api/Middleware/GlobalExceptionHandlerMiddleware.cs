@@ -1,6 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using TradeHub.Api.Exceptions;
+using TradeHub.Api.Utilities;
 
 namespace TradeHub.Api.Middleware;
 

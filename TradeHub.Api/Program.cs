@@ -33,10 +33,11 @@ public class Program
             });
         }
 
-        // Add services to the container.
-
+        // add services to container
         builder.Services.AddControllers();
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+        builder.Services.AddAutoMapper(typeof(Program));
+
         builder.Services.AddOpenApi();
 
         var app = builder.Build();

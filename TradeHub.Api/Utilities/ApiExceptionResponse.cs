@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace TradeHub.Api.Exceptions;
+namespace TradeHub.Api.Utilities;
 
 /// <summary>
 /// Represents a standardized error response for the API.

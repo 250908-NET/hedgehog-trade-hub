@@ -1,0 +1,13 @@
+using TradeHub.Api.Models;
+
+namespace TradeHub.Api.Repository;
+
+public interface ITradeRepository
+{
+    Task<List<Trade>> GetAllTradesAsync();
+    Task<List<Trade>> GetTradesByUser(int userId);
+    Task<Trade?> GetTradeByIdAsync(int tradeId);
+    Task<Trade> CreateTradeAsync(Trade trade);
+    Task<Trade> UpdateTradeAsync(Trade trade);
+    Task DeleteTradeAsync(int tradeId);
+}
