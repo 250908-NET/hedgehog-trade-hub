@@ -24,9 +24,11 @@ Parking Lot [   ]
 
 ## 2. Browsing & Discovering
 
-1. As a user, I want to browse items available for trade in the marketplace so that I can find potential matches for my iPhone 10.
+1. As a user, I want to browse items available for trade in the marketplace so that I can find items to trade.
 
-2. As a user, I want to search specifically for phones of similar value (like a Samsung Galaxy 10) so that I can propose a fair trade.
+2. As a user, I want to search specifically for items of similar value so that I can propose a fair trade.
+
+3. As a user, I want to search using keywords so that I can find something I want to trade for.
 
 ## 3. Proposing a Trade
 

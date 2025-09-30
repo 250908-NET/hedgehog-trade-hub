@@ -10,12 +10,18 @@ https://revaturetech-my.sharepoint.com/:w:/g/personal/tevin708_revature_net/EU0g
 
 ### Users
 
-- [ ] GET /users
-- [ ] POST /users - login
+- [ ] GET /users - get all users (admin only?)
+- [ ] POST /users - create new user
+- [ ] POST /login - log in
+- [ ] GET /users/me - get currently logged-in user(?)
+- [ ] PATCH /users/me - modify currently logged-in user(?)
+- [ ] GET /users/{UserId} - get specific user
+- [ ] PATCH /users/{UserId} - modify specific user
+- [ ] DELETE /users/{UserId} - delete user
 
 ### Items
 
-- [ ] GET /items - get all items (parameters as search terms)
+- [ ] GET /items - get all items (in active trades) (parameters as search terms)
 - [ ] POST /items - create new item
 - [ ] GET /items/{ItemId} - get specific item
 - [ ] PATCH /items/{ItemId} - modify item
@@ -23,15 +29,26 @@ https://revaturetech-my.sharepoint.com/:w:/g/personal/tevin708_revature_net/EU0g
 
 ### Trades
 
+- [ ] GET /trades - get all trades (admin only?)
 - [ ] POST /trades - create new trade
 - [ ] GET /trades/{TradeId} - get info on specific trade
 - [ ] DELETE /trades/{TradeId} - close trade
+- [ ] POST /trades/{TradeId}/items - add items to trade
+- [ ] DELETE /trades/{TradeId}/items/{ItemId} - remove item from trade
+
+### Offers
+
+- [ ] GET /trades/{TradeId}/offers - get all offers
+- [ ] POST /trades/{TradeId}/offers - create new offer
+- [ ] GET /trades/{TradeId}/offers/{OfferId} - get info on specific offer (and all attached items?)
+- [ ] POST /trades/{TradeId}/offers/{OfferId} - add items to offer
+- [ ] DELETE /trades/{TradeId}/offers/{OfferId}/items/{ItemId} - delete specific item from offer
 
 ## Requirements
 
 ### Application Architecture
 
-- [ ] Your code must be pushed to a project git repo on the cohort organization
+- [X] Your code must be pushed to a project git repo on the cohort organization
 - [ ] Your application must build and run
 - [ ] Your application components must be loosely coupled, and exemplify a Service Oriented Architecture
 
@@ -39,8 +56,8 @@ https://revaturetech-my.sharepoint.com/:w:/g/personal/tevin708_revature_net/EU0g
 
 - [ ] Your database must use MS SQL Server
 - [ ] Your database must run inside of a docker container
-- [ ] Your database should be in 3rd normal form
-- [ ] Your database should include at least one many-to-many relationship
+- [X] Your database should be in 3rd normal form
+- [X] Your database should include at least one many-to-many relationship
 - [ ] Your database should be set up through an Entity Framework "Code-First" migration
 
 ### API
