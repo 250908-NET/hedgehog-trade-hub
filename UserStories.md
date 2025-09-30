@@ -2,6 +2,16 @@
 
 Parking Lot [   ]
 
+## 0. Login
+
+1. As a user, I want to create an account so I can start trading with other users.
+
+2. As a user, I want to log into my account so I can start trading with other users.
+
+3. As a user, I want to modify my account details (about me, email, username, password) so that I can update my account with accurate information.
+
+4. As a user, I want to delete my account so I can stop trading with other users.
+
 ## 1. Listing Items
 
 1. As a user, I want to list my item so that I can trade it with other users.
@@ -34,7 +44,17 @@ Parking Lot [   ]
 
 ## 5. Completing the Trade
 
-1. As both users, we want the system to mark the trade as "completed" once we confirm the exchange has happened successfully so that the trade can be completed. // TODO: fix
+1. As both users, we want the system to mark the trade as "completed" once we confirm the exchange has happened successfully so that the trade can be completed.
+
+## 6. Administraton
+
+1. As an admin, I want to create, modify, and delete user accounts so that I can do administrative tasks.
+
+2. As an admin, I want to place and lift restrictions on users so that bad user behavior can be prevented.
+
+3. As an admin, I want to modify and delete items so that disallowed items can be removed.
+
+4. As an admin, I want to modify and delete trades so that trades of disallowed items can be stopped.
 
 ## Ice Bucket
 
@@ -47,6 +67,8 @@ Parking Lot [   ]
 4. As a user, I want to view ratings or feedback about the other trader so that I feel confident the trade will go smoothly.
 
 5. As a user, I want to leave feedback after the trade to help future users judge reliability.
+
+6. As a user, I want to ensure unauthorized people cannot modify my trades and items so that my information is secure. (JWT?)
 
 ## Sequences
 
@@ -123,6 +145,26 @@ person A wants to trade item 1 for person B's item 2
 9. trade is marked as complete
 
 
+------------
+
+
+Register (Sign Up)
+
+As a new user, I want to create an account with a username, email, and password so that I can access the TradeHub platform.
+
+As a new user, I want my password to be stored securely (hashed, not plain text) so that my personal information is protected.
+
+As a new user, I want to receive feedback if my email is already taken or my password is too weak so that I can correct it and successfully register.
+
+Login (Sign In)
+
+As a registered user, I want to log in using my email and password so that I can access my account.
+
+As a registered user, I want the system to verify my credentials securely so that only I can access my account.
+
+As a registered user, I want to receive a secure session token (JWT) so that I can remain logged in and perform actions without re-entering credentials every time.
+
+As a registered user, I want to see a clear error message if I provide invalid credentials so that I understand what went wrong.
 
 
 
