@@ -1,39 +1,56 @@
+using Microsoft.EntityFrameworkCore;
 using TradeHub.Api.Models;
 using TradeHub.Api.Repository.Interfaces;
 
 namespace TradeHub.Api.Repository;
 
-public class ItemRepository(TradeHubContext context) // : IItemRepository
+public class ItemRepository(TradeHubContext context) : IItemRepository
 {
     private readonly TradeHubContext _context = context;
 
-    Task<List<Item>> GetAllAsync(TradeHubContext context)
+    public async Task<List<Item>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Items.ToListAsync();
     }
 
-    Task<Item?> GetByIdAsync(int id)
+    public async Task<Item?> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Items.FindAsync((long)id);
     }
 
-    Task AddAsync(Item Item)
+    public async Task AddAsync(Item item)
     {
-        throw new NotImplementedException();
+        await _context.Items.AddAsync(item);
     }
 
-    Task SaveChangesAsync()
+    public async Task SaveChangesAsync()
     {
-        throw new NotImplementedException();
+        await _context.SaveChangesAsync();
     }
 
-    Task UpdateAsync(int id, Item updatedItem)
+    public async Task UpdateAsync(int id, Item updatedItem)
     {
-        throw new NotImplementedException();
+        var existingItem = await _context.Items.FindAsync((long)id);
+        if (existingItem != null)
+        {
+            existingItem.Description = updatedItem.Description;
+            existingItem.Image = updatedItem.Image;
+            existingItem.Value = updatedItem.Value;
+            existingItem.Owner = updatedItem.Owner;
+            existingItem.Tags = updatedItem.Tags;
+            
+            _context.Items.Update(existingItem);
+        }
     }
 
-    Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var item = await _context.Items.FindAsync((long)id);
+        if (item != null)
+        {
+            _context.Items.Remove(item);
+            return true;
+        }
+        return false;
     }
 }
