@@ -105,3 +105,11 @@ https://trello.com/b/m2zDpKVQ/project-management
 - Project presentation will be done on Friday 10/10 afternoon.
 - You should demo the application functionality by completing the planned user stories
 - Your presentation should be about 10 minutes long, no longer than 15 minutes (at 20 min, you will be cut off so that there is time for everyone to present)
+
+## ERD
+
+![ERD](erdmk2.png)
+
+## Wireframe
+
+![Wireframe](wireframemk1.png)
