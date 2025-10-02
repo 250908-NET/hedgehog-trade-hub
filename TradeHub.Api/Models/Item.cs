@@ -13,6 +13,8 @@ public class Item
     public long OwnerId { get; set; } // fk to user
     public User Owner { get; set; } = null!; // navigation
     public string Tags { get; set; } = ""; // TODO: how to represent tags (json list, csv, etc.)
+    public string Condition { get; set; } = null!;
+    public string Availability { get; set; } = null!;
     public byte[] RowVersion { get; set; } = []; // concurrency
 }
 
@@ -35,6 +37,10 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.HasOne(i => i.Owner).WithMany().HasForeignKey(i => i.OwnerId);
 
         // builder.Property(i => i.Tags)
+
+        builder.Property(i => i.Condition).IsRequired();
+
+        builder.Property(i => i.Availability).IsRequired();
 
         builder.Property(o => o.RowVersion).IsRowVersion();
     }

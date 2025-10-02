@@ -17,8 +17,10 @@ Table Items {
   Description varchar(MAX)
   Image varchar(MAX) // ?
   Value decimal(18,2) // approx. monetary value
-  Owner bigint 
+  OwnerId bigint 
   Tags varchar(MAX) // json array? use pivot table? idk
+  Condition varchar // enum, TBD
+  Availability varchar // enum, TBD
 }
 
 Ref: Items.Owner > Users.Id

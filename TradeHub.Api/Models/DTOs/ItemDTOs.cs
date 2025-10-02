@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using FluentValidation;
 
 namespace TradeHub.API.Models.DTOs;
@@ -11,7 +9,9 @@ public record ItemDTO(
     string Image,
     decimal Value,
     long OwnerId,
-    string Tags
+    string Tags,
+    string Condition,
+    string Availability
 );
 
 public record CreateItemDTO(
@@ -20,7 +20,9 @@ public record CreateItemDTO(
     string? Image,
     decimal Value,
     long OwnerId,
-    string? Tags
+    string? Tags,
+    string Condition,
+    string Availability
 );
 
 public record UpdateItemDTO(
@@ -29,7 +31,9 @@ public record UpdateItemDTO(
     string? Image,
     decimal? Value,
     long? OwnerId,
-    string? Tags
+    string? Tags,
+    string? Condition,
+    string? Availability
 );
 
 // --- validators ---
@@ -41,6 +45,8 @@ public class CreateItemDTOValidator : AbstractValidator<CreateItemDTO>
         RuleFor(i => i.Name).MustBeValidName();
         RuleFor(i => i.Value).MustBeValidValue();
         RuleFor(i => i.OwnerId).MustBeValidOwnerId();
+        RuleFor(i => i.Condition).NotEmpty().WithMessage("Condition is required.");
+        RuleFor(i => i.Availability).NotEmpty().WithMessage("Availability is required.");
     }
 }
 
@@ -51,6 +57,14 @@ public class UpdateItemDTOValidator : AbstractValidator<UpdateItemDTO>
         RuleFor(i => i.Name).MustBeValidName().When(i => i.Name is not null);
         RuleFor(i => i.Value).MustBeValidValue().When(i => i.Value is not null);
         RuleFor(i => i.OwnerId).MustBeValidOwnerId().When(i => i.OwnerId is not null);
+        RuleFor(i => i.Condition)
+            .NotEmpty()
+            .WithMessage("Condition is required.")
+            .When(i => i.Condition is not null);
+        RuleFor(i => i.Availability)
+            .NotEmpty()
+            .WithMessage("Availability is required.")
+            .When(i => i.Availability is not null);
     }
 }
 
@@ -89,7 +103,6 @@ public static class ItemValidationRules
             .WithMessage("Value must not have more than 18 digits or more than 2 decimal places.");
     }
 
-    // TODO: implement checking if owner exists once UserRepository is implemented
     public static IRuleBuilderOptions<T, long> MustBeValidOwnerId<T>(
         this IRuleBuilder<T, long> ruleBuilder
     )
@@ -99,7 +112,6 @@ public static class ItemValidationRules
         // .WithMessage("Specified owner does not exist.");
     }
 
-    // TODO: implement checking if owner exists once UserRepository is implemented
     public static IRuleBuilderOptions<T, long?> MustBeValidOwnerId<T>(
         this IRuleBuilder<T, long?> ruleBuilder
     )
@@ -107,6 +119,20 @@ public static class ItemValidationRules
         return ruleBuilder.NotEmpty().WithMessage("Owner is required.");
         // .MustAsync(OwnerExists) // async method to check if owner exists
         // .WithMessage("Specified owner does not exist.");
+    }
+
+    public static IRuleBuilderOptions<T, string?> MustBeValidCondition<T>(
+        this IRuleBuilder<T, string?> ruleBuilder
+    )
+    {
+        return ruleBuilder.NotEmpty().WithMessage("Condition is required.");
+    }
+
+    public static IRuleBuilderOptions<T, string?> MustBeValidAvailability<T>(
+        this IRuleBuilder<T, string?> ruleBuilder
+    )
+    {
+        return ruleBuilder.NotEmpty().WithMessage("Availability is required.");
     }
 
     // TODO: figure out if there's a way to handle both TProperty and TProperty? without repeating code
