@@ -6,7 +6,7 @@ public interface IOfferRepository
 {
     Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(int tradeId);
     Task<Offer?> GetOfferAsync(int offerId);
-    Task<Offer> CreateOfferAsync(Offer offer);
-    Task<bool> UpdateOfferAsync(Offer offer);
-    Task<bool> DeleteOfferAsync(Offer offer);
+    Task<Offer> CreateOfferAsync(OfferDTO offerDto);
+    Task<bool> UpdateOfferAsync(OfferDTO offerDto);
+    Task<bool> DeleteOfferAsync(int offerId);
 }
