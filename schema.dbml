@@ -23,7 +23,7 @@ Table Items {
   Availability varchar // enum, TBD
 }
 
-Ref: Items.Owner > Users.Id
+Ref: Items.OwnerId > Users.Id
 
 
 Table Trades {
