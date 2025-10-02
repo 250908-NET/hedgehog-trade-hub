@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-using TradeHub.Api.Models;
-using TradeHub.Api.Models.DTOs;
-using TradeHub.Api.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using TradeHub.Api.Models;
+using TradeHub.API.Models.DTOs;
 using TradeHub.Api.Repository.Interfaces;
 
 namespace TradeHub.Api.Controllers;
@@ -40,16 +37,16 @@ public class ItemsController : ControllerBase
     [HttpPost(Name = "CreateItem")]
     public async Task<ActionResult> CreateItem(ItemDTO itemDto)
     {
-         var item = new Item(
+        var item = new Item(
+            itemDto.Name,
             itemDto.Description,
             itemDto.Image,
             itemDto.Value,
-            itemDto.Owner,
+            itemDto.OwnerId,
             itemDto.Tags,
             itemDto.Condition,
             itemDto.Availability
         );
-
 
         await _itemRepository.AddAsync(item);
         await _itemRepository.SaveChangesAsync();
@@ -58,10 +55,10 @@ public class ItemsController : ControllerBase
 
     [HttpPut("{id}", Name = "UpdateItem")]
     public async Task<ActionResult> UpdateItem(int id, ItemDTO updatedItemDto)
-
     {
-        var existingItem = await_itemRepository.GetByIdAsync(id);
-        if (existingItem == null) return NotFound();
+        var existingItem = await _itemRepository.GetByIdAsync(id);
+        if (existingItem == null)
+            return NotFound();
 
         existingItem.Description = updatedItemDto.Description;
         existingItem.Image = updatedItemDto.Image;
@@ -70,8 +67,7 @@ public class ItemsController : ControllerBase
         existingItem.Condition = updatedItemDto.Condition;
         existingItem.Availability = updatedItemDto.Availability;
 
-
-        await _itemRepository.UpdateAsync(id, updatedItem);
+        await _itemRepository.UpdateAsync(id, existingItem);
         await _itemRepository.SaveChangesAsync();
         return NoContent();
     }

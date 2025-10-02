@@ -3,18 +3,27 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace TradeHub.Api.Models;
 
-public class Item
+public class Item(
+    string name,
+    string description,
+    string image,
+    decimal value,
+    long ownerId,
+    string tags,
+    string condition,
+    string availability
+)
 {
     public long Id { get; set; }
-    public string Name { get; set; } = null!;
-    public string Description { get; set; } = "";
-    public string Image { get; set; } = ""; // TODO: how 2 store image?
-    public decimal Value { get; set; } // decimal(18,2)
-    public long OwnerId { get; set; } // fk to user
+    public string Name { get; set; } = name;
+    public string Description { get; set; } = description;
+    public string Image { get; set; } = image;
+    public decimal Value { get; set; } = value;
+    public long OwnerId { get; set; } = ownerId;
     public User Owner { get; set; } = null!; // navigation
-    public string Tags { get; set; } = ""; // TODO: how to represent tags (json list, csv, etc.)
-    public string Condition { get; set; } = null!;
-    public string Availability { get; set; } = null!;
+    public string Tags { get; set; } = tags;
+    public string Condition { get; set; } = condition;
+    public string Availability { get; set; } = availability;
     public byte[] RowVersion { get; set; } = []; // concurrency
 }
 
