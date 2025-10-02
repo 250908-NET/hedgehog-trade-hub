@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using TradeHub.Api.Models;
 using TradeHub.Api.Models.DTOs;
-using TradeHub.Api.Repository.Interfaces
+using TradeHub.Api.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using TradeHub.Api.Models;
 using TradeHub.Api.Repository.Interfaces;
