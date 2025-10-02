@@ -3,7 +3,7 @@
 
 Table Users {
   Id bigint 
-  Username varchar(32) 
+  Username varchar(127) 
   Description text
   Email varchar
   PasswordHash char(60) // idk the length, depends on hash
@@ -13,8 +13,9 @@ Table Users {
 
 Table Items {
   Id bigint
-  Description text
-  Image text // ?
+  Name varchar(32)
+  Description varchar(MAX)
+  Image varchar(MAX) // ?
   Value decimal(18,2) // approx. monetary value
   Owner bigint 
   Tags varchar(MAX) // json array? use pivot table? idk

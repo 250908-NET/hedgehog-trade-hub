@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -6,28 +5,15 @@ namespace TradeHub.Api.Models;
 
 public class Item
 {
-    [Key]
     public long Id { get; set; }
-
-    public string Description { get; set; }
-
-    public string Image { get; set; }
-
-    public decimal Value { get; set; }
-
-    [Required]
-    public long Owner { get; set; }
-
-    public string Tags { get; set; }
-
-    protected Item(string description, string image, decimal value, long owner, string tags)
-    {
-        Description = description;
-        Image = image;
-        Value = value;
-        Owner = owner;
-        Tags = tags;
-    }
+    public string Name { get; set; } = null!;
+    public string Description { get; set; } = "";
+    public string Image { get; set; } = ""; // TODO: how 2 store image?
+    public decimal Value { get; set; } // decimal(18,2)
+    public long OwnerId { get; set; } // fk to user
+    public User Owner { get; set; } = null!; // navigation
+    public string Tags { get; set; } = ""; // TODO: how to represent tags (json list, csv, etc.)
+    public byte[] RowVersion { get; set; } = []; // concurrency
 }
 
 public class ItemConfiguration : IEntityTypeConfiguration<Item>
@@ -36,10 +22,20 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
     {
         builder.ToTable("Items");
         builder.HasKey(i => i.Id);
-        builder.Property(i => i.Description).IsRequired();
-        builder.Property(i => i.Image).IsRequired();
-        builder.Property(i => i.Value).IsRequired();
-        builder.Property(i => i.Owner).IsRequired();
-        builder.Property(i => i.Tags).IsRequired();
+
+        builder.Property(i => i.Name).HasMaxLength(127).IsRequired();
+
+        // builder.Property(i => i.Description)
+
+        // builder.Property(i => i.Image).IsRequired();
+
+        builder.Property(i => i.Value).HasPrecision(18, 2).IsRequired();
+
+        builder.Property(i => i.OwnerId).IsRequired();
+        builder.HasOne(i => i.Owner).WithMany().HasForeignKey(i => i.OwnerId);
+
+        // builder.Property(i => i.Tags)
+
+        builder.Property(o => o.RowVersion).IsRowVersion();
     }
 }
