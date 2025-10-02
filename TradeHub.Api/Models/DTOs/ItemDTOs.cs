@@ -70,6 +70,9 @@ public class UpdateItemDTOValidator : AbstractValidator<UpdateItemDTO>
 
 public static class ItemValidationRules
 {
+    /// <summary>
+    /// Validate name is not empty and not longer than 127 characters.
+    /// </summary>
     public static IRuleBuilderOptions<T, string?> MustBeValidName<T>(
         this IRuleBuilder<T, string?> ruleBuilder
     )
@@ -81,6 +84,9 @@ public static class ItemValidationRules
             .WithMessage("Name cannot exceed 127 characters.");
     }
 
+    /// <summary>
+    /// Validate value is nonnegative and fits in a <code>decimal(18, 2)</code>.
+    /// </summary>
     public static IRuleBuilderOptions<T, decimal> MustBeValidValue<T>(
         this IRuleBuilder<T, decimal> ruleBuilder
     )
@@ -92,6 +98,9 @@ public static class ItemValidationRules
             .WithMessage("Value must not have more than 18 digits or more than 2 decimal places.");
     }
 
+    /// <summary>
+    /// Override of <see cref="MustBeValidValue{T}"/> for nullable decimals.
+    /// </summary>
     public static IRuleBuilderOptions<T, decimal?> MustBeValidValue<T>(
         this IRuleBuilder<T, decimal?> ruleBuilder
     )
@@ -103,6 +112,12 @@ public static class ItemValidationRules
             .WithMessage("Value must not have more than 18 digits or more than 2 decimal places.");
     }
 
+    /// <summary>
+    /// Validate OwnerId is not empty.
+    /// </summary>
+    /// <remarks>
+    /// TODO: implement checking if owner exists once UserRepository is implemented
+    /// </remarks>
     public static IRuleBuilderOptions<T, long> MustBeValidOwnerId<T>(
         this IRuleBuilder<T, long> ruleBuilder
     )
@@ -112,6 +127,12 @@ public static class ItemValidationRules
         // .WithMessage("Specified owner does not exist.");
     }
 
+    /// <summary>
+    /// Override of <see cref="MustBeValidOwnerId{T}"/> for nullable longs.
+    /// </summary>
+    /// <remarks>
+    /// TODO: implement checking if owner exists once UserRepository is implemented
+    /// </remarks>
     public static IRuleBuilderOptions<T, long?> MustBeValidOwnerId<T>(
         this IRuleBuilder<T, long?> ruleBuilder
     )
@@ -121,6 +142,9 @@ public static class ItemValidationRules
         // .WithMessage("Specified owner does not exist.");
     }
 
+    /// <summary>
+    /// Validate Condition is not empty.
+    /// </summary>
     public static IRuleBuilderOptions<T, string?> MustBeValidCondition<T>(
         this IRuleBuilder<T, string?> ruleBuilder
     )
@@ -128,6 +152,9 @@ public static class ItemValidationRules
         return ruleBuilder.NotEmpty().WithMessage("Condition is required.");
     }
 
+    /// <summary>
+    /// Validate Availability is not empty.
+    /// </summary>
     public static IRuleBuilderOptions<T, string?> MustBeValidAvailability<T>(
         this IRuleBuilder<T, string?> ruleBuilder
     )
