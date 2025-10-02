@@ -2,9 +2,9 @@
 
 A hub for users to trade items. 
 
-## User Stories
+## Progress Tracking
 
-https://revaturetech-my.sharepoint.com/:w:/g/personal/tevin708_revature_net/EU0gblsMjxpAr_tGBHMHMgEBmofDabaSnAn1ZbMcXj9wng?e=ikqzFu
+https://trello.com/b/m2zDpKVQ/project-management
 
 ## Endpoints
 
