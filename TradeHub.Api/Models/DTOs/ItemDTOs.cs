@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace TradeHub.API.Models.DTOs;
+namespace TradeHub.Api.Models.DTOs;
 
 public record ItemDTO(
     long Id,
@@ -10,19 +10,19 @@ public record ItemDTO(
     decimal Value,
     long OwnerId,
     string Tags,
-    string Condition,
-    string Availability
+    Condition Condition,
+    Availability Availability
 );
 
 public record CreateItemDTO(
     string Name,
-    string? Description,
-    string? Image,
+    string Description,
+    string Image,
     decimal Value,
     long OwnerId,
-    string? Tags,
-    string Condition,
-    string Availability
+    string Tags,
+    Condition Condition,
+    Availability Availability
 );
 
 public record UpdateItemDTO(
@@ -32,8 +32,8 @@ public record UpdateItemDTO(
     decimal? Value,
     long? OwnerId,
     string? Tags,
-    string? Condition,
-    string? Availability
+    Condition? Condition,
+    Availability? Availability
 );
 
 // --- validators ---
@@ -43,10 +43,13 @@ public class CreateItemDTOValidator : AbstractValidator<CreateItemDTO>
     public CreateItemDTOValidator()
     {
         RuleFor(i => i.Name).MustBeValidName();
+        RuleFor(i => i.Description).NotNull().WithMessage("Description is required.");
+        RuleFor(i => i.Image).NotNull().WithMessage("Image is required.");
+        RuleFor(i => i.Tags).NotNull().WithMessage("Tags is required.");
         RuleFor(i => i.Value).MustBeValidValue();
         RuleFor(i => i.OwnerId).MustBeValidOwnerId();
-        RuleFor(i => i.Condition).NotEmpty().WithMessage("Condition is required.");
-        RuleFor(i => i.Availability).NotEmpty().WithMessage("Availability is required.");
+        RuleFor(i => i.Condition).IsInEnum();
+        RuleFor(i => i.Availability).IsInEnum();
     }
 }
 
@@ -57,14 +60,8 @@ public class UpdateItemDTOValidator : AbstractValidator<UpdateItemDTO>
         RuleFor(i => i.Name).MustBeValidName().When(i => i.Name is not null);
         RuleFor(i => i.Value).MustBeValidValue().When(i => i.Value is not null);
         RuleFor(i => i.OwnerId).MustBeValidOwnerId().When(i => i.OwnerId is not null);
-        RuleFor(i => i.Condition)
-            .NotEmpty()
-            .WithMessage("Condition is required.")
-            .When(i => i.Condition is not null);
-        RuleFor(i => i.Availability)
-            .NotEmpty()
-            .WithMessage("Availability is required.")
-            .When(i => i.Availability is not null);
+        RuleFor(i => i.Condition).IsInEnum().When(i => i.Condition is not null);
+        RuleFor(i => i.Availability).IsInEnum().When(i => i.Availability is not null);
     }
 }
 
@@ -140,26 +137,6 @@ public static class ItemValidationRules
         return ruleBuilder.NotEmpty().WithMessage("Owner is required.");
         // .MustAsync(OwnerExists) // async method to check if owner exists
         // .WithMessage("Specified owner does not exist.");
-    }
-
-    /// <summary>
-    /// Validate Condition is not empty.
-    /// </summary>
-    public static IRuleBuilderOptions<T, string?> MustBeValidCondition<T>(
-        this IRuleBuilder<T, string?> ruleBuilder
-    )
-    {
-        return ruleBuilder.NotEmpty().WithMessage("Condition is required.");
-    }
-
-    /// <summary>
-    /// Validate Availability is not empty.
-    /// </summary>
-    public static IRuleBuilderOptions<T, string?> MustBeValidAvailability<T>(
-        this IRuleBuilder<T, string?> ruleBuilder
-    )
-    {
-        return ruleBuilder.NotEmpty().WithMessage("Availability is required.");
     }
 
     // TODO: figure out if there's a way to handle both TProperty and TProperty? without repeating code
