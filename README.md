@@ -72,6 +72,8 @@ https://trello.com/b/m2zDpKVQ/project-management
 - [ ] Your API should include logging with Serilog
 - [ ] Your API should include validation for any data being handled
 - [ ] Your API should include at least 50% unit test coverage
+  - To run: `dotnet test --collect:"XPlat Code Coverage" --results-directory ./CodeCoverage`
+  - To generate report: `reportgenerator -reports:./CodeCoverage/**/*.cobertura.xml -targetdir:./CodeCoverage/Report -reporttypes:Html`
 - [ ] **Your API must implement an HTTP request to another API**
 
 ### Frontend
