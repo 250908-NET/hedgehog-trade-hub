@@ -1,5 +1,7 @@
 using TradeHub.Api.Models;
 
+namespace TradeHub.Api.Repository.Interfaces;
+
 public interface IUserRepository
 {
     Task<User> GetByIdAsync(long id);
@@ -9,5 +11,4 @@ public interface IUserRepository
     Task<bool> DeleteAsync(long id);
     Task<IEnumerable<User>> GetAllAsync();
     Task<bool> ExistsAsync(long id);
-    
 }
