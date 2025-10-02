@@ -31,7 +31,7 @@ public class User
 
     // Navigation properties
     public ICollection<Item> OwnedItems { get; set; }
-    public ICollection<Trace> InitiatedTrades { get; set; }
+    public ICollection<Trade> InitiatedTrades { get; set; }
     public ICollection<Trade> ReceivedTrades { get; set; }
     public ICollection<Offer> Offers { get; set; }
 }
