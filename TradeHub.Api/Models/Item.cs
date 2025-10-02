@@ -27,13 +27,14 @@ public class Item
     [Required]
     public string Availability { get; set; }
 
-    protected Item(string description, string image, decimal value, long owner, string tags)
+    protected Item(string description, string image, decimal value, long owner, List<string> tags1, string tags, string availability)
     {
         Description = description;
         Image = image;
         Value = value;
         Owner = owner;
         Tags = tags;
+        Availability = availability;
     }
 }
 

@@ -1,5 +1,6 @@
 using TradeHub.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using TradeHub.Api.Repository.Interfaces;
 
 public class UserRepository : IUserRepository
 {

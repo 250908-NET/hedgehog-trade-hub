@@ -59,4 +59,25 @@ public class ItemRepository(TradeHubContext context) : IItemRepository
         }
         return false;
     }
+
+    // TODO: fix pls
+    public Task<Item?> GetByIdAsync(long id)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<Item> IItemRepository.AddAsync(Item ItemDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> UpdateAsync(Item itemDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> DeleteAsync(long id)
+    {
+        throw new NotImplementedException();
+    }
 }

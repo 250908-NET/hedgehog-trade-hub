@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using TradeHub.Api.Models;
+using TradeHub.Api.Services;
+using TradeHub.Api.Services.Interfaces;
+
+namespace TradeHub.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UsersController : ControllerBase
+public class UsersController(IUserService service) : ControllerBase
 {
-    private readonly IUserService _service;
-
-    public UsersController(IUserService service)
-    {
-        _service = service;
-    }
+    private readonly IUserService _service = service;
 
     //Add Mapper/Dto to Alll Endpoints
     [HttpGet("{id}", Name = "GetUser")]

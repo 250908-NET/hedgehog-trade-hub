@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 namespace TradeHub.API.Models.DTOs
 {
     public class OfferDTO

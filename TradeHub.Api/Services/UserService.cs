@@ -1,4 +1,8 @@
 using TradeHub.Api.Models;
+using TradeHub.Api.Repository.Interfaces;
+using TradeHub.Api.Services.Interfaces;
+
+namespace TradeHub.Api.Services;
 
 public class UserService : IUserService
 {
@@ -30,7 +34,7 @@ public class UserService : IUserService
         return await _repository.GetByIdAsync(id);
     }
 
-    public async Task<bool> UpdateUserAsync(long id , User user)
+    public async Task<bool> UpdateUserAsync(long id, User user)
     {
         if (!await _repository.ExistsAsync(id)) return false;
 
