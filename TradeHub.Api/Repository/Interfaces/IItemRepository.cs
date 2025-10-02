@@ -4,10 +4,10 @@ namespace TradeHub.Api.Repository.Interfaces;
 
 public interface IItemRepository
 {
-    Task<List<Item>> GetAllAsync();
-    Task<Item?> GetByIdAsync(int id);
-    Task AddAsync(Item Item);
-    Task SaveChangesAsync();
-    Task UpdateAsync(int id, Item updatedItem);
-    Task<bool> DeleteAsync(int id);
+    Task<List<ItemDTO>> GetAllAsync();
+    Task<ItemDTO?> GetByIdAsync(long id);
+    Task <ItemDTO>AddAsync(ItemDTO ItemDto);
+  
+    Task<bool> UpdateAsync(ItemDTO itemDto);
+    Task<bool> DeleteAsync(long id);
 }

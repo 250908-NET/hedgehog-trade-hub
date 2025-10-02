@@ -11,7 +11,7 @@ public class Offer
     public long  TradeId { get; set; } // fk to Trade
     public Trade Trade { get; set; } = null!; // navigation property
     public DateTimeOffset Created { get; set; }
-    public byte[] RowVersion { get; set; } = []; // concurrency
+    public byte[] RowVersion { get; set; } = Array.Empty <byte>(); // concurrency
 }
 
 // Fluent API configuration

@@ -9,6 +9,8 @@ public class ItemDTO
     public string Image { get; set; } = "";
     public decimal Value { get; set; }
     public long Owner { get; set; }
+    public string Condition{ get; set; }
+    public string Availability { get; set; }
 
     public List<string> Tags { get; set; } = [];
 }

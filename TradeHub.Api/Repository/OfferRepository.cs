@@ -1,73 +1,96 @@
 using Microsoft.EntityFrameworkCore;
 using TradeHub.Api.Models;
+using TradeHub.Api.Models.DTOs;
 using TradeHub.Api.Repository.Interfaces;
-using TradeHub.Api.Utilities;
 
-namespace TradeHub.Api.Repository;
-
-public class OfferRepository(TradeHubContext context) : IOfferRepository
+namespace TradeHub.Api.Repository
 {
-    private readonly TradeHubContext _context = context;
 
-    public async Task<Offer> CreateOfferAsync(Offer offer)
+    public class offerRepository : IOfferRepository
     {
-        _context.Offers.Add(offer);
-        await _context.SaveChangesAsync();
 
-        // eager load navigation properties
-        await _context.Entry(offer).Reference(o => o.Trade).LoadAsync();
-        await _context.Entry(offer).Reference(o => o.User).LoadAsync();
+        private readonly TradeHubContext _context;
 
-        return offer;
-    }
-
-    public async Task<bool> DeleteOfferAsync(Offer offer)
-    {
-        _context.Offers.Remove(offer);
-        try
+        public OfferRepository(TradeHubContext _context)
         {
-            return await _context.SaveChangesAsync() > 0;
+            _ context = context;
         }
-        catch (DbUpdateConcurrencyException)
-        {
-            throw new ConflictException(
-                "The card you are trying to delete has been modified by another user. Please refresh and try again."
-            );
-        }
-    }
+        //get all offers
 
-    public async Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(int tradeId)
-    {
-        // include navigation properties as readonly
-        return await _context
-            .Offers.Where(o => o.TradeId == tradeId)
-            .AsNoTracking()
-            .Include(o => o.User)
-            .Include(o => o.Trade)
-            .ToListAsync();
-    }
-
-    public async Task<Offer?> GetOfferAsync(int offerId)
-    {
-        // include navigation properties
-        return await _context
-            .Offers.Include(o => o.Trade)
-            .Include(o => o.User)
-            .FirstOrDefaultAsync(o => o.Id == offerId);
-    }
-
-    public async Task<bool> UpdateOfferAsync(Offer offer)
-    {
-        _context.Entry(offer).State = EntityState.Modified;
-        try
+        public async Task<IEnumerable<OfferDTO>> GetAllOffersAsync()
         {
-            return await _context.SaveChangesAsync() > 0;
+            return await _context.Offers
+                .Select(offer => new OfferDTO
+                {
+                    Id = offer.Id,
+                    UserId = (int)offer.UserId,
+                    TradeId = (int)offer.TradeId,
+                    Created = offerCreated
+                })
+                .ToListAsync();
         }
-        catch (DbUpdateConcurrencyException)
+
+        // get by Id
+        public async Task<OfferDTO?> GetOfferByAsync(int offerId)
         {
-            throw new ConflictException(
-                "The card you are trying to update has been modified by another user. Please refresh and try again."
-            );
+            var offer = await _context.offer.FindAsync(offerId);
+            if (offerRepository == null) return null;
+
+            return new OfferDTO
+            {
+                id = offerRepository.id,
+                UserId = (long)offer.UserId,
+                TradeId = (long)offer.TradeId,
+                Created = offer.Created
+            };
         }
+
+        //create offer
+
+        public async Task<OfferDTO> CreateOfferAsync(OfferDTO offerDto)
+        {
+            var offer = new offerRepository
+            {
+                UserId = offerDto.UserId,
+                TradeId = offerDto.TradeId,
+                Created = DateTimeOffSet.tcNow
+            };
+            context.Offers.Add(offer);
+            await _context.SaveChangesAsync();
+
+            // return DTO after saving
+            offerDto.Id = offer.Id;
+            offerDto.Created = offer.Created;
+            return offerDto;
+        }
+
+        // update offer
+
+        public async Task<bool> UpdateOfferAsync(OfferDTO offerDto)
+        {
+            var offer = await _context.Offers.FindAsync(offerDto.Id);
+            if (offer == null) return false;
+
+            offer.UserId = offerDto.UserId;
+            offer.TradeId = offerDto.TradeId;
+
+            _context.Offers.Update(offer);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        //delete offer
+
+        public async Task<bool> DeleteOfferAsync(int offerId)
+        {
+            var offer = await _context.Offers.FindAsync(offerId);
+            if (offer == null) return false;
+
+            _context.Offers.Remove(offer);
+            await _context.SaveChangesAsync();
+            return true;
+
+        }
+
     }
 }

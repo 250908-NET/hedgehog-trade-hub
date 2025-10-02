@@ -20,6 +20,13 @@ public class Item
 
     public string Tags { get; set; }
 
+    [Required]
+
+    public string Condition { get; set; }  // new property
+
+    [Required]
+    public string Availability { get; set; }
+
     protected Item(string description, string image, decimal value, long owner, string tags)
     {
         Description = description;
@@ -41,5 +48,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(i => i.Value).IsRequired();
         builder.Property(i => i.Owner).IsRequired();
         builder.Property(i => i.Tags).IsRequired();
+        builder.Property(i => i.Condition).IsRequired();
+        builder.Property(i => i.Availability).IsRequired();
     }
 }
