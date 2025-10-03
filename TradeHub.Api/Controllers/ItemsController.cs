@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TradeHub.Api.Models;
+using TradeHub.API.Models.DTOs;
 using TradeHub.Api.Repository.Interfaces;
 using TradeHub.API.Models.DTOs;
 
