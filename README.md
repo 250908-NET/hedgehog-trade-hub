@@ -75,6 +75,7 @@ https://trello.com/b/m2zDpKVQ/project-management
   - To run: `dotnet test --collect:"XPlat Code Coverage" --results-directory ./CodeCoverage`
   - To generate report: `reportgenerator -reports:./CodeCoverage/**/*.cobertura.xml -targetdir:./CodeCoverage/Report -reporttypes:Html`
 - [ ] **Your API must implement an HTTP request to another API**
+- [ ] **Your API must provide a cookie to the client**
 
 ### Frontend
 
