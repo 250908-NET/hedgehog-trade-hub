@@ -50,7 +50,16 @@ public class ItemRepository(TradeHubContext context) : IItemRepository
     /// <exception cref="ConflictException">Thrown if the item was modified by another user</exception>
     public async Task<bool> UpdateAsync(Item updatedItem)
     {
-        _context.Entry(updatedItem).State = EntityState.Modified;
+        // check if item exists
+        Item? existingItem =
+            await _context.Items.FindAsync(updatedItem.Id)
+            ?? throw new NotFoundException("Item not found.");
+
+        // update existing item
+        _context.Entry(existingItem).CurrentValues.SetValues(updatedItem);
+        _context.Entry(existingItem).Property(i => i.RowVersion).OriginalValue =
+            updatedItem.RowVersion; // preserve concurrency from original
+
         try
         {
             return await _context.SaveChangesAsync() > 0;
