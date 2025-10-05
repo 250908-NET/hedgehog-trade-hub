@@ -13,11 +13,9 @@ using TradeHub.Test.Utilities;
 
 namespace TradeHub.Test.Integration;
 
-public class ItemControllerMockedEndpointsTests : IntegrationTestBase
+public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> factory)
+    : IntegrationTestBase(factory)
 {
-    public ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> factory)
-        : base(factory) { }
-
     #region GET /items
 
     [Fact]
