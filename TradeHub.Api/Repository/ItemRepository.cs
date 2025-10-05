@@ -18,9 +18,10 @@ public class ItemRepository(TradeHubContext context) : IItemRepository
         return await _context.Items.FindAsync((long)id);
     }
 
-    public async Task AddAsync(Item item)
+    public async Task<Item> AddAsync(Item item)
     {
         await _context.Items.AddAsync(item);
+        return item;
     }
 
     public async Task SaveChangesAsync()
