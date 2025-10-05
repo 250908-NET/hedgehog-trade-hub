@@ -9,7 +9,7 @@ using TradeHub.Api.Models;
 using TradeHub.Api.Models.DTOs;
 using TradeHub.Api.Services.Interfaces;
 using TradeHub.Api.Utilities;
-using TradeHub.Test.Utilities;
+using TradeHub.Test.Helpers;
 
 namespace TradeHub.Test.Integration;
 

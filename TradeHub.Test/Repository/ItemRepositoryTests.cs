@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TradeHub.Api.Models;
 using TradeHub.Api.Repository;
 using TradeHub.Api.Utilities;
-using TradeHub.Test.Utilities;
+using TradeHub.Test.Helpers;
 
 namespace TradeHub.Test.Repository;
 

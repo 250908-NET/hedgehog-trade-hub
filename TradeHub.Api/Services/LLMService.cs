@@ -34,7 +34,17 @@ public class MultiLLMService(
 
         if (_geminiApiKey != null)
         {
-            success = (await CallGeminiAsync(prompt)).SafeParseMoney(out value, true, true);
+            _logger.LogInformation("Calling Gemini API...");
+
+            try
+            {
+                success = (await CallGeminiAsync(prompt)).SafeParseMoney(out value, true, true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Gemini API call failed for item {ItemName}.", itemName);
+                success = false;
+            }
         }
         else
         {
@@ -43,7 +53,17 @@ public class MultiLLMService(
 
         if (_openAIApiKey != null && !success)
         {
-            success = (await CallOpenAIAsync(prompt)).SafeParseMoney(out value, true, true);
+            _logger.LogInformation("Calling OpenAI API...");
+
+            try
+            {
+                success = (await CallOpenAIAsync(prompt)).SafeParseMoney(out value, true, true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "OpenAI API call failed for item {ItemName}.", itemName);
+                success = false;
+            }
         }
         else
         {
@@ -89,7 +109,7 @@ public class MultiLLMService(
     ///   }'
     /// <code>
     /// </remarks>
-    internal async Task<string> CallGeminiAsync(string prompt)
+    public virtual async Task<string> CallGeminiAsync(string prompt)
     {
         _logger.LogInformation("Calling Gemini API...");
 
@@ -99,7 +119,6 @@ public class MultiLLMService(
 
         using HttpRequestMessage request = new(HttpMethod.Post, url);
 
-        request.Headers.Add("Content-Type", "application/json");
         request.Headers.Add("x-goog-api-key", _geminiApiKey);
 
         var requestBody = new
@@ -125,30 +144,83 @@ public class MultiLLMService(
         }
 
         string responseBody = await response.Content.ReadAsStringAsync();
-        GeminiResponse response_data = JsonSerializer.Deserialize<GeminiResponse>(responseBody)!;
+
+        GeminiResponse? response_data;
+        try
+        {
+            response_data = JsonSerializer.Deserialize<GeminiResponse>(responseBody);
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to deserialize Gemini API response JSON. Raw response: {ResponseBody}",
+                responseBody
+            );
+            throw new InternalServerException("Invalid JSON response from Gemini API.");
+        }
+
+        if (response_data == null)
+        {
+            _logger.LogError(
+                "Deserialized Gemini API response is null. Raw response: {ResponseBody}",
+                responseBody
+            );
+            throw new InternalServerException("Empty or invalid Gemini API response.");
+        }
 
         _logger.LogInformation(
-            "Gemini API returned response, {TokenCount} total tokens used.",
+            "Gemini API returned response ({TokenCount} total tokens used)!",
             response_data.UsageMetadata?.TotalTokenCount ?? 0
         );
 
-        return response_data.Candidates?[0].Parts?[0].Text ?? "";
+        string? extractedText = response_data.Candidates?[0].Content?.Parts?[0].Text;
+        if (string.IsNullOrWhiteSpace(extractedText))
+        {
+            _logger.LogWarning(
+                "Gemini API response did not contain expected text content. Deserialized object: {@ResponseData}",
+                response_data
+            );
+            return "";
+        }
+
+        return extractedText ?? "";
     }
 
-    internal record GeminiResponse(
+    public record GeminiResponse(
         [property: JsonPropertyName("candidates")] List<Candidate>? Candidates,
-        [property: JsonPropertyName("usageMetadata")] UsageMetadata? UsageMetadata
+        [property: JsonPropertyName("usageMetadata")] UsageMetadata? UsageMetadata,
+        [property: JsonPropertyName("modelVersion")] string? ModelVersion,
+        [property: JsonPropertyName("responseId")] string? ResponseId
     );
 
-    internal record Candidate([property: JsonPropertyName("parts")] List<Part>? Parts);
-
-    internal record Part([property: JsonPropertyName("text")] string? Text);
-
-    internal record UsageMetadata(
-        [property: JsonPropertyName("totalTokenCount")] int TotalTokenCount
+    public record Candidate(
+        [property: JsonPropertyName("content")] Content? Content, // CORRECTED: Added Content property
+        [property: JsonPropertyName("finishReason")] string? FinishReason,
+        [property: JsonPropertyName("index")] int? Index
     );
 
-    internal async Task<string> CallOpenAIAsync(string prompt)
+    public record Content(
+        [property: JsonPropertyName("parts")] List<Part>? Parts,
+        [property: JsonPropertyName("role")] string? Role
+    );
+
+    public record Part([property: JsonPropertyName("text")] string? Text);
+
+    public record UsageMetadata(
+        [property: JsonPropertyName("promptTokenCount")] int? PromptTokenCount,
+        [property: JsonPropertyName("candidatesTokenCount")] int? CandidatesTokenCount,
+        [property: JsonPropertyName("totalTokenCount")] int? TotalTokenCount,
+        [property: JsonPropertyName("promptTokensDetails")]
+            List<PromptTokensDetails>? PromptTokensDetails
+    );
+
+    public record PromptTokensDetails(
+        [property: JsonPropertyName("modality")] string? Modality,
+        [property: JsonPropertyName("tokenCount")] int? TokenCount
+    );
+
+    public virtual async Task<string> CallOpenAIAsync(string prompt)
     {
         throw new NotImplementedException();
     }
