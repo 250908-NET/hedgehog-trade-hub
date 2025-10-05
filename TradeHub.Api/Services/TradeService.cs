@@ -1,26 +1,45 @@
 using TradeHub.Api.Models;
 using TradeHub.Api.Repository.Interfaces;
+using TradeHub.Api.Services.Interfaces;
+
 namespace TradeHub.Api.Services;
-public class ItemService {
-    private readonly IItemRepository _repo;
-    public ItemService(IItemRepository repo) {
-        if (repo == null) { throw new ArgumentNullException(nameof(repo)); }
-        _repo = repo;
-    }
-    public async Task<List<Item>> GetAllAsync() => await _repo.GetAllAsync();
-    public async Task<Item?> GetByIdAsync(int id) => await _repo.GetByIdAsync(id);
-    public async Task<Item> CreateAsync(Item Item)
+
+public class TradeService : ITradeService
+{
+    private readonly ITradeRepository _repository;
+
+    public TradeService(ITradeRepository repository)
     {
-        Item createdItem = await _repo.AddAsync(Item);
-        return createdItem;
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
-    public async Task UpdateAsync(int id, Item course)
+
+    public async Task<List<Trade>> GetAllTradesAsync()
     {
-        await _repo.UpdateAsync(id, course);
+        return await _repository.GetAllTradesAsync();
     }
-    public async Task DeleteAsync(int id)
+
+    public async Task<List<Trade>> GetTradesByUserAsync(int userId)
     {
-        await _repo.DeleteAsync(id);
+        return await _repository.GetTradesByUser(userId);
     }
-    // public async  Task<bool> Exists(int id) => await _repo.Exists(id);
+
+    public async Task<Trade?> GetTradeByIdAsync(int tradeId)
+    {
+        return await _repository.GetTradeByIdAsync(tradeId);
+    }
+
+    public async Task<Trade> CreateTradeAsync(Trade trade)
+    {
+        return await _repository.CreateTradeAsync(trade);
+    }
+
+    public async Task<Trade> UpdateTradeAsync(Trade trade)
+    {
+        return await _repository.UpdateTradeAsync(trade);
+    }
+
+    public async Task DeleteTradeAsync(int tradeId)
+    {
+        await _repository.DeleteTradeAsync(tradeId);
+    }
 }
