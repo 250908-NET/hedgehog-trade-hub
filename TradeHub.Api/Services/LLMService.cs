@@ -220,7 +220,7 @@ public class MultiLLMService(
         [property: JsonPropertyName("tokenCount")] int? TokenCount
     );
 
-    public virtual async Task<string> CallOpenAIAsync(string prompt)
+    public virtual Task<string> CallOpenAIAsync(string prompt)
     {
         throw new NotImplementedException();
     }

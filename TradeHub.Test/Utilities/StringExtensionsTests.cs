@@ -178,7 +178,11 @@ public class StringExtensionsTests
         decimal expectedCappedValue = 9.99m;
 
         // Act
-        bool success = inputExceedingPrecision.SafeParseMoney(out actualValue, precision: 3, scale: 2);
+        bool success = inputExceedingPrecision.SafeParseMoney(
+            out actualValue,
+            precision: 3,
+            scale: 2
+        );
 
         // Assert
         Assert.True(success);
@@ -187,7 +191,12 @@ public class StringExtensionsTests
         // Test a negative value exceeding precision
         string negativeInputExceedingPrecision = "-169.00";
         decimal expectedNegativeCappedValue = -9.99m;
-        success = negativeInputExceedingPrecision.SafeParseMoney(out actualValue, precision: 3, scale: 2, allowNegative: true);
+        success = negativeInputExceedingPrecision.SafeParseMoney(
+            out actualValue,
+            precision: 3,
+            scale: 2,
+            allowNegative: true
+        );
         Assert.True(success);
         Assert.Equal(expectedNegativeCappedValue, actualValue);
     }

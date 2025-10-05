@@ -14,7 +14,7 @@ public static partial class StringExtensions
     /// <param name="lenientParse">Whether to try to find a valid decimal value, if the string cannot be parsed.</param>
     /// <returns>True if the string could be parsed, false otherwise.</returns>
     public static bool SafeParseMoney(
-        this string input,
+        this string? input,
         out decimal value,
         bool allowNegative = false,
         bool lenientParse = false,
