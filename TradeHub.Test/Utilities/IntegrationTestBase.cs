@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using TradeHub.Api;
 using TradeHub.Api.Models;
 
-namespace TradeHub.Test;
+namespace TradeHub.Test.Utilities;
 
 /// <summary>
 /// Base class for integration tests, providing common setup like an in-memory database and mocked services.

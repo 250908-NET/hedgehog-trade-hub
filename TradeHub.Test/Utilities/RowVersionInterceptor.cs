@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace TradeHub.Test.Helpers;
+namespace TradeHub.Test.Utilities;
 
 /// <summary>
 /// EF Core's InMemory provider does not support automatic RowVersion generation, so we need to do it manually.

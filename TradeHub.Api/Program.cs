@@ -1,5 +1,6 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
+using TradeHub.Api.Middleware;
 using TradeHub.Api.Models;
 
 namespace TradeHub.Api;
@@ -41,6 +42,8 @@ public class Program
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
+
+        app.UseMiddleware<GlobalExceptionHandler>();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
