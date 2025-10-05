@@ -22,6 +22,8 @@ Parking Lot [   ]
 
 4. As a user, I want to add existing items to a trade so that I can trade them with other users.
 
+5. As a user, I want my item to be given an estimated value so that I can trade an item I am unsure the value of.
+
 ## 2. Browsing & Discovering
 
 1. As a user, I want to browse items available for trade in the marketplace so that I can find items to trade.

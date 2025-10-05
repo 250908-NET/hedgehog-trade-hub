@@ -2,6 +2,8 @@ using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using TradeHub.Api.Middleware;
 using TradeHub.Api.Models;
+using TradeHub.Api.Services;
+using TradeHub.Api.Services.Interfaces;
 
 namespace TradeHub.Api;
 
@@ -40,6 +42,11 @@ public class Program
         builder.Services.AddAutoMapper(typeof(Program));
 
         builder.Services.AddOpenApi();
+
+        // register HttpClient for the LLM service
+        builder.Services.AddHttpClient<ILLMService, MultiLLMService>();
+        // builder.Services.AddHttpClient();
+        // builder.Services.AddScoped<ILLMService, MultiLLMService>();
 
         var app = builder.Build();
 

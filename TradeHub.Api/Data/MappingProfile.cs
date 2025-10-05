@@ -11,12 +11,20 @@ public class MappingProfile : Profile
     /// </remark>
     public MappingProfile()
     {
-        # region Item
+        #region Item
+
         CreateMap<Item, ItemDTO>();
-        CreateMap<CreateItemDTO, Item>();
+
+        CreateMap<CreateItemDTO, Item>()
+            .ForMember(dest => dest.Value, opt => opt.Ignore()) // set by service logic
+            .ForMember(dest => dest.IsValueEstimated, opt => opt.Ignore()); // set by service logic
+
         CreateMap<UpdateItemDTO, Item>()
+            .ForMember(dest => dest.Value, opt => opt.Ignore()) // set by service logic
+            .ForMember(dest => dest.IsValueEstimated, opt => opt.Ignore()) // set by service logic
             // ignore null values for patch updates
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
         #endregion
     }
 }

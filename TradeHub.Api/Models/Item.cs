@@ -35,6 +35,7 @@ public class Item(
     public string Description { get; set; } = description; // can be empty string
     public string Image { get; set; } = image; // can be empty string (for now)
     public decimal Value { get; set; } = value;
+    public bool IsValueEstimated { get; set; } = false;
     public long OwnerId { get; set; } = ownerId;
     public User Owner { get; set; } = null!; // navigation
     public string Tags { get; set; } = tags; // can be empty string (for now)

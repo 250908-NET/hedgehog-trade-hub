@@ -56,6 +56,8 @@ public class ItemService(
 
         // TODO: ensure user exists
 
+        // TODO: add value estimation
+
         Item createdItem = await _itemRepository.CreateAsync(_mapper.Map<Item>(dto));
         _logger.LogInformation(
             "Created item {Name} of (ID: {Id})!",
@@ -70,6 +72,8 @@ public class ItemService(
         _logger.LogInformation("Updating item {Name} (ID: {Id})...", dto.Name, id);
 
         // TODO: ensure user exists
+
+        // TODO: add value estimation
 
         Item existingItem =
             await _itemRepository.GetByIdAsync(id)
