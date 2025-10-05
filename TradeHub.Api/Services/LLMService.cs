@@ -1,8 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Azure;
-using Azure.Core;
-using TradeHub.Api.Models;
 using TradeHub.Api.Services.Interfaces;
 using TradeHub.Api.Utilities;
 
