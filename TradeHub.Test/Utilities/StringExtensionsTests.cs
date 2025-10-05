@@ -288,5 +288,93 @@ public class StringExtensionsTests
         Assert.Equal(0m, actualValue);
     }
 
+    [Fact]
+    public void SafeParseMoney_ShouldHandleZeroScale()
+    {
+        // Arrange
+        decimal actualValue;
+
+        // Act
+        bool success = "123.456".SafeParseMoney(out actualValue, scale: 0);
+
+        // Assert
+        Assert.True(success);
+        Assert.Equal(123m, actualValue); // Should round to nearest integer
+    }
+
+    [Theory]
+    [InlineData("Price: $123.45 USD")]
+    public void SafeParseMoney_ShouldReturnFalse_WhenNotLenientAndContainsExtraText(string input)
+    {
+        // Arrange
+        decimal actualValue;
+
+        // Act
+        bool success = input.SafeParseMoney(out actualValue, lenientParse: false);
+
+        // Assert
+        Assert.False(success);
+        Assert.Equal(0m, actualValue);
+    }
+
+    [Fact]
+    public void SafeParseMoney_ShouldCapValue_WhenPrecisionEqualsScale()
+    {
+        // Arrange
+        decimal actualValue;
+        // For precision: 2, scale: 2, the max value is 0.99 (integerDigitsCount = 0)
+        string inputExceedingPrecision = "1.23";
+        decimal expectedCappedValue = 0.99m;
+
+        // Act
+        bool success = inputExceedingPrecision.SafeParseMoney(
+            out actualValue,
+            precision: 2,
+            scale: 2
+        );
+
+        // Assert
+        Assert.True(success);
+        Assert.Equal(expectedCappedValue, actualValue);
+    }
+
+    #endregion
+
+    #region Invalid Parameter Tests
+
+    [Theory]
+    [InlineData(-1, 2, "precision")]
+    [InlineData(5, -1, "scale")]
+    public void SafeParseMoney_ShouldThrowArgumentOutOfRangeException_ForNegativePrecisionOrScale(
+        int precision,
+        int scale,
+        string paramName
+    )
+    {
+        // Arrange
+        decimal actualValue;
+        string input = "10.00";
+
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            input.SafeParseMoney(out actualValue, precision: precision, scale: scale)
+        );
+        Assert.Equal(paramName, ex.ParamName);
+    }
+
+    [Fact]
+    public void SafeParseMoney_ShouldThrowArgumentOutOfRangeException_WhenScaleExceedsPrecision()
+    {
+        // Arrange
+        decimal actualValue;
+        string input = "10.00";
+
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            input.SafeParseMoney(out actualValue, precision: 2, scale: 3)
+        );
+        Assert.Equal("scale", ex.ParamName);
+    }
+
     #endregion
 }

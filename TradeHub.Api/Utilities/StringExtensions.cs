@@ -24,11 +24,13 @@ public static partial class StringExtensions
     {
         value = 0;
 
-        if (precision < 0 || scale < 0)
+        if (precision < 0)
             throw new ArgumentOutOfRangeException(
                 nameof(precision),
-                "Precision and scale must be non-negative."
+                "Precision must be non-negative."
             );
+        if (scale < 0)
+            throw new ArgumentOutOfRangeException(nameof(scale), "Scale must be non-negative.");
         if (scale > precision)
             throw new ArgumentOutOfRangeException(
                 nameof(scale),
