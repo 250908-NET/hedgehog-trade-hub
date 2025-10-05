@@ -48,21 +48,20 @@ public class ItemRepository(TradeHubContext context) : IItemRepository
     /// <param name="updatedItem">An item with updated fields</param>
     /// <returns>True if successful, false if no update was made</returns>
     /// <exception cref="ConflictException">Thrown if the item was modified by another user</exception>
-    public async Task<bool> UpdateAsync(Item updatedItem)
+    public async Task<Item> UpdateAsync(Item updatedItem)
     {
         // check if item exists
-        Item? existingItem =
+        Item? item =
             await _context.Items.FindAsync(updatedItem.Id)
             ?? throw new NotFoundException("Item not found.");
 
         // update existing item
-        _context.Entry(existingItem).CurrentValues.SetValues(updatedItem);
-        _context.Entry(existingItem).Property(i => i.RowVersion).OriginalValue =
-            updatedItem.RowVersion; // preserve concurrency from original
+        _context.Entry(item).CurrentValues.SetValues(updatedItem);
+        _context.Entry(item).Property(i => i.RowVersion).OriginalValue = updatedItem.RowVersion; // preserve concurrency from original
 
         try
         {
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -70,6 +69,8 @@ public class ItemRepository(TradeHubContext context) : IItemRepository
                 "The item you are trying to update has been modified by another user. Please refresh and try again."
             );
         }
+
+        return item;
     }
 
     /// <summary>

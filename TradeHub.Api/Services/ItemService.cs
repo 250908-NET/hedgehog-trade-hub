@@ -45,18 +45,59 @@ public class ItemService(
         return _mapper.Map<ItemDTO>(item);
     }
 
-    public Task<ItemDTO> CreateItemAsync(CreateItemDTO item)
+    /// <summary>
+    /// Create a new item in the database.
+    /// </summary>
+    /// <param name="dto">The item to create.</param>
+    /// <returns>The created item DTO.</returns>
+    public async Task<ItemDTO> CreateItemAsync(CreateItemDTO dto)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Creating item {Name}...", dto.Name);
+
+        // TODO: ensure user exists
+
+        Item createdItem = await _itemRepository.CreateAsync(_mapper.Map<Item>(dto));
+        _logger.LogInformation(
+            "Created item {Name} of (ID: {Id})!",
+            createdItem.Name,
+            createdItem.Id
+        );
+        return _mapper.Map<ItemDTO>(createdItem);
     }
 
-    public Task<bool> DeleteItemAsync(long id)
+    public async Task<ItemDTO> UpdateItemAsync(long id, UpdateItemDTO dto)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Updating item {Name} (ID: {Id})...", dto.Name, id);
+
+        // TODO: ensure user exists
+
+        Item existingItem =
+            await _itemRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException($"Item with ID {id} was not found to delete.");
+
+        _mapper.Map(dto, existingItem); // update item in-place
+
+        Item updatedItem = await _itemRepository.UpdateAsync(existingItem);
+        _logger.LogInformation(
+            "Updated item {Name} of (ID: {Id})!",
+            updatedItem.Name,
+            updatedItem.Id
+        );
+        return _mapper.Map<ItemDTO>(updatedItem);
     }
 
-    public Task<ItemDTO> UpdateItemAsync(long id, UpdateItemDTO item)
+    public async Task<bool> DeleteItemAsync(long id)
     {
-        throw new NotImplementedException();
+        // check if item exists
+        Item existingItem =
+            await _itemRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException($"Item with ID {id} was not found to delete.");
+
+        _logger.LogInformation(
+            "Deleting item {Name} (ID: {Id})...",
+            existingItem.Name,
+            existingItem.Id
+        );
+        return await _itemRepository.DeleteAsync(existingItem);
     }
 }

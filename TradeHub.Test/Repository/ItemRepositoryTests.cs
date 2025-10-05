@@ -195,15 +195,18 @@ public class ItemRepositoryTests
         var result = await repository.UpdateAsync(item);
 
         // Assert
-        Assert.True(result);
+        Assert.NotNull(result);
+        Assert.Equal("Updated Name", result.Name);
+        Assert.NotEqual(item.RowVersion, result.RowVersion); // The RowVersion should have been updated
+
         await using var assertContext = new TradeHubContext(_dbContextOptions);
-        var updatedItem = await assertContext.Items.FindAsync(item.Id);
-        Assert.NotNull(updatedItem);
-        Assert.Equal("Updated Name", updatedItem.Name);
+        var updatedItemInDb = await assertContext.Items.FindAsync(item.Id);
+        Assert.NotNull(updatedItemInDb);
+        Assert.Equal("Updated Name", updatedItemInDb.Name);
     }
 
     [Fact]
-    public async Task UpdateAsync_ShouldReturnFalse_WhenNoChangesAreMade()
+    public async Task UpdateAsync_ShouldReturnItem_WhenNoChangesAreMade()
     {
         // Arrange
         await using var context = new TradeHubContext(_dbContextOptions);
@@ -227,7 +230,9 @@ public class ItemRepositoryTests
         var result = await repository.UpdateAsync(item);
 
         // Assert
-        Assert.False(result);
+        Assert.NotNull(result);
+        Assert.Equal(item.Id, result.Id);
+        Assert.Equal(item.Name, result.Name);
     }
 
     [Fact]
