@@ -2,9 +2,9 @@
 
 A hub for users to trade items. 
 
-## User Stories
+## Progress Tracking
 
-https://revaturetech-my.sharepoint.com/:w:/g/personal/tevin708_revature_net/EU0gblsMjxpAr_tGBHMHMgEBmofDabaSnAn1ZbMcXj9wng?e=ikqzFu
+https://trello.com/b/m2zDpKVQ/project-management
 
 ## Endpoints
 
@@ -72,7 +72,10 @@ https://revaturetech-my.sharepoint.com/:w:/g/personal/tevin708_revature_net/EU0g
 - [ ] Your API should include logging with Serilog
 - [ ] Your API should include validation for any data being handled
 - [ ] Your API should include at least 50% unit test coverage
+  - To run: `dotnet test --collect:"XPlat Code Coverage" --results-directory ./CodeCoverage`
+  - To generate report: `reportgenerator -reports:./CodeCoverage/**/*.cobertura.xml -targetdir:./CodeCoverage/Report -reporttypes:Html`
 - [ ] **Your API must implement an HTTP request to another API**
+- [ ] **Your API must provide a cookie to the client**
 
 ### Frontend
 
@@ -103,3 +106,11 @@ https://revaturetech-my.sharepoint.com/:w:/g/personal/tevin708_revature_net/EU0g
 - Project presentation will be done on Friday 10/10 afternoon.
 - You should demo the application functionality by completing the planned user stories
 - Your presentation should be about 10 minutes long, no longer than 15 minutes (at 20 min, you will be cut off so that there is time for everyone to present)
+
+## ERD
+
+![ERD](erdmk2.png)
+
+## Wireframe
+
+![Wireframe](wireframemk1.png)

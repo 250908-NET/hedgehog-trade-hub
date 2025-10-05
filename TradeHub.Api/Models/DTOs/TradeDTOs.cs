@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 namespace TradeHub.Api.Models.DTOs
 
 {

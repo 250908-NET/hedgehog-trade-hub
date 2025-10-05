@@ -1,0 +1,58 @@
+name: Backend CI
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches: ["main"]
+    paths:
+      - "TradeHub.Api/**"
+      - "TradeHub.Test/**"
+      - "**/*.sln"
+      - "**/*.csproj"
+      - ".github/workflows/ci-backend.yml"
+
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "TradeHub.Api/**"
+      - "TradeHub.Test/**"
+      - "**/*.sln"
+      - "**/*.csproj"
+      - ".github/workflows/ci-backend.yml"
+
+jobs:
+  build-and-test:
+    name: "Build and Test"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Check formatting
+        id: check-format
+        run: dotnet csharpier check . > csharpier_output.txt 2>&1
+        continue-on-error: true
+
+      - name: Show formatting warnings
+        if: steps.check-format.outcome == 'failure'
+        run: |
+          echo "::warning::Code formatting does not match the style guide. Run 'dotnet csharpier .' locally to fix."
+          echo "::group::CSharpier Output"
+          cat csharpier_output.txt
+          echo "::endgroup::"
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal

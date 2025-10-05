@@ -6,12 +6,12 @@ namespace TradeHub.Api.Models;
 public class Offer
 {
     public int Id { get; set; }
-    public int UserId { get; set; } // fk to User
+    public long UserId { get; set; } // fk to User
     public User User { get; set; } = null!; // navigation property
-    public int TradeId { get; set; } // fk to Trade
+    public long  TradeId { get; set; } // fk to Trade
     public Trade Trade { get; set; } = null!; // navigation property
     public DateTimeOffset Created { get; set; }
-    public byte[] RowVersion { get; set; } = []; // concurrency
+    public byte[] RowVersion { get; set; } = Array.Empty <byte>(); // concurrency
 }
 
 // Fluent API configuration
