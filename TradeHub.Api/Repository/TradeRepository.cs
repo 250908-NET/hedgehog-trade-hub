@@ -15,19 +15,15 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
         return trade;
     }
 
-    public async Task DeleteTradeAsync(int tradeId)
+    public async Task DeleteTradeAsync(long tradeId)
     {
         var trade = await _context.Trades.FindAsync(tradeId);
         _context.Trades.Remove(trade);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Trade>> GetAllTradesAsync()
-    {
-        return await _context.Trades.Include(t => t.TradeItems).ToListAsync();
-    }
-
-    public async Task<Trade?> GetTradeByIdAsync(int tradeId)
+    
+    public async Task<Trade?> GetTradeByIdAsync(long tradeId)
     {
         return await _context
             .Trades.Include(t => t.InitiatedUser)
@@ -35,13 +31,13 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
             .FirstOrDefaultAsync(t => t.Id == tradeId);
     }
 
-    public async Task<List<Trade>> GetTradesByUser(int userId)
-    {
-        return await _context
-            .Trades.Include(t => t.TradeItems)
-            .Where(t => t.InitiatedId == userId || t.ReceivedId == userId)
-            .ToListAsync();
-    }
+    // public async Task<List<Trade>> GetTradesByUser(long userId)
+    // {
+    //     return await _context
+    //         .Trades.Include(t => t.TradeItems)
+    //         .Where(t => t.InitiatedId == userId || t.ReceivedId == userId)
+    //         .ToListAsync();
+    // }
 
     public async Task<Trade?> UpdateTradeAsync(Trade trade)
     {
@@ -52,5 +48,38 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
         _context.Entry(exisitingTrade).CurrentValues.SetValues(trade);
 
         return exisitingTrade;
+    }
+
+    public async Task<Trade?> AcceptTradeAsync(int tradeId)
+    {
+        var trade = await _context.Trades.FindAsync(tradeId);
+        if (trade is null)
+        {
+            return null;
+        }
+
+        trade.Status = TradeStatuses.Accepted;
+        await _context.SaveChangesAsync();
+        return trade;
+    }
+
+    public Task<List<Trade>> GetAllTradesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<List<Trade>> GetTradesByUser(long userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Trade?> GetTradeByIdAsync(long tradeId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteTradeAsync(long tradeId)
+    {
+        throw new NotImplementedException();
     }
 }

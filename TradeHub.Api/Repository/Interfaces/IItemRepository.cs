@@ -10,4 +10,5 @@ public interface IItemRepository
     Task SaveChangesAsync();
     Task UpdateAsync(int id, Item updatedItem);
     Task<bool> DeleteAsync(int id);
+    Task<Trade?> AcceptTradeAsync(int tradeId);
 }

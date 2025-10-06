@@ -16,6 +16,9 @@ public partial class TradeHubContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // automatic ItemConfiguration and OfferConfiguration:
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TradeHubContext).Assembly);  
+
         OnModelCreatingPartial(modelBuilder);
     }
 

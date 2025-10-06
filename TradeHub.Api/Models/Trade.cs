@@ -5,6 +5,15 @@ using TradeHub.API.Models;
 
 namespace TradeHub.Api.Models
 {
+
+    public static class TradeStatuses
+    {
+        public const byte Pending = 0;
+        public const byte Accepted = 1;
+        public const byte Rejected = 2;
+        public const byte Cancelled = 3;
+        public const byte Completed = 4;
+    }
     public class Trade
     {
         [Key]
@@ -19,16 +28,19 @@ namespace TradeHub.Api.Models
         [Required]
         public long ReceivedId { get; set; }
 
-        public byte Status { get; set; }
+        public byte Status { get; set; } = TradeStatuses.Pending;
+
 
         // Navigation properties
-        [ForeignKey("InitiatedId")]
+        [ForeignKey(nameof(InitiatedId))]
         public User InitiatedUser { get; set; }
 
-        [ForeignKey("ReceivedId")]
+        [ForeignKey(nameof(ReceivedId))]
         public User ReceivedUser { get; set; }
 
-        public ICollection<Item> TradeItems { get; set; }
-        public ICollection<Offer> Offers { get; set; }
+        public ICollection<Offer> Offers { get; set; } = new List<Offer>();
+
+    
+
     }
 }

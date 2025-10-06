@@ -36,7 +36,7 @@ public class OfferRepository(TradeHubContext context) : IOfferRepository
         }
     }
 
-    public async Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(int tradeId)
+    public async Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(long tradeId)
     {
         // include navigation properties as readonly
         return await _context
@@ -47,7 +47,7 @@ public class OfferRepository(TradeHubContext context) : IOfferRepository
             .ToListAsync();
     }
 
-    public async Task<Offer?> GetOfferAsync(int offerId)
+    public async Task<Offer?> GetOfferAsync(long offerId)
     {
         // include navigation properties
         return await _context
