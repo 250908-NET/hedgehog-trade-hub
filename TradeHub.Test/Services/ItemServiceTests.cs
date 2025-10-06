@@ -79,7 +79,19 @@ public class ItemServiceTests
             new(2, "Item 2", "Desc 2", "", 20, 1, "", Condition.UsedGood, Availability.Available),
         };
 
-        _mockItemRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(testItems);
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<Condition?>(),
+                    It.IsAny<Availability?>(),
+                    It.IsAny<string>()
+                )
+            )
+            .ReturnsAsync(testItems);
         _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(testItems)).Returns(testItemDTOs);
 
         // Act
@@ -89,7 +101,19 @@ public class ItemServiceTests
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
         Assert.Same(testItemDTOs, result);
-        _mockItemRepository.Verify(repo => repo.GetAllAsync(), Times.Once);
+        _mockItemRepository.Verify(
+            repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<Condition?>(),
+                    It.IsAny<Availability?>(),
+                    It.IsAny<string>()
+                ),
+            Times.Once
+        );
         _mockMapper.Verify(mapper => mapper.Map<List<ItemDTO>>(testItems), Times.Once);
     }
 
@@ -100,7 +124,19 @@ public class ItemServiceTests
         var emptyItems = new List<Item>();
         var emptyItemDTOs = new List<ItemDTO>();
 
-        _mockItemRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(emptyItems);
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<Condition?>(),
+                    It.IsAny<Availability?>(),
+                    It.IsAny<string>()
+                )
+            )
+            .ReturnsAsync(emptyItems);
         _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(emptyItems)).Returns(emptyItemDTOs);
 
         // Act
@@ -109,8 +145,355 @@ public class ItemServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.Empty(result);
-        _mockItemRepository.Verify(repo => repo.GetAllAsync(), Times.Once);
+        _mockItemRepository.Verify(
+            repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<Condition?>(),
+                    It.IsAny<Availability?>(),
+                    It.IsAny<string>()
+                ),
+            Times.Once
+        );
         _mockMapper.Verify(mapper => mapper.Map<List<ItemDTO>>(emptyItems), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetAllItemsAsync_ShouldPassPaginationParametersToRepository()
+    {
+        // Arrange
+        var testItems = new List<Item>
+        {
+            new("Item 1", "Desc 1", "", 10, 1, "", Condition.New, Availability.Available),
+        };
+        var testItemDTOs = new List<ItemDTO>
+        {
+            new(1, "Item 1", "Desc 1", "", 10, 1, "", Condition.New, Availability.Available),
+        };
+
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    2, // page
+                    5, // pageSize
+                    It.IsAny<decimal?>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<Condition?>(),
+                    It.IsAny<Availability?>(),
+                    It.IsAny<string>()
+                )
+            )
+            .ReturnsAsync(testItems);
+        _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(testItems)).Returns(testItemDTOs);
+
+        // Act
+        var result = await _itemService.GetAllItemsAsync(page: 2, pageSize: 5);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Single(result);
+        _mockItemRepository.Verify(
+            repo => repo.GetAllAsync(2, 5, null, null, null, null, null),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task GetAllItemsAsync_ShouldPassMinValueFilterToRepository()
+    {
+        // Arrange
+        var testItems = new List<Item>
+        {
+            new("Item 2", "Desc 2", "", 20, 1, "", Condition.UsedGood, Availability.Available),
+        };
+        var testItemDTOs = new List<ItemDTO>
+        {
+            new(2, "Item 2", "Desc 2", "", 20, 1, "", Condition.UsedGood, Availability.Available),
+        };
+
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    15m, // minValue
+                    It.IsAny<decimal?>(),
+                    It.IsAny<Condition?>(),
+                    It.IsAny<Availability?>(),
+                    It.IsAny<string>()
+                )
+            )
+            .ReturnsAsync(testItems);
+        _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(testItems)).Returns(testItemDTOs);
+
+        // Act
+        var result = await _itemService.GetAllItemsAsync(minValue: 15m);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Single(result);
+        _mockItemRepository.Verify(
+            repo => repo.GetAllAsync(1, 10, 15m, null, null, null, null),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task GetAllItemsAsync_ShouldPassMaxValueFilterToRepository()
+    {
+        // Arrange
+        var testItems = new List<Item>
+        {
+            new("Item 1", "Desc 1", "", 10, 1, "", Condition.New, Availability.Available),
+        };
+        var testItemDTOs = new List<ItemDTO>
+        {
+            new(1, "Item 1", "Desc 1", "", 10, 1, "", Condition.New, Availability.Available),
+        };
+
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<decimal?>(),
+                    15m, // maxValue
+                    It.IsAny<Condition?>(),
+                    It.IsAny<Availability?>(),
+                    It.IsAny<string>()
+                )
+            )
+            .ReturnsAsync(testItems);
+        _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(testItems)).Returns(testItemDTOs);
+
+        // Act
+        var result = await _itemService.GetAllItemsAsync(maxValue: 15m);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Single(result);
+        _mockItemRepository.Verify(
+            repo => repo.GetAllAsync(1, 10, null, 15m, null, null, null),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task GetAllItemsAsync_ShouldPassConditionFilterToRepository()
+    {
+        // Arrange
+        var testItems = new List<Item>
+        {
+            new("Item 2", "Desc 2", "", 20, 1, "", Condition.UsedGood, Availability.Available),
+        };
+        var testItemDTOs = new List<ItemDTO>
+        {
+            new(2, "Item 2", "Desc 2", "", 20, 1, "", Condition.UsedGood, Availability.Available),
+        };
+
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<decimal?>(),
+                    Condition.UsedGood, // condition
+                    It.IsAny<Availability?>(),
+                    It.IsAny<string>()
+                )
+            )
+            .ReturnsAsync(testItems);
+        _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(testItems)).Returns(testItemDTOs);
+
+        // Act
+        var result = await _itemService.GetAllItemsAsync(condition: Condition.UsedGood);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Single(result);
+        _mockItemRepository.Verify(
+            repo => repo.GetAllAsync(1, 10, null, null, Condition.UsedGood, null, null),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task GetAllItemsAsync_ShouldPassAvailabilityFilterToRepository()
+    {
+        // Arrange
+        var testItems = new List<Item>
+        {
+            new("Item 1", "Desc 1", "", 10, 1, "", Condition.New, Availability.Available),
+        };
+        var testItemDTOs = new List<ItemDTO>
+        {
+            new(1, "Item 1", "Desc 1", "", 10, 1, "", Condition.New, Availability.Available),
+        };
+
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<Condition?>(),
+                    Availability.Available, // availability
+                    It.IsAny<string>()
+                )
+            )
+            .ReturnsAsync(testItems);
+        _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(testItems)).Returns(testItemDTOs);
+
+        // Act
+        var result = await _itemService.GetAllItemsAsync(availability: Availability.Available);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Single(result);
+        _mockItemRepository.Verify(
+            repo => repo.GetAllAsync(1, 10, null, null, null, Availability.Available, null),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task GetAllItemsAsync_ShouldPassSearchTermToRepository()
+    {
+        // Arrange
+        var testItems = new List<Item>
+        {
+            new(
+                "Searchable Item",
+                "This item is for searching",
+                "",
+                10,
+                1,
+                "",
+                Condition.New,
+                Availability.Available
+            ),
+        };
+        var testItemDTOs = new List<ItemDTO>
+        {
+            new(
+                1,
+                "Searchable Item",
+                "This item is for searching",
+                "",
+                10,
+                1,
+                "",
+                Condition.New,
+                Availability.Available
+            ),
+        };
+
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<decimal?>(),
+                    It.IsAny<Condition?>(),
+                    It.IsAny<Availability?>(),
+                    "search term" // search
+                )
+            )
+            .ReturnsAsync(testItems);
+        _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(testItems)).Returns(testItemDTOs);
+
+        // Act
+        var result = await _itemService.GetAllItemsAsync(search: "search term");
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Single(result);
+        _mockItemRepository.Verify(
+            repo => repo.GetAllAsync(1, 10, null, null, null, null, "search term"),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task GetAllItemsAsync_ShouldPassAllParametersToRepository()
+    {
+        // Arrange
+        var testItems = new List<Item>
+        {
+            new(
+                "Specific Item",
+                "Specific Description",
+                "",
+                25,
+                1,
+                "",
+                Condition.UsedGood,
+                Availability.Available
+            ),
+        };
+        var testItemDTOs = new List<ItemDTO>
+        {
+            new(
+                1,
+                "Specific Item",
+                "Specific Description",
+                "",
+                25,
+                1,
+                "",
+                Condition.UsedGood,
+                Availability.Available
+            ),
+        };
+
+        _mockItemRepository
+            .Setup(repo =>
+                repo.GetAllAsync(
+                    2, // page
+                    5, // pageSize
+                    20m, // minValue
+                    30m, // maxValue
+                    Condition.UsedGood, // condition
+                    Availability.Available, // availability
+                    "Specific" // search
+                )
+            )
+            .ReturnsAsync(testItems);
+        _mockMapper.Setup(mapper => mapper.Map<List<ItemDTO>>(testItems)).Returns(testItemDTOs);
+
+        // Act
+        var result = await _itemService.GetAllItemsAsync(
+            page: 2,
+            pageSize: 5,
+            minValue: 20m,
+            maxValue: 30m,
+            condition: Condition.UsedGood,
+            availability: Availability.Available,
+            search: "Specific"
+        );
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Single(result);
+        _mockItemRepository.Verify(
+            repo =>
+                repo.GetAllAsync(
+                    2,
+                    5,
+                    20m,
+                    30m,
+                    Condition.UsedGood,
+                    Availability.Available,
+                    "Specific"
+                ),
+            Times.Once
+        );
     }
 
     #endregion

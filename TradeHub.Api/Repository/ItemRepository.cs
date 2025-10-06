@@ -13,9 +13,39 @@ public class ItemRepository(TradeHubContext context) : IItemRepository
     /// Get all items
     /// </summary>
     /// <returns>A list containing all items</returns>
-    public async Task<List<Item>> GetAllAsync()
+    public async Task<List<Item>> GetAllAsync(
+        int page = 1,
+        int pageSize = 10,
+        decimal? minValue = null,
+        decimal? maxValue = null,
+        Condition? condition = null,
+        Availability? availability = null,
+        string? search = null
+    )
     {
-        return await _context.Items.AsNoTracking().ToListAsync();
+        IQueryable<Item> query = _context.Items.AsNoTracking().AsQueryable();
+
+        // apply filters
+        if (minValue != null)
+            query = query.Where(i => i.Value >= minValue.Value);
+        if (maxValue != null)
+            query = query.Where(i => i.Value <= maxValue.Value);
+        if (condition != null)
+            query = query.Where(i => i.Condition == condition.Value);
+        if (availability != null)
+            query = query.Where(i => i.Availability == availability.Value);
+        if (!string.IsNullOrEmpty(search))
+            query = query.Where(i =>
+                i.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || i.Description.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || i.Tags.Contains(search, StringComparison.OrdinalIgnoreCase)
+            );
+
+        // apply pagination
+        int skip = (Math.Max(1, page) - 1) * Math.Max(1, pageSize);
+        query = query.Skip(skip).Take(pageSize);
+
+        return await query.ToListAsync();
     }
 
     /// <summary>

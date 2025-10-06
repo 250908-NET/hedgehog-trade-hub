@@ -23,11 +23,27 @@ public class ItemService(
     /// Fetch all items from database.
     /// </summary>
     /// <returns>A list of item DTOs</returns>
-    public async Task<List<ItemDTO>> GetAllItemsAsync()
+    public async Task<List<ItemDTO>> GetAllItemsAsync(
+        int page = 1,
+        int pageSize = 10,
+        decimal? minValue = null,
+        decimal? maxValue = null,
+        Condition? condition = null,
+        Availability? availability = null,
+        string? search = null
+    )
     {
-        _logger.LogInformation("Fetching all items...");
-        List<Item> items = await _itemRepository.GetAllAsync();
-        _logger.LogInformation("Found {Count} items!", items.Count);
+        _logger.LogInformation("Fetching all items with filters and pagination...");
+        List<Item> items = await _itemRepository.GetAllAsync(
+            page,
+            pageSize,
+            minValue,
+            maxValue,
+            condition,
+            availability,
+            search
+        );
+        _logger.LogInformation("Found {Count} items matching the criteria!", items.Count);
         return _mapper.Map<List<ItemDTO>>(items);
     }
 

@@ -4,7 +4,15 @@ namespace TradeHub.Api.Repository.Interfaces;
 
 public interface IItemRepository
 {
-    Task<List<Item>> GetAllAsync();
+    Task<List<Item>> GetAllAsync(
+        int page,
+        int pageSize,
+        decimal? minValue,
+        decimal? maxValue,
+        Condition? condition,
+        Availability? availability,
+        string? search
+    );
     Task<Item?> GetByIdAsync(long id);
     Task<Item> CreateAsync(Item newItem);
     Task<Item> UpdateAsync(Item item);

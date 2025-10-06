@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TradeHub.Api.Models;
 using TradeHub.Api.Models.DTOs;
 using TradeHub.Api.Services.Interfaces;
 
@@ -11,9 +12,27 @@ public class ItemsController(IItemService itemService) : ControllerBase
     private readonly IItemService _itemService = itemService;
 
     [HttpGet(Name = "GetAllItems")]
-    public async Task<ActionResult<List<ItemDTO>>> GetAllItems()
+    public async Task<ActionResult<List<ItemDTO>>> GetAllItems(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] decimal? minValue = null,
+        [FromQuery] decimal? maxValue = null,
+        [FromQuery] Condition? condition = null,
+        [FromQuery] Availability? availability = null,
+        [FromQuery] string? search = null
+    )
     {
-        return Ok(await _itemService.GetAllItemsAsync());
+        return Ok(
+            await _itemService.GetAllItemsAsync(
+                page,
+                pageSize,
+                minValue,
+                maxValue,
+                condition,
+                availability,
+                search
+            )
+        );
     }
 
     [HttpGet("{id}", Name = "GetItemById")]
