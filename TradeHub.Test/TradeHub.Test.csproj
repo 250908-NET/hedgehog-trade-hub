@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <!-- include .env file during testing -->
-    <Content Include="..\TradeHub.Api\.env">
+    <Content Include="..\TradeHub.Api\.env" Condition="Exists('..\TradeHub.Api\.env')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>.env</Link>
     </Content>
