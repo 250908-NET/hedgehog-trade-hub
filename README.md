@@ -21,11 +21,11 @@ https://trello.com/b/m2zDpKVQ/project-management
 
 ### Items
 
-- [ ] GET /items - get all items (in active trades) (parameters as search terms)
-- [ ] POST /items - create new item
-- [ ] GET /items/{ItemId} - get specific item
-- [ ] PATCH /items/{ItemId} - modify item
-- [ ] DELETE /items/{ItemId} - delete item
+- [X] GET /items - get all items (in active trades) (parameters as search terms)
+- [X] POST /items - create new item
+- [X] GET /items/{ItemId} - get specific item
+- [X] PATCH /items/{ItemId} - modify item
+- [X] DELETE /items/{ItemId} - delete item
 
 ### Trades
 
@@ -49,32 +49,32 @@ https://trello.com/b/m2zDpKVQ/project-management
 ### Application Architecture
 
 - [X] Your code must be pushed to a project git repo on the cohort organization
-- [ ] Your application must build and run
-- [ ] Your application components must be loosely coupled, and exemplify a Service Oriented Architecture
+- [X] Your application must build and run
+- [X] Your application components must be loosely coupled, and exemplify a Service Oriented Architecture
 
 ### SQL Database
 
-- [ ] Your database must use MS SQL Server
-- [ ] Your database must run inside of a docker container
+- [X] Your database must use MS SQL Server
+- [X] Your database must run inside of a docker container
 - [X] Your database should be in 3rd normal form
 - [X] Your database should include at least one many-to-many relationship
-- [ ] Your database should be set up through an Entity Framework "Code-First" migration
+- [X] Your database should be set up through an Entity Framework "Code-First" migration
 
 ### API
 
-- [ ] Your API must be written in C# for .NET
-- [ ] Your API must use the ASP.NET framework
+- [X] Your API must be written in C# for .NET
+- [X] Your API must use the ASP.NET framework
 - [ ] Your API must exemplify the principles of REST
-- [ ] Your API must implement the Repository pattern for data persistance (multiple namespaces, interface)
+- [X] Your API must implement the Repository pattern for data persistance (multiple namespaces, interface)
 - [ ] Your API must implement SQL Server and Entity Framework Core to provide data persistance
 - [ ] Your API should fulfill all common CRUD functions
-- [ ] Your API should include proper exception handling
-- [ ] Your API should include logging with Serilog
+- [X] Your API should include proper exception handling
+- [X] Your API should include logging with Serilog
 - [ ] Your API should include validation for any data being handled
 - [ ] Your API should include at least 50% unit test coverage
   - To run: `dotnet test --collect:"XPlat Code Coverage" --results-directory ./CodeCoverage`
   - To generate report: `reportgenerator -reports:./CodeCoverage/**/*.cobertura.xml -targetdir:./CodeCoverage/Report -reporttypes:Html`
-- [ ] **Your API must implement an HTTP request to another API**
+- [X] **Your API must implement an HTTP request to another API**
 - [ ] **Your API must provide a cookie to the client**
 
 ### Frontend
@@ -90,14 +90,14 @@ https://trello.com/b/m2zDpKVQ/project-management
 
 ### Non-Functional Requiremnts
 
-- [ ] Your project team should select a Team Lead to organize the development team efforts
+- [X] Your project team should select a Team Lead to organize the development team efforts
 - [ ] Your project should include a Project Description document which details:
-    - [ ] a description of the project
-    - [ ] at least five user stories for your applicaton
-    - [ ] a wireframe diagram of the UI
-    - [ ] an ERD (Entity Relationship Diagram) of the Database
+    - [X] a description of the project
+    - [X] at least five user stories for your applicaton
+    - [X] a wireframe diagram of the UI
+    - [X] an ERD (Entity Relationship Diagram) of the Database
     - [ ] unit test coverage reporting
-    - [ ] API endpoint documentation
+    - [X] API endpoint documentation
 - [ ] Your project team should conduct a daily stand-up meeting
     - [ ] meeting notes should be kept to record development progress
 
