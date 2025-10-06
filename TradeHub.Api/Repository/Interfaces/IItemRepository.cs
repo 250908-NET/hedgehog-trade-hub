@@ -1,13 +1,20 @@
 using TradeHub.Api.Models;
- 
+
 namespace TradeHub.Api.Repository.Interfaces;
- 
+
 public interface IItemRepository
 {
-    Task<List<Item>> GetAllAsync();
-    Task<Item?> GetByIdAsync(int id);
-    Task<Item> AddAsync(Item Item);
-    Task SaveChangesAsync();
-    Task UpdateAsync(int id, Item updatedItem);
-    Task<bool> DeleteAsync(int id);
+    Task<List<Item>> GetAllAsync(
+        int page,
+        int pageSize,
+        decimal? minValue,
+        decimal? maxValue,
+        Condition? condition,
+        Availability? availability,
+        string? search
+    );
+    Task<Item?> GetByIdAsync(long id);
+    Task<Item> CreateAsync(Item newItem);
+    Task<Item> UpdateAsync(Item item);
+    Task<bool> DeleteAsync(Item item);
 }

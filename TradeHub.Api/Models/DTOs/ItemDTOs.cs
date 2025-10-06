@@ -11,7 +11,8 @@ public record ItemDTO(
     long OwnerId,
     string Tags,
     Condition Condition,
-    Availability Availability
+    Availability Availability,
+    bool IsValueEstimated = false
 );
 
 public record CreateItemDTO(
@@ -22,7 +23,8 @@ public record CreateItemDTO(
     long OwnerId,
     string Tags,
     Condition Condition,
-    Availability Availability
+    Availability Availability,
+    bool EstimateValue = false
 );
 
 public record UpdateItemDTO(
@@ -33,7 +35,8 @@ public record UpdateItemDTO(
     long? OwnerId,
     string? Tags,
     Condition? Condition,
-    Availability? Availability
+    Availability? Availability,
+    bool EstimateValue = false
 );
 
 // --- validators ---

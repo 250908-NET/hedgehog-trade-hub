@@ -18,17 +18,19 @@ public partial class TradeHubContext : DbContext
     {
         OnModelCreatingPartial(modelBuilder);
 
-        modelBuilder.Entity<Trade>()
-        .HasOne(t => t.InitiatedUser)
-        .WithMany(u => u.InitiatedTrades) 
-        .HasForeignKey(t => t.InitiatedId)
-        .OnDelete(DeleteBehavior.Restrict); 
+        modelBuilder
+            .Entity<Trade>()
+            .HasOne(t => t.InitiatedUser)
+            .WithMany(u => u.InitiatedTrades)
+            .HasForeignKey(t => t.InitiatedId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-    modelBuilder.Entity<Trade>()
-        .HasOne(t => t.ReceivedUser)
-        .WithMany(u => u.ReceivedTrades) 
-        .HasForeignKey(t => t.ReceivedId)
-        .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder
+            .Entity<Trade>()
+            .HasOne(t => t.ReceivedUser)
+            .WithMany(u => u.ReceivedTrades)
+            .HasForeignKey(t => t.ReceivedId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     internal async Task SaveChangesAsync(Trade trade)

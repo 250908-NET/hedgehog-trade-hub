@@ -4,13 +4,10 @@ using TradeHub.Api.Utilities;
 
 namespace TradeHub.Api.Middleware;
 
-public class GlobalExceptionHandlerMiddleware(
-    RequestDelegate next,
-    ILogger<GlobalExceptionHandlerMiddleware> logger
-)
+public class GlobalExceptionHandler(RequestDelegate next, ILogger<GlobalExceptionHandler> logger)
 {
     private readonly RequestDelegate _next = next;
-    private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger = logger;
+    private readonly ILogger<GlobalExceptionHandler> _logger = logger;
 
     public async Task InvokeAsync(HttpContext context)
     {

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TradeHub.Api.Models;
 using TradeHub.Api.Repository.Interfaces;
+using TradeHub.Api.Utilities;
 
 namespace TradeHub.Api.Repository;
 
@@ -8,59 +9,117 @@ public class ItemRepository(TradeHubContext context) : IItemRepository
 {
     private readonly TradeHubContext _context = context;
 
-
-//get all items
-    public async Task<List<Item>> GetAllAsync()
+    /// <summary>
+    /// Get all items
+    /// </summary>
+    /// <returns>A list containing all items</returns>
+    public async Task<List<Item>> GetAllAsync(
+        int page = 1,
+        int pageSize = 10,
+        decimal? minValue = null,
+        decimal? maxValue = null,
+        Condition? condition = null,
+        Availability? availability = null,
+        string? search = null
+    )
     {
-        return await _context.Items.ToListAsync();
+        IQueryable<Item> query = _context.Items.AsNoTracking().AsQueryable();
+
+        // apply filters
+        if (minValue != null)
+            query = query.Where(i => i.Value >= minValue.Value);
+        if (maxValue != null)
+            query = query.Where(i => i.Value <= maxValue.Value);
+        if (condition != null)
+            query = query.Where(i => i.Condition == condition.Value);
+        if (availability != null)
+            query = query.Where(i => i.Availability == availability.Value);
+        if (!string.IsNullOrEmpty(search))
+            query = query.Where(i =>
+                i.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || i.Description.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || i.Tags.Contains(search, StringComparison.OrdinalIgnoreCase)
+            );
+
+        // apply pagination
+        int skip = (Math.Max(1, page) - 1) * Math.Max(1, pageSize);
+        query = query.Skip(skip).Take(pageSize);
+
+        return await query.ToListAsync();
     }
 
-
-//get item by id
-    public async Task<Item?> GetByIdAsync(int id)
+    /// <summary>
+    /// Get item by id
+    /// </summary>
+    /// <param name="id">The id of the item to find</param>
+    /// <returns>The item if found, otherwise null</returns>
+    public async Task<Item?> GetByIdAsync(long id)
     {
-        return await _context.Items.FindAsync((long)id);
+        return await _context.Items.FindAsync(id);
     }
 
-    public async Task<Item> AddAsync(Item item)
+    /// <summary>
+    /// Create a new item
+    /// </summary>
+    /// <param name="newItem">A new item, not including id</param>
+    /// <returns>The created item, including id</returns>
+    public async Task<Item> CreateAsync(Item newItem)
     {
-        await _context.Items.AddAsync(item);
+        await _context.Items.AddAsync(newItem);
+        await _context.SaveChangesAsync();
+
+        await _context.Entry(newItem).ReloadAsync();
+        return newItem;
+    }
+
+    /// <summary>
+    /// Update item, replacing all fields with those of the provided item
+    /// </summary>
+    /// <param name="updatedItem">An item with updated fields</param>
+    /// <returns>True if successful, false if no update was made</returns>
+    /// <exception cref="ConflictException">Thrown if the item was modified by another user</exception>
+    public async Task<Item> UpdateAsync(Item updatedItem)
+    {
+        // check if item exists
+        Item? item =
+            await _context.Items.FindAsync(updatedItem.Id)
+            ?? throw new NotFoundException("Item not found.");
+
+        // update existing item
+        _context.Entry(item).CurrentValues.SetValues(updatedItem);
+        _context.Entry(item).Property(i => i.RowVersion).OriginalValue = updatedItem.RowVersion; // preserve concurrency from original
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new ConflictException(
+                "The item you are trying to update has been modified by another user. Please refresh and try again."
+            );
+        }
+
         return item;
     }
 
-    public async Task SaveChangesAsync()
+    /// <summary>
+    /// Delete existing item
+    /// </summary>
+    /// <param name="id">The </param>
+    /// <returns></returns>
+    public async Task<bool> DeleteAsync(Item item)
     {
-        await _context.SaveChangesAsync();
-    }
-
-// update item
-    public async Task UpdateAsync(int id, Item updatedItem)
-    {
-        var existingItem = await _context.Items.FindAsync((long)id);
-        if (existingItem != null)
+        _context.Items.Remove(item);
+        try
         {
-            existingItem.Description = updatedItem.Description;
-            existingItem.Image = updatedItem.Image;
-            existingItem.Value = updatedItem.Value;
-            existingItem.Owner = updatedItem.Owner;
-            existingItem.Tags = updatedItem.Tags;
-            existingItem.Condition = updatedItem.Condition;
-            existingItem.Availability = updatedItem.Availability;
-
-            _context.Items.Update(existingItem);
+            return await _context.SaveChangesAsync() > 0;
         }
-    }
-
-
-// delete
-    public async Task<bool> DeleteAsync(int id)
-    {
-        var item = await _context.Items.FindAsync((long)id);
-        if (item != null)
+        catch (DbUpdateConcurrencyException)
         {
-            _context.Items.Remove(item);
-            return true;
+            throw new ConflictException(
+                "The item you are trying to delete has been modified by another user. Please refresh and try again."
+            );
         }
-        return false;
     }
 }

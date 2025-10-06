@@ -7,6 +7,6 @@ public static class MiddlewareExtensions
     /// </summary>
     public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder builder)
     {
-        return builder.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+        return builder.UseMiddleware<GlobalExceptionHandler>();
     }
 }
