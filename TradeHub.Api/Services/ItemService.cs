@@ -10,12 +10,14 @@ namespace TradeHub.Api.Services;
 public class ItemService(
     IItemRepository itemRepository,
     IMapper mapper,
-    ILogger<ItemService> logger
+    ILogger<ItemService> logger,
+    ILLMService? llmService = null
 ) : IItemService
 {
     private readonly IItemRepository _itemRepository = itemRepository;
     private readonly IMapper _mapper = mapper;
     private readonly ILogger<ItemService> _logger = logger;
+    private readonly ILLMService? _llmService = llmService;
 
     /// <summary>
     /// Fetch all items from database.
@@ -56,7 +58,25 @@ public class ItemService(
 
         // TODO: ensure user exists
 
-        // TODO: add value estimation
+        // value estimation
+        if (_llmService is not null && dto.Value == 0 && dto.EstimateValue)
+        {
+            try
+            {
+                decimal estimatedValue = await _llmService.EstimateItemValueAsync(
+                    dto.Name,
+                    dto.Description,
+                    dto.Condition.ToString()
+                );
+
+                dto = dto with { Value = estimatedValue };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to estimate item value for {Name}.", dto.Name);
+                // on fail, proceed with the original DTO (with Value == 0)
+            }
+        }
 
         Item createdItem = await _itemRepository.CreateAsync(_mapper.Map<Item>(dto));
         _logger.LogInformation(
@@ -73,13 +93,46 @@ public class ItemService(
 
         // TODO: ensure user exists
 
-        // TODO: add value estimation
-
         Item existingItem =
             await _itemRepository.GetByIdAsync(id)
-            ?? throw new NotFoundException($"Item with ID {id} was not found to delete.");
+            ?? throw new NotFoundException($"Item with ID {id} was not found to update.");
 
         _mapper.Map(dto, existingItem); // update item in-place
+
+        // value estimation
+        if (
+            _llmService is not null
+            && dto.Value == 0
+            && dto.EstimateValue
+            && dto.Name is not null
+            && dto.Description is not null
+            && dto.Condition is not null
+        )
+        {
+            try
+            {
+                _logger.LogInformation("Estimating value of item {Name} using LLM...", dto.Name);
+
+                decimal estimatedValue = await _llmService.EstimateItemValueAsync(
+                    dto.Name,
+                    dto.Description,
+                    (dto.Condition ?? Condition.UsedAcceptable).ToString() // should always be not null
+                );
+
+                existingItem.Value = estimatedValue;
+                existingItem.IsValueEstimated = true;
+                _logger.LogInformation(
+                    "Estimated item value for {Name} as {Value}!",
+                    dto.Name,
+                    estimatedValue
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to estimate item value for {Name}.", dto.Name);
+                // on fail, proceed with the original DTO (with Value == 0)
+            }
+        }
 
         Item updatedItem = await _itemRepository.UpdateAsync(existingItem);
         _logger.LogInformation(
