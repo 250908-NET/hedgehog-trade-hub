@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TradeHub.Api.Models;
 
@@ -11,9 +12,11 @@ using TradeHub.Api.Models;
 namespace TradeHub.Api.Migrations
 {
     [DbContext(typeof(TradeHubContext))]
-    partial class TradeHubContextModelSnapshot : ModelSnapshot
+    [Migration("20251006011748_AddItemsFunctionality")]
+    partial class AddItemsFunctionality
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
