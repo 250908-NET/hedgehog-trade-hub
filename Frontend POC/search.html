@@ -47,36 +47,53 @@
         }
     </style>
 </head>
-<body>
-    <input type="text" id="searchInput" placeholder="Search items..." onkeyup="filterItems()">
-    <div class="container"></div>
+    <body>
+        <input type="text" id="searchInput" placeholder="Search items..." onkeyup="filterItems()">
+        <input type="text" id="value" placeholder="target value..." onkeyup="filterItems()">
+        <div class="container"></div>
 
-    <script>
-        let items = [
-            {name: 'Item 1', description: 'Description for Item 1', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 10},
-            {name: 'Item 2', description: 'Description for Item 2', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 20},
-            {name: 'Item 3', description: 'Description for Item 3', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 30},
-        ];
-        const container = document.querySelector('.container');
-        items.forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'item';
-            itemDiv.innerHTML = `<h2>${item.name}</h2><p><img src="${item.imgURL}" alt="${item.name}">${item.description}</p><p class='priceTag'>est. $${item.value}</p>`;
-            container.appendChild(itemDiv);
-        });
-
-        function filterItems() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const itemDivs = document.querySelectorAll('.item');
-            itemDivs.forEach(div => {
-                const itemName = div.querySelector('h2').innerText.toLowerCase();
-                if (itemName.includes(query)) {
-                    div.style.display = '';
-                } else {
-                    div.style.display = 'none';
-                }
+        <script>
+            let items = [
+                {name: 'Item 1', description: 'Description for Item 1', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 10},
+                {name: 'Item 2', description: 'Description for Item 2', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 20},
+                {name: 'Item 3', description: 'Description for Item 3', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 30},
+            ];
+            const container = document.querySelector('.container');
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'item';
+                itemDiv.innerHTML = `<h2>${item.name}</h2><p><img src="${item.imgURL}" alt="${item.name}">${item.description}</p><p class='priceTag'>est. $${item.value}</p>`;
+                container.appendChild(itemDiv);
             });
-        }
-    </script>
-</body>
+
+            function filterItems() {
+                const query = document.getElementById('searchInput').value.toLowerCase();
+                const targetValue = parseFloat(document.getElementById('value').value);
+                const container = document.querySelector('.container');
+                
+                // Get all visible items that match the search query
+                let filteredItems = items.filter(item => 
+                    item.name.toLowerCase().includes(query)
+                );
+                
+                // Sort by proximity to target value if target value is provided
+                if (!isNaN(targetValue)) {
+                    filteredItems.sort((a, b) => {
+                        const diffA = Math.abs(a.value - targetValue);
+                        const diffB = Math.abs(b.value - targetValue);
+                        return diffA - diffB;
+                    });
+                }
+                
+                // Clear container and re-add items in sorted order
+                container.innerHTML = '';
+                filteredItems.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item';
+                    itemDiv.innerHTML = `<h2>${item.name}</h2><p><img src="${item.imgURL}" alt="${item.name}">${item.description}</p><p class='priceTag'>est. $${item.value}</p>`;
+                    container.appendChild(itemDiv);
+                });
+            }
+        </script>
+    </body>
 </html>
