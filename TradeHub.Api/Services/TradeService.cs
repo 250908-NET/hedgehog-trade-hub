@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using TradeHub.Api.Models;
 using TradeHub.Api.Repository.Interfaces;
 using TradeHub.Api.Services.Interfaces;
@@ -42,4 +43,33 @@ public class TradeService : ITradeService
     {
         await _repository.DeleteTradeAsync(tradeId);
     }
+
+    // implementaions for confirm trade
+
+    public async Task<Trade> ConfirmTradeAsync(int tradeId, int userId)
+    {
+        var trade = await _repository.GetTradeByIdAsync(tradeId);
+        if (trade == null)
+            throw new Exception("Trade not found");
+
+        // only trade participants can confirm
+
+        if (userId != trade.InitiatedId && userId != trade.ReceivedId)
+            throw new Exception("User not part of this trade");
+
+        // to update the confirmation
+
+        if (userId == trade.InitiatedId)
+            trade.InitiatedConfirmed = true;
+        else if (userId == trade.ReceivedId)
+            trade.ReceivedConfirmed = true;
+
+        // to masr as completed
+
+        if (trade.InitiatedConfirmed && trade.ReceivedConfirmed)
+            trade.Status = TradeStatus.Completed;
+       return await _repository.UpdateTradeAsync(trade);
+        
+    }
+
 }

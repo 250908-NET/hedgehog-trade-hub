@@ -31,12 +31,15 @@ public partial class TradeHubContext : DbContext
             .WithMany(u => u.ReceivedTrades)
             .HasForeignKey(t => t.ReceivedId)
             .OnDelete(DeleteBehavior.Restrict);
+
+
+        modelBuilder.Entity<Trade>()
+              .Property(t => t.Status)
+                .HasConversion<byte>(); // store enum as byte
+            
+
     }
 
-    internal async Task SaveChangesAsync(Trade trade)
-    {
-        throw new NotImplementedException();
-    }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

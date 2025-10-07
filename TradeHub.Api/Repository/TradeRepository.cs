@@ -4,20 +4,29 @@ using TradeHub.Api.Repository.Interfaces;
 
 namespace TradeHub.Api.Repository;
 
-public class TradeRepository(TradeHubContext context) : ITradeRepository
+public class TradeRepository : ITradeRepository
 {
-    private readonly TradeHubContext _context = context;
+    private readonly TradeHubContext _context;
+    public TradeRepository(TradeHubContext context)
+    {
+        _context = context;
+    }
 
-    public async Task<Trade> CreateTradeAsync(Trade trade)
+
+ public async Task<Trade> CreateTradeAsync(Trade trade)
     {
         _context.Trades.Add(trade);
-        await _context.SaveChangesAsync(trade);
+        await _context.SaveChangesAsync();
         return trade;
     }
 
     public async Task DeleteTradeAsync(int tradeId)
     {
         var trade = await _context.Trades.FindAsync(tradeId);
+        if (trade == null)
+        {
+            throw new KeyNotFoundException($"Trade with Id {tradeId} not found.");
+        }
         _context.Trades.Remove(trade);
         await _context.SaveChangesAsync();
     }
@@ -52,5 +61,16 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
         _context.Entry(exisitingTrade).CurrentValues.SetValues(trade);
 
         return exisitingTrade;
+    }
+
+    public async Task<List<Trade>> GetTradesByStatusAsync(TradeStatus status)
+    {
+        return await _context.Trades
+          .Include(t => t.TradeItems)
+        .Include(t => t.InitiatedUser)
+        .Include(t => t.ReceivedUser)
+        .Include(t => t.Offers)
+        .Where(t => t.Status == status)
+        .ToListAsync();
     }
 }
