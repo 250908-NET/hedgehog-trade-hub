@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TradeHub.Api.Models;
 
@@ -11,9 +12,11 @@ using TradeHub.Api.Models;
 namespace TradeHub.Api.Migrations
 {
     [DbContext(typeof(TradeHubContext))]
-    partial class TradeHubContextModelSnapshot : ModelSnapshot
+    [Migration("20251007192043_InitAuthClean")]
+    partial class InitAuthClean
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,6 +324,9 @@ namespace TradeHub.Api.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<byte>("Role")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
