@@ -1,5 +1,6 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using TradeHub.Api.Middleware;
 using TradeHub.Api.Models;
 using TradeHub.Api.Services;
@@ -47,6 +48,11 @@ public class Program
         builder.Services.AddHttpClient<ILLMService, MultiLLMService>();
         // builder.Services.AddHttpClient();
         // builder.Services.AddScoped<ILLMService, MultiLLMService>();
+
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .CreateLogger(); // read from appsettings.json
+        builder.Host.UseSerilog();
 
         var app = builder.Build();
 
