@@ -96,9 +96,11 @@ public class Program
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserService, UserService>();
 
-        Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger(); // read from appsettings.json
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .CreateLogger(); // read from appsettings.json
         builder.Host.UseSerilog();
-        
+
         var app = builder.Build();
 
         app.UseMiddleware<GlobalExceptionHandler>();
