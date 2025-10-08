@@ -5,6 +5,9 @@ using TradeHub.Api.Middleware;
 using TradeHub.Api.Models;
 using TradeHub.Api.Services;
 using TradeHub.Api.Services.Interfaces;
+using TradeHub.Api.Repository.Interfaces;
+using TradeHub.Api.Repository;
+
 
 namespace TradeHub.Api;
 
@@ -48,6 +51,12 @@ public class Program
         builder.Services.AddHttpClient<ILLMService, MultiLLMService>();
         // builder.Services.AddHttpClient();
         // builder.Services.AddScoped<ILLMService, MultiLLMService>();
+
+        // DI for trade layer
+        builder.Services.AddScoped<ITradeService, TradeService>();
+        builder.Services.AddScoped<ITradeRepository, TradeRepository>();
+
+
 
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
