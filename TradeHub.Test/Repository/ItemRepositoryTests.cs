@@ -22,7 +22,7 @@ public class ItemRepositoryTests
     {
         var user = new User
         {
-            Username = "testuser",
+            UserName = "testuser",
             Email = "test@test.com",
             PasswordHash = "password",
         };
