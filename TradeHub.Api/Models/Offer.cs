@@ -1,17 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.ComponentModel.DataAnnotations;
 
-namespace TradeHub.Api.Models;
+
+namespace TradeHub.API.Models;
 
 public class Offer
 {
     public int Id { get; set; }
+
     public long UserId { get; set; } // fk to User
     public User User { get; set; } = null!; // navigation property
-    public long  TradeId { get; set; } // fk to Trade
+
+    public long TradeId { get; set; } // fk to Trade
     public Trade Trade { get; set; } = null!; // navigation property
+
+    public string? Notes { get; set; }
+
     public DateTimeOffset Created { get; set; }
-    public byte[] RowVersion { get; set; } = Array.Empty <byte>(); // concurrency
+    public byte[] RowVersion { get; set; } = Array.Empty<byte>(); // concurrency
+
+    // when a user adding multiple items
+    
+    public ICollection<OfferItem> OfferItems { get; set; } = new List<OfferItem>();
 }
 
 // Fluent API configuration

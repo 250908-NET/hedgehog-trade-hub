@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TradeHub.Api.Models;
+namespace TradeHub.API.Models;
 
 public class User
 {

@@ -1,9 +1,9 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
-using TradeHub.Api.Middleware;
-using TradeHub.Api.Models;
-using TradeHub.Api.Services;
-using TradeHub.Api.Services.Interfaces;
+using TradeHub.API.Middleware;
+using TradeHub.API.Models;
+using TradeHub.API.Services;
+using TradeHub.API.Services.Interfaces;
 
 namespace TradeHub.Api;
 

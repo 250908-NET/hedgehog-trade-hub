@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using TradeHub.API.Models;
 
-namespace TradeHub.Api.Models;
+
+namespace TradeHub.API.Models;
 
 public partial class TradeHubContext : DbContext
 {
@@ -13,6 +15,8 @@ public partial class TradeHubContext : DbContext
     public DbSet<Trade> Trades { get; set; }
     public DbSet<Offer> Offers { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<OfferItem> OfferItems { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,12 +35,25 @@ public partial class TradeHubContext : DbContext
             .WithMany(u => u.ReceivedTrades)
             .HasForeignKey(t => t.ReceivedId)
             .OnDelete(DeleteBehavior.Restrict);
+        // Trade → Offers
+        modelBuilder.Entity<Offer>()
+            .HasOne(o => o.Trade)
+            .WithMany(t => t.Offers)
+            .HasForeignKey(o => o.TradeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Offer → User
+        modelBuilder.Entity<Offer>()
+            .HasOne(o => o.User)
+            .WithMany()
+            .HasForeignKey(o => o.UserId);
+
+        // Optional: configure RowVersion
+        modelBuilder.Entity<Offer>()
+            .Property(o => o.RowVersion)
+            .IsRowVersion();
+
     }
 
-    internal async Task SaveChangesAsync(Trade trade)
-    {
-        throw new NotImplementedException();
-    }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

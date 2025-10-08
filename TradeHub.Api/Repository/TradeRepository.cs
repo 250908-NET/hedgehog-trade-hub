@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using TradeHub.Api.Models;
-using TradeHub.Api.Repository.Interfaces;
+using TradeHub.API.Models;
+using TradeHub.API.Repository.Interfaces;
 
-namespace TradeHub.Api.Repository;
+namespace TradeHub.API.Repository;
 
 public class TradeRepository(TradeHubContext context) : ITradeRepository
 {

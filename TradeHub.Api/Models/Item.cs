@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace TradeHub.Api.Models;
+namespace TradeHub.API.Models;
 
 public enum Condition
 {

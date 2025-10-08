@@ -1,8 +1,8 @@
-using TradeHub.Api.Models;
-using TradeHub.Api.Repository.Interfaces;
-using TradeHub.Api.Services.Interfaces;
+using TradeHub.API.Models;
+using TradeHub.API.Repository.Interfaces;
+using TradeHub.API.Services.Interfaces;
 
-namespace TradeHub.Api.Services;
+namespace TradeHub.API.Services;
 
 public class UserService : IUserService
 {

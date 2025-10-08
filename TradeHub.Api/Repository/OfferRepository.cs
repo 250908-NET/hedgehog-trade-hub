@@ -1,8 +1,9 @@
-using TradeHub.Api.Models;
+using Microsoft.EntityFrameworkCore;
+using TradeHub.API.Models;
 using TradeHub.API.Models.DTOs;
-using TradeHub.Api.Repository.Interfaces;
+using TradeHub.API.Repository.Interfaces;
 
-namespace TradeHub.Api.Repository
+namespace TradeHub.API.Repository
 {
 
     public class OfferRepository : IOfferRepository
@@ -15,55 +16,35 @@ namespace TradeHub.Api.Repository
             _context = context;
         }
 
-        //get all offers
+        // get all offers
 
-        // public async Task<IEnumerable<OfferDTO>> GetAllOffersAsync()
-        // {
-        //     return await _context.Offers
-        //         .Select(offer => new OfferDTO
-        //         {
-        //             Id = offer.Id,
-        //             UserId = (int)offer.UserId,
-        //             TradeId = (int)offer.TradeId,
-        //             Created = offerCreated
-        //         })
-        //         .ToListAsync();
-        // }
+        public async Task<IEnumerable<OfferDTO>> GetAllOffersAsync()
+        {
+            return await _context.Offers
+                .Select(offer => new OfferDTO
+                {
+                    Id = offer.Id,
+                    UserId = (int)offer.UserId,
+                    TradeId = (int)offer.TradeId,
+                    Created = offer.Created
+                })
+                .ToListAsync();
+        }
 
-        // get by Id
-        // public async Task<OfferDTO?> GetOfferByAsync(int offerId)
-        // {
-        //     var offer = await _context.offer.FindAsync(offerId);
-        //     if (OfferRepository == null) return null;
+        //get by Id
+        public async Task<OfferDTO?> GetOfferByAsync(int offerId)
+        {
+            var offer = await _context.Offers.FindAsync(offerId);
+            if (offer == null) return null;
 
-        //     return new OfferDTO
-        //     {
-        //         id = OfferRepository.id,
-        //         UserId = (long)offer.UserId,
-        //         TradeId = (long)offer.TradeId,
-        //         Created = offer.Created
-        //     };
-        // }
-
-        //create offer
-
-        // public async Task<OfferDTO> CreateOfferAsync(OfferDTO offerDto)
-        // {
-        //     var offer = new OfferRepository
-        //     {
-        //         UserId = offerDto.UserId,
-        //         TradeId = offerDto.TradeId,
-        //         Created = DateTimeOffset.UtcNow
-        //     };
-        //     _context.Offers.Add(offer);
-        //     await _context.SaveChangesAsync();
-
-        //     // return DTO after saving
-        //     offerDto.Id = offer.Id;
-        //     offerDto.Created = offer.Created;
-        //     return offerDto;
-        // }
-
+            return new OfferDTO
+            {
+                Id = offer.Id,
+                UserId = offer.UserId,
+                TradeId = offer.TradeId,
+                Created = offer.Created
+            };
+        }
         // update offer
 
         public async Task<bool> UpdateOfferAsync(OfferDTO offerDto)
@@ -92,20 +73,48 @@ namespace TradeHub.Api.Repository
 
         }
 
-        // TODO: fix pls
-        public Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(int tradeId)
+        //create offer
+
+        public async Task<Offer> CreateOfferAsync(OfferDTO offerDto)
         {
-            throw new NotImplementedException();
+            var offer = new Offer
+            {
+                UserId = offerDto.UserId,
+                TradeId = offerDto.TradeId,
+                Notes = offerDto.Notes,
+                Created = DateTimeOffset.UtcNow
+            };
+
+            _context.Offers.Add(offer);
+            await _context.SaveChangesAsync();
+
+            return offer;
         }
 
-        public Task<Offer?> GetOfferAsync(int offerId)
+
+        // get all the offers for a specific trade
+
+        public async Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(int tradeId)
         {
-            throw new NotImplementedException();
+            return await _context.Offers
+            .Where(offer => offer.TradeId == tradeId)
+            .Include(o => o.User)
+            .Include(o => o.Trade)
+             .ToListAsync();
         }
 
-        Task<Offer> IOfferRepository.CreateOfferAsync(OfferDTO offerDto)
+        // get specific offer by its id
+        public async Task<Offer?> GetOfferAsync(int offerId)
         {
-            throw new NotImplementedException();
+            return await _context.Offers
+                .Include(o => o.User)
+                .Include(o => o.Trade)
+                .FirstOrDefaultAsync(o => o.Id == offerId);
         }
+
     }
 }
+
+
+
+
