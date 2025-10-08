@@ -10,4 +10,6 @@ public interface ITradeService
     Task<Trade> CreateTradeAsync(Trade trade);
     Task<Trade> UpdateTradeAsync(Trade trade);
     Task DeleteTradeAsync(int tradeId);
+
+     Task<bool> ConfirmTradeCompletionAsync(long tradeId, long userId);
 }

@@ -53,4 +53,18 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
 
         return exisitingTrade;
     }
-}
+
+
+        // Implementation for completing a trade
+        public async Task<bool> MarkTradeAsCompletedAsync(long tradeId)
+    {
+        var trade = await _context.Trades.FindAsync(tradeId);
+        if (trade == null) return false;
+
+        trade.Status = 1; // 1 = completed
+        _context.Trades.Update(trade);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+    }
+

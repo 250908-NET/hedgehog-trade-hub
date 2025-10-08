@@ -42,4 +42,38 @@ public class TradeService : ITradeService
     {
         await _repository.DeleteTradeAsync(tradeId);
     }
+
+    // to complete the trade
+
+public async Task<bool> ConfirmTradeCompletionAsync(long tradeId, long userId)
+{
+    var trade = await _tradeRepository.GetTradeByIdAsync(tradeId);
+    if (trade == null) return false;
+
+    // Track confirmations
+    // Example: using Status as flags: 0 = pending, 1 = initiated confirmed, 2 = received confirmed, 3 = both confirmed (completed
+
+    if (trade.InitiatedId == userId)
+    {
+        trade.Status |= 1; 
+    }
+    else if (trade.ReceivedId == userId)
+    {
+        trade.Status |= 2;
+    }
+    else
+    {
+        return false; // user not part of trade
+    }
+
+    // If both bits set, mark as completed (status = 3)
+    if (trade.Status == 3)
+    {
+        // fully completed
+    }
+
+    await _tradeRepository.UpdateTradeAsync(trade);
+    return true;
+}
+
 }

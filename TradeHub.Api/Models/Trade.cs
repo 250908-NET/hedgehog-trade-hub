@@ -3,6 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TradeHub.Api.Models
 {
+
+// properties to track whether each user has confirmed  and convert status to an enum
+    public enum TradeStatus : byte
+    {
+        Pending = 0,
+        Accepted = 1,
+        Rejected = 2,
+        Completed = 3
+    }
+
     public class Trade
     {
         [Key]
