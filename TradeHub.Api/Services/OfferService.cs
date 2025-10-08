@@ -38,4 +38,8 @@ public class OfferService : IOfferService
     {
         return await _repository.DeleteOfferAsync(offerId);
     }
+     public async Task<IEnumerable<ReceivedOfferDto>> GetReceivedOffersAsync(long userId)
+    {
+        return await _repository.GetReceivedOffersAsync(userId);
+    }
 }

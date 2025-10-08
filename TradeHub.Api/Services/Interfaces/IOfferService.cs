@@ -10,4 +10,11 @@ public interface IOfferService
     Task<Offer> CreateOfferAsync(OfferDTO offerDto);
     Task<bool> UpdateOfferAsync(OfferDTO offerDto);
     Task<bool> DeleteOfferAsync(int offerId);
+
+
+    // to receive trade proposal
+
+    Task<IEnumerable<OfferDTO>> GetReceivedOffersAsync(long userId);
+    Task<OfferItemViewDto> AddItemToOfferAsync(int offerId, OfferItemCreateDto dto);
+    Task<IEnumerable<OfferItemViewDto>> GetOfferItemsAsync(int offerId)
 }
