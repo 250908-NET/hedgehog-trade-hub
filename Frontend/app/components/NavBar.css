@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .nav-container {
   position: fixed;
   top: 0;
