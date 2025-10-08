@@ -20,14 +20,14 @@ namespace TradeHub.DTO
 }
     public class LoginDto
     {
-        public string Email { get; set; }
+        public required string Email { get; set; }
         public string Password { get; set; }
     }
 
     public class AuthResponseDto
     {
-        public string Token { get; set; }
-        public string Email { get; set; }
-        public List<string> Roles { get; set; }
+        public required string Token { get; set; }
+        public required string Email { get; set; }
+        public required List<string> Roles { get; set; }
     }
 }
