@@ -51,6 +51,9 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
 
         _context.Entry(exisitingTrade).CurrentValues.SetValues(trade);
 
+        //added this line to fix issue with updating trade status
+        await _context.SaveChangesAsync();
+
         return exisitingTrade;
     }
 }
