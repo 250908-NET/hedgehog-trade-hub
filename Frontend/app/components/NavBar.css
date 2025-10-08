@@ -16,27 +16,25 @@
   justify-content: left;
   align-items: center;
   gap: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0;
   color: #fff;
 }
 
-.nav-links {
-  display: flex;
-}
-
-.nav-links a {
+.nav-bar a {
   color: #fff;
   text-decoration: none;
 }
 
-.nav-links a:hover {
+.nav-bar a:hover {
   text-decoration: underline;
 }
 
-.nav-links a.active {
+.nav-bar a.active {
   font-weight: bold;
 }
 
-.nav-links a.active:hover {
-  text-decoration: underline;
+/* align last link to the right */
+/* if a custom login group is added, this will need to be updated */
+.nav-bar a:last-child {
+  margin-left: auto;
 }

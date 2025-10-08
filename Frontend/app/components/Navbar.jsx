@@ -7,10 +7,13 @@ export default function Navbar() {
     <div className="nav-container">
       <nav className="nav-bar">
         <NavLink to="/">
-          Hedgehog Trade Hub
+          Home
         </NavLink>
         <NavLink to="/search">
           Search
+        </NavLink>
+        <NavLink to="/login">
+          Login
         </NavLink>
       </nav>
     </div>
