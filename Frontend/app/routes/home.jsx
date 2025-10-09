@@ -1,4 +1,5 @@
 import Tile from '../components/Tile';
+import hedgehog from '../assets/hedgehog.png';
 
 export default function HomePage() {
   return (
@@ -6,8 +7,8 @@ export default function HomePage() {
       <header className="home-header">
         <div className="logo-section">
           {/* Replace the emoji with an actual image when available */}
-          {/* <img src={hedgehogImage} alt="Hedgehog" className="hedgehog-logo" /> */}
-          <span className="hedgehog-logo-placeholder" role="img" aria-label="Hedgehog">🦔</span>
+          {/*  */}
+          <img src={hedgehog} alt="Hedgehog" className="hedgehog-logo" />
           <h1>TradeHub</h1>
         </div>
         <div className="welcome-message">
