@@ -1,10 +1,12 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TradeHub.API.Models;
 
 
 namespace TradeHub.API.Models;
 
-public partial class TradeHubContext : DbContext
+public partial class TradeHubContext : IdentityDbContext<User, IdentityRole<long>, long>
 {
     public TradeHubContext() { }
 
@@ -20,7 +22,7 @@ public partial class TradeHubContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        OnModelCreatingPartial(modelBuilder);
+        base.OnModelCreating(modelBuilder);
 
         modelBuilder
             .Entity<Trade>()

@@ -25,7 +25,7 @@ public class RowVersionInterceptor : ISaveChangesInterceptor
 
         foreach (var entry in context.ChangeTracker.Entries())
         {
-            if (entry.State is EntityState.Added or EntityState.Modified)
+            if (entry.State is EntityState.Modified)
             {
                 var property = entry.Properties.FirstOrDefault(p => p.Metadata.IsConcurrencyToken);
                 if (property != null)

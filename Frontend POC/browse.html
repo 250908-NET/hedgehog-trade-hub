@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Cache Browser</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: grid;
+            gap: 10px;
+            padding: 20px;
+        }
+        .item {
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            max-width: fit-content;
+        }
+        .item * {
+            margin: 5px 0;
+        }
+        .item img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin-top: 10px;
+        }
+        .item p {
+            font-size: 14px;
+            color: #555;
+            border: 1px solid #000000;
+            padding: 10px;
+        }
+        .priceTag {
+            font-weight: bold;
+            color: #000;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+    </div>
+    <script>
+        let items = [
+            {name: 'Item 1', description: 'Description for Item 1', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 10},
+            {name: 'Item 2', description: 'Description for Item 2', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 20},
+            {name: 'Item 3', description: 'Description for Item 3', imgURL: 'https://clipart-library.com/8300/2368/black-open-box-isolated-white_255502-165.jpg', value: 30},
+        ];
+        const container = document.querySelector('.container');
+        items.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item';
+            itemDiv.innerHTML = `<h2>${item.name}</h2><p><img src="${item.imgURL}" alt="${item.name}">${item.description}</p><p class='priceTag'>est. $${item.value}</p>`;
+            container.appendChild(itemDiv);
+        });
+    </script>
+</body>
+</html>
