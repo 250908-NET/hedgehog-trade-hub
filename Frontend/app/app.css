@@ -23,17 +23,17 @@ body {
   flex-direction: column;
 }
 
-main {
+/* main {
   margin: 0 auto;
   max-width: 1000px;
   width: 100%;
   flex-grow: 1;
-}
+} */
 
-h1 {
+/* h1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
+} */
 
 /* button {
   border-radius: 8px;

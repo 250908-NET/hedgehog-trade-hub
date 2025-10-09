@@ -2,7 +2,7 @@ import { NavLink } from "react-router";
 
 export default function Navbar() {
   const getNavLinkClass = ({ isActive }) => {
-    return `text-white hover:underline ${isActive ? "font-bold" : ""}`;
+    return `hover:underline ${isActive ? "font-bold" : ""}`;
   };
 
   return (
