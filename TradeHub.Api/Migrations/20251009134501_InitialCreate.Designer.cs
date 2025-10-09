@@ -12,8 +12,8 @@ using TradeHub.Api.Models;
 namespace TradeHub.Api.Migrations
 {
     [DbContext(typeof(TradeHubContext))]
-    [Migration("20251007204423_RemoveRoleFromUser")]
-    partial class RemoveRoleFromUser
+    [Migration("20251009134501_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
