@@ -27,7 +27,10 @@ namespace TradeHub.API.Controllers
         // POST: api/offers/{offerId}/items
         // Add an item to an existing offer
         [HttpPost("{offerId}/items")]
-        public async Task<ActionResult<OfferItemViewDto>> AddItemToOffer(int offerId, [FromBody] OfferItemCreateDto dto)
+        public async Task<ActionResult<OfferItemViewDto>> AddItemToOffer(
+            int offerId,
+            [FromBody] OfferItemCreateDto dto
+        )
         {
             var offerItem = await _offerService.AddItemToOfferAsync(offerId, dto);
             return Ok(offerItem);
@@ -72,7 +75,8 @@ namespace TradeHub.API.Controllers
                 return BadRequest("Offer ID mismatch");
 
             var success = await _offerService.UpdateOfferAsync(dto);
-            if (!success) return NotFound();
+            if (!success)
+                return NotFound();
 
             return NoContent();
         }
@@ -83,7 +87,8 @@ namespace TradeHub.API.Controllers
         public async Task<ActionResult> DeleteOffer(int offerId)
         {
             var success = await _offerService.DeleteOfferAsync(offerId);
-            if (!success) return NotFound();
+            if (!success)
+                return NotFound();
 
             return NoContent();
         }

@@ -8,6 +8,6 @@ public interface ITradeRepository
     Task<List<Trade>> GetTradesByUser(int userId);
     Task<Trade?> GetTradeByIdAsync(int tradeId);
     Task<Trade> CreateTradeAsync(Trade trade);
-    Task<Trade> UpdateTradeAsync(Trade trade);
+    Task<Trade?> UpdateTradeAsync(Trade trade);
     Task DeleteTradeAsync(int tradeId);
 }

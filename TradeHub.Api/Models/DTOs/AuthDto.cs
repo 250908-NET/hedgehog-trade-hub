@@ -3,21 +3,22 @@ using System.ComponentModel.DataAnnotations;
 namespace TradeHub.DTO
 {
     public class RegisterUserDto
-{
-    [Required]
-    [MaxLength(32)]
-    public string Username { get; set; }
+    {
+        [Required]
+        [MaxLength(32)]
+        public string Username { get; set; }
 
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
 
-    public string Description { get; set; }
+        public string Description { get; set; }
 
-    [Required]
-    [MinLength(6)]
-    public string Password { get; set; }
-}
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; }
+    }
+
     public class LoginDto
     {
         public required string Email { get; set; }

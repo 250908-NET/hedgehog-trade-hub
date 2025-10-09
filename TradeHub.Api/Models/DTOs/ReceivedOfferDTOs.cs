@@ -1,4 +1,3 @@
-
 // to send trade, offers, items to the  frontend
 
 namespace TradeHub.API.Models.DTOs
@@ -14,7 +13,7 @@ namespace TradeHub.API.Models.DTOs
 
         // Items included in the offer
         public List<OfferItemViewDto> Items { get; set; } = new List<OfferItemViewDto>();
-        
+
         //status, e.g., Pending, Accepted, Rejected
         public byte Status { get; set; }
     }

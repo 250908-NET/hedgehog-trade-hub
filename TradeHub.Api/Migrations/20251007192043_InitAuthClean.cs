@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TradeHub.Api.Migrations
+namespace TradeHub.API.Migrations
 {
     /// <inheritdoc />
     public partial class InitAuthClean : Migration

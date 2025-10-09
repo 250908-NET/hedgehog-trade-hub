@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TradeHub.API.Models;
 
-
 namespace TradeHub.API.Models;
 
 public partial class TradeHubContext : IdentityDbContext<User, IdentityRole<long>, long>
@@ -18,7 +17,6 @@ public partial class TradeHubContext : IdentityDbContext<User, IdentityRole<long
     public DbSet<Offer> Offers { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<OfferItem> OfferItems { get; set; }
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,24 +36,19 @@ public partial class TradeHubContext : IdentityDbContext<User, IdentityRole<long
             .HasForeignKey(t => t.ReceivedId)
             .OnDelete(DeleteBehavior.Restrict);
         // Trade → Offers
-        modelBuilder.Entity<Offer>()
+        modelBuilder
+            .Entity<Offer>()
             .HasOne(o => o.Trade)
             .WithMany(t => t.Offers)
             .HasForeignKey(o => o.TradeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Offer → User
-        modelBuilder.Entity<Offer>()
-            .HasOne(o => o.User)
-            .WithMany()
-            .HasForeignKey(o => o.UserId);
+        modelBuilder.Entity<Offer>().HasOne(o => o.User).WithMany().HasForeignKey(o => o.UserId);
 
         // Optional: configure RowVersion
-        modelBuilder.Entity<Offer>()
-            .Property(o => o.RowVersion)
-            .IsRowVersion();
-
+        modelBuilder.Entity<Offer>().Property(o => o.RowVersion).IsRowVersion();
     }
 
-
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

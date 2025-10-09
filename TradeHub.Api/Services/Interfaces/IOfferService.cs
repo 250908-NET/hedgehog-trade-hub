@@ -5,16 +5,15 @@ namespace TradeHub.API.Services.Interfaces;
 
 public interface IOfferService
 {
-    Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(int tradeId);
-    Task<Offer?> GetOfferAsync(int offerId);
-    Task<Offer> CreateOfferAsync(OfferDTO offerDto);
+    Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(long tradeId);
+    Task<Offer?> GetOfferAsync(long offerId);
+    Task<Offer> CreateOfferAsync(CreateOfferDTO offerDto);
     Task<bool> UpdateOfferAsync(OfferDTO offerDto);
-    Task<bool> DeleteOfferAsync(int offerId);
-
+    Task<bool> DeleteOfferAsync(long offerId);
 
     // to receive trade proposal
 
-    Task<IEnumerable<OfferDTO>> GetReceivedOffersAsync(long userId);
-    Task<OfferItemViewDto> AddItemToOfferAsync(int offerId, OfferItemCreateDto dto);
-    Task<IEnumerable<OfferItemViewDto>> GetOfferItemsAsync(int offerId);
+    Task<IEnumerable<ReceivedOfferDto>> GetReceivedOffersAsync(long userId);
+    Task<OfferItemViewDto> AddItemToOfferAsync(long offerId, OfferItemCreateDto dto);
+    Task<IEnumerable<OfferItemViewDto>> GetOfferItemsAsync(long offerId);
 }

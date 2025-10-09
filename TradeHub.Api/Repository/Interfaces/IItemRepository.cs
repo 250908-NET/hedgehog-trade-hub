@@ -1,4 +1,4 @@
-using TradeHub.Api.Models;
+using TradeHub.API.Models;
 
 namespace TradeHub.API.Repository.Interfaces;
 

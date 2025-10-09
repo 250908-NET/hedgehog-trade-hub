@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using TradeHub.API.Utilities;
 
 namespace TradeHub.API.Utilities;
 

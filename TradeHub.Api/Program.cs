@@ -3,12 +3,15 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using TradeHub.API.Middleware;
 using TradeHub.API.Models;
+using TradeHub.API.Repository.Interfaces;
 using TradeHub.API.Services;
 using TradeHub.API.Services.Interfaces;
 
-namespace TradeHub.Api;
+namespace TradeHub.API;
 
 public class Program
 {
@@ -39,39 +42,45 @@ public class Program
             });
         }
         // Identity
-        builder.Services.AddIdentity<User, IdentityRole<long>>(options =>
-        {
-            options.Password.RequireDigit = true;
-            options.Password.RequiredLength = 6;
-            options.Password.RequireNonAlphanumeric = false;
-        })
-        .AddEntityFrameworkStores<TradeHubContext>()
-        .AddDefaultTokenProviders();
-
-                // Jwt Auth
-        var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-        var key = jwtSettings["SecretKey"]?? throw new InvalidOperationException("JwtSettings.SecretKey is missing in appsettings.json!");
-
-        builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
+        builder
+            .Services.AddIdentity<User, IdentityRole<long>>(options =>
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings["Issuer"],
-                ValidAudience = jwtSettings["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
-            };
-        });
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<TradeHubContext>()
+            .AddDefaultTokenProviders();
 
-        builder.Services.AddAuthorization( options =>
+        // Jwt Auth
+        var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+        var key =
+            jwtSettings["SecretKey"]
+            ?? throw new InvalidOperationException(
+                "JwtSettings.SecretKey is missing in appsettings.json!"
+            );
+
+        builder
+            .Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                };
+            });
+
+        builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("Users", policy => policy.RequireClaim("User"));
             options.AddPolicy("Admins", policy => policy.RequireClaim("Admin"));

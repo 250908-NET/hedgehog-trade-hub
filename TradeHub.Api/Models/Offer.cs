@@ -1,8 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.ComponentModel.DataAnnotations;
-
 
 namespace TradeHub.API.Models;
 
@@ -22,7 +19,7 @@ public class Offer
     public byte[] RowVersion { get; set; } = Array.Empty<byte>(); // concurrency
 
     // when a user adding multiple items
-    
+
     public ICollection<OfferItem> OfferItems { get; set; } = new List<OfferItem>();
 }
 

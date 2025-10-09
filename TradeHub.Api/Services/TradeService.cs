@@ -33,7 +33,7 @@ public class TradeService : ITradeService
         return await _repository.CreateTradeAsync(trade);
     }
 
-    public async Task<Trade> UpdateTradeAsync(Trade trade)
+    public async Task<Trade?> UpdateTradeAsync(Trade trade)
     {
         return await _repository.UpdateTradeAsync(trade);
     }

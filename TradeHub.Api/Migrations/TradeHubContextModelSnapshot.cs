@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TradeHub.Api.Models;
+using TradeHub.API.Models;
 
 #nullable disable
 
-namespace TradeHub.Api.Migrations
+namespace TradeHub.API.Migrations
 {
     [DbContext(typeof(TradeHubContext))]
     partial class TradeHubContextModelSnapshot : ModelSnapshot

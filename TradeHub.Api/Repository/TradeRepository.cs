@@ -11,13 +11,17 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
     public async Task<Trade> CreateTradeAsync(Trade trade)
     {
         _context.Trades.Add(trade);
-        await _context.SaveChangesAsync(trade);
+        await _context.SaveChangesAsync();
         return trade;
     }
 
     public async Task DeleteTradeAsync(int tradeId)
     {
         var trade = await _context.Trades.FindAsync(tradeId);
+
+        if (trade == null)
+            return;
+
         _context.Trades.Remove(trade);
         await _context.SaveChangesAsync();
     }
