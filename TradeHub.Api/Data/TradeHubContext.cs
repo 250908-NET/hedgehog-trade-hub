@@ -22,6 +22,9 @@ public partial class TradeHubContext : IdentityDbContext<User, IdentityRole<long
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Item>().Property(i => i.RowVersion).IsRowVersion();
+        modelBuilder.Entity<Item>().Property(i => i.Value).HasColumnType("decimal(18,2)");
+
         modelBuilder
             .Entity<Trade>()
             .HasOne(t => t.InitiatedUser)
