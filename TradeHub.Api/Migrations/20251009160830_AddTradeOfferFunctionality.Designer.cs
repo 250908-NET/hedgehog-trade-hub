@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TradeHub.API.Models;
 
 #nullable disable
 
-namespace TradeHub.Api.Migrations
+namespace TradeHub.API.Migrations
 {
     [DbContext(typeof(TradeHubContext))]
-    partial class TradeHubContextModelSnapshot : ModelSnapshot
+    [Migration("20251009160830_AddTradeOfferFunctionality")]
+    partial class AddTradeOfferFunctionality
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
