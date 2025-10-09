@@ -203,9 +203,6 @@ namespace TradeHub.Api.Migrations
                     b.Property<long?>("TradeId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
                     b.Property<decimal>("Value")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -215,8 +212,6 @@ namespace TradeHub.Api.Migrations
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("TradeId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Items", (string)null);
                 });
@@ -454,7 +449,7 @@ namespace TradeHub.Api.Migrations
             modelBuilder.Entity("TradeHub.API.Models.Item", b =>
                 {
                     b.HasOne("TradeHub.API.Models.User", "Owner")
-                        .WithMany()
+                        .WithMany("OwnedItems")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -462,10 +457,6 @@ namespace TradeHub.Api.Migrations
                     b.HasOne("TradeHub.API.Models.Trade", null)
                         .WithMany("TradeItems")
                         .HasForeignKey("TradeId");
-
-                    b.HasOne("TradeHub.API.Models.User", null)
-                        .WithMany("OwnedItems")
-                        .HasForeignKey("UserId");
 
                     b.Navigation("Owner");
                 });
