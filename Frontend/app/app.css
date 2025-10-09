@@ -11,17 +11,18 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --navbar-height: 4rem;
 }
 
-body {
+/* body {
   margin: 0;
-  padding-top: 3em;
   min-width: 320px;
   min-height: 100vh;
 
   display: flex;
   flex-direction: column;
-}
+} */
 
 /* main {
   margin: 0 auto;

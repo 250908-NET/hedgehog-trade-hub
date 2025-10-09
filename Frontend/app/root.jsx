@@ -34,7 +34,7 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <main className="pt-16 container mx-auto p-4">
+      <main className="mt-12 container mx-auto p-4">
         <Outlet />
       </main>
       <Footer />
