@@ -1,14 +1,22 @@
 import { NavLink } from "react-router";
 
-import "./Navbar.css";
-
 export default function Navbar() {
+  const getNavLinkClass = ({ isActive }) => {
+    return `hover:underline ${isActive ? "font-bold" : ""}`;
+  };
+
   return (
-    <div className="nav-container">
-      <nav className="nav-bar">
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/search">Search</NavLink>
-        <NavLink to="/login">Login</NavLink>
+    <div className="bg-neutral-700 fixed top-0 left-0 w-full">
+      <nav className="container mx-auto flex items-center gap-8 p-4">
+        <NavLink className={getNavLinkClass} to="/">
+          Home
+        </NavLink>
+        <NavLink className={getNavLinkClass} to="/search">
+          Search
+        </NavLink>
+        <NavLink className={getNavLinkClass + " ml-auto"} to="/login">
+          Login
+        </NavLink>
       </nav>
     </div>
   );

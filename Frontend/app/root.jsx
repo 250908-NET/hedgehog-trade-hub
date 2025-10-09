@@ -9,6 +9,7 @@ import {
 
 import "./app.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 export function Layout({ children }) {
   return (
@@ -20,7 +21,7 @@ export function Layout({ children }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-neutral-900 text-gray-100">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -33,9 +34,10 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="mt-12 container mx-auto p-4">
         <Outlet />
       </main>
+      <Footer />
     </>
   );
 }
