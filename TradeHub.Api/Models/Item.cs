@@ -61,7 +61,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(i => i.Value).HasPrecision(18, 2).IsRequired();
 
         builder.Property(i => i.OwnerId).IsRequired();
-        builder.HasOne(i => i.Owner).WithMany().HasForeignKey(i => i.OwnerId);
+        builder.HasOne(i => i.Owner).WithMany(u => u.OwnedItems).HasForeignKey(i => i.OwnerId);
 
         builder.Property(i => i.Tags).IsRequired();
 
