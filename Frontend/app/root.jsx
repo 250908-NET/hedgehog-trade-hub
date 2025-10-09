@@ -9,6 +9,7 @@ import {
 
 import "./app.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 export function Layout({ children }) {
   return (
@@ -36,6 +37,7 @@ export default function App() {
       <main>
         <Outlet />
       </main>
+      <Footer />
     </>
   );
 }
