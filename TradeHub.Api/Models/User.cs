@@ -1,12 +1,10 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
-namespace TradeHub.Api.Models;
+namespace TradeHub.API.Models;
 
 public class User : IdentityUser<long>
 {
-
     [Column(TypeName = "text")]
     public string Description { get; set; } = "";
 

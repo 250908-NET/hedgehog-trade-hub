@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace TradeHub.Api.Models.DTOs;
+namespace TradeHub.API.Models.DTOs;
 
 public record ItemDTO(
     long Id,

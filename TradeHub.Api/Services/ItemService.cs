@@ -1,11 +1,11 @@
 using AutoMapper;
-using TradeHub.Api.Models;
-using TradeHub.Api.Models.DTOs;
-using TradeHub.Api.Repository.Interfaces;
-using TradeHub.Api.Services.Interfaces;
-using TradeHub.Api.Utilities;
+using TradeHub.API.Models;
+using TradeHub.API.Models.DTOs;
+using TradeHub.API.Repository.Interfaces;
+using TradeHub.API.Services.Interfaces;
+using TradeHub.API.Utilities;
 
-namespace TradeHub.Api.Services;
+namespace TradeHub.API.Services;
 
 public class ItemService(
     IItemRepository itemRepository,

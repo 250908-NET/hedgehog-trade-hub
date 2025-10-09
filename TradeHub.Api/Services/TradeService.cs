@@ -1,8 +1,8 @@
-using TradeHub.Api.Models;
-using TradeHub.Api.Repository.Interfaces;
-using TradeHub.Api.Services.Interfaces;
+using TradeHub.API.Models;
+using TradeHub.API.Repository.Interfaces;
+using TradeHub.API.Services.Interfaces;
 
-namespace TradeHub.Api.Services;
+namespace TradeHub.API.Services;
 
 public class TradeService : ITradeService
 {
@@ -33,7 +33,7 @@ public class TradeService : ITradeService
         return await _repository.CreateTradeAsync(trade);
     }
 
-    public async Task<Trade> UpdateTradeAsync(Trade trade)
+    public async Task<Trade?> UpdateTradeAsync(Trade trade)
     {
         return await _repository.UpdateTradeAsync(trade);
     }

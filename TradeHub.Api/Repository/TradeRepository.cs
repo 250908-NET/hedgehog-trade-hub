@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using TradeHub.Api.Models;
-using TradeHub.Api.Repository.Interfaces;
+using TradeHub.API.Models;
+using TradeHub.API.Repository.Interfaces;
 
-namespace TradeHub.Api.Repository;
+namespace TradeHub.API.Repository;
 
 public class TradeRepository(TradeHubContext context) : ITradeRepository
 {
@@ -11,13 +11,17 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
     public async Task<Trade> CreateTradeAsync(Trade trade)
     {
         _context.Trades.Add(trade);
-        await _context.SaveChangesAsync(trade);
+        await _context.SaveChangesAsync();
         return trade;
     }
 
     public async Task DeleteTradeAsync(int tradeId)
     {
         var trade = await _context.Trades.FindAsync(tradeId);
+
+        if (trade == null)
+            return;
+
         _context.Trades.Remove(trade);
         await _context.SaveChangesAsync();
     }

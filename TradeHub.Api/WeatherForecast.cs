@@ -1,4 +1,4 @@
-namespace TradeHub.Api;
+namespace TradeHub.API;
 
 public class WeatherForecast
 {

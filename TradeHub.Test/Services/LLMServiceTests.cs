@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using TradeHub.Api.Services;
+using TradeHub.API.Services;
 
 namespace TradeHub.Test.Services;
 

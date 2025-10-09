@@ -1,9 +1,9 @@
 using AutoMapper;
-using TradeHub.Api.Models;
-using TradeHub.Api.Models.DTOs;
+using TradeHub.API.Models;
+using TradeHub.API.Models.DTOs;
 using TradeHub.DTO;
 
-namespace TradeHub.Api.Data;
+namespace TradeHub.API.Data;
 
 public class MappingProfile : Profile
 {
@@ -23,13 +23,13 @@ public class MappingProfile : Profile
         CreateMap<UpdateItemDTO, Item>()
             .ForMember(dest => dest.Value, opt => opt.Ignore()) // set by service logic
             .ForMember(dest => dest.IsValueEstimated, opt => opt.Ignore()) // set by service logic
-                                                                           // ignore null values for patch updates
+            // ignore null values for patch updates
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         #endregion
 
         #region User
-           // User -> UserDto
+        // User -> UserDto
         CreateMap<User, UserDto>()
             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))

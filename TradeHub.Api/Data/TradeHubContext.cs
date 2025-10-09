@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TradeHub.API.Models;
 
-namespace TradeHub.Api.Models;
+namespace TradeHub.API.Models;
 
 public partial class TradeHubContext : IdentityDbContext<User, IdentityRole<long>, long>
 {
@@ -14,37 +15,19 @@ public partial class TradeHubContext : IdentityDbContext<User, IdentityRole<long
     public DbSet<Item> Items { get; set; }
     public DbSet<Trade> Trades { get; set; }
     public DbSet<Offer> Offers { get; set; }
+    public DbSet<OfferItem> OfferItems { get; set; }
 
+    // already handled by IdentityDbContext
+    // public DbSet<User> Users { get; set; }
+
+    /// <summary>
+    /// Provides the configuration for TradeHubContext models.
+    /// Any custom configurations should be defined in <see cref="OnModelCreatingPartial"/>.
+    /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder
-            .Entity<Trade>()
-            .HasOne(t => t.InitiatedUser)
-            .WithMany(u => u.InitiatedTrades)
-            .HasForeignKey(t => t.InitiatedId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder
-            .Entity<Trade>()
-            .HasOne(t => t.ReceivedUser)
-            .WithMany(u => u.ReceivedTrades)
-            .HasForeignKey(t => t.ReceivedId)
-            .OnDelete(DeleteBehavior.Restrict);
-        
-        modelBuilder.Entity<Item>()
-            .Property(i => i.RowVersion)
-            .IsRowVersion();
-
-        modelBuilder.Entity<Item>()
-            .Property(i => i.Value)
-            .HasColumnType("decimal(18,2)");
-    }
-
-    internal async Task SaveChangesAsync(Trade trade)
-    {
-        throw new NotImplementedException();
+        OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

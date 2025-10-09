@@ -1,4 +1,4 @@
-using TradeHub.Api.Utilities;
+using TradeHub.API.Utilities;
 
 namespace TradeHub.Test.Utilities;
 
