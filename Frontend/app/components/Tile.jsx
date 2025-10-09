@@ -1,5 +1,3 @@
-import "./Tile.css";
-
 // represents a base "tile" for the search page
 // should be overloaded with "item" and "trade" components
 export default function Tile() {

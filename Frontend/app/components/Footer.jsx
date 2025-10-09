@@ -1,8 +1,6 @@
-import "./Footer.css";
-
 export default function Footer() {
   return (
-    <footer>
+    <footer className="bg-neutral-700 text-white p-4 mt-auto text-center">
       <p>Revature Project 2, 2025</p>
       <p>Made with ♥ by Team Hedgehog</p>
     </footer>

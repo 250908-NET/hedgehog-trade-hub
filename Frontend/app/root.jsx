@@ -21,7 +21,7 @@ export function Layout({ children }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-neutral-900">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -34,7 +34,7 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="pt-16 container mx-auto">
         <Outlet />
       </main>
       <Footer />

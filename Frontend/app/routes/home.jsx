@@ -6,8 +6,6 @@ export default function HomePage() {
     <div className="home-page-container">
       <header className="home-header">
         <div className="logo-section">
-          {/* Replace the emoji with an actual image when available */}
-          {/*  */}
           <img src={hedgehog} alt="Hedgehog" className="hedgehog-logo" />
           <h1>TradeHub</h1>
         </div>
