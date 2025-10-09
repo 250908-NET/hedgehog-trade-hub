@@ -18,7 +18,7 @@ namespace TradeHub.API.Repository
                     Id = offer.Id,
                     UserId = (int)offer.UserId,
                     TradeId = (int)offer.TradeId,
-                    Created = offer.Created,
+                    Created = offer.CreatedAt,
                 })
                 .ToListAsync();
         }
@@ -35,7 +35,7 @@ namespace TradeHub.API.Repository
                 Id = offer.Id,
                 UserId = offer.UserId,
                 TradeId = offer.TradeId,
-                Created = offer.Created,
+                Created = offer.CreatedAt,
             };
         }
 
@@ -77,7 +77,7 @@ namespace TradeHub.API.Repository
                 UserId = offerDto.UserId,
                 TradeId = offerDto.TradeId,
                 Notes = offerDto.Notes,
-                Created = DateTimeOffset.UtcNow,
+                CreatedAt = DateTimeOffset.UtcNow,
             };
 
             _context.Offers.Add(offer);
@@ -120,7 +120,7 @@ namespace TradeHub.API.Repository
                     TradeItemCondition = o.Trade.ItemCondition,
                     TradeNotes = o.Trade.Notes,
                     OwnerReputation = o.Trade.OwnerReputation,
-                    OfferCreated = o.Created,
+                    OfferCreated = o.CreatedAt,
                     Status = o.Trade.Status,
                     Items = o
                         .OfferItems.Select(oi => new OfferItemViewDto

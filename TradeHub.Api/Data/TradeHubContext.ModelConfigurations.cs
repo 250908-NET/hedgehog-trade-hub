@@ -7,6 +7,7 @@ public partial class TradeHubContext
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
     {
         // apply any IEntityTypeConfiguration<> implementations found in this assembly
+        // fully automatic! the wonders of modern technology
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TradeHubContext).Assembly);
 
         // configure value converter for Condition and Availibility enums
