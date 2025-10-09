@@ -16,13 +16,11 @@ public class Trade
     [Required]
     public long InitiatedId { get; set; }
 
-    [ForeignKey("InitiatedId")]
     public User? InitiatedUser { get; set; }
 
     [Required]
     public long ReceivedId { get; set; }
 
-    [ForeignKey("ReceivedId")]
     public User? ReceivedUser { get; set; }
 
     public byte Status { get; set; }
@@ -45,34 +43,20 @@ public class TradeConfiguration : IEntityTypeConfiguration<Trade>
 {
     public void Configure(EntityTypeBuilder<Trade> builder)
     {
-        // modelBuilder
-        //     .Entity<Trade>()
-        //     .HasOne(t => t.InitiatedUser)
-        //     .WithMany(u => u.InitiatedTrades)
-        //     .HasForeignKey(t => t.InitiatedId)
-        //     .OnDelete(DeleteBehavior.Restrict);
-
-        // modelBuilder
-        //     .Entity<Trade>()
-        //     .HasOne(t => t.ReceivedUser)
-        //     .WithMany(u => u.ReceivedTrades)
-        //     .HasForeignKey(t => t.ReceivedId)
-        //     .OnDelete(DeleteBehavior.Restrict);
-
         builder.Property(t => t.CreatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
         // builder.Property(i => i.InitiatedId).IsRequired();
         builder
             .HasOne(t => t.InitiatedUser)
-            .WithMany()
-            .HasForeignKey(i => i.InitiatedId)
+            .WithMany(u => u.InitiatedTrades)
+            .HasForeignKey(t => t.InitiatedId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // builder.Property(i => i.ReceivedId).IsRequired();
         builder
             .HasOne(t => t.ReceivedUser)
-            .WithMany()
-            .HasForeignKey(i => i.ReceivedId)
+            .WithMany(u => u.ReceivedTrades)
+            .HasForeignKey(t => t.ReceivedId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

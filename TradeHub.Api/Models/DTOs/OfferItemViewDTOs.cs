@@ -6,8 +6,8 @@ namespace TradeHub.API.Models.DTOs
 {
     public class OfferItemViewDto
     {
-        public int Id { get; set; }
-        public int ItemId { get; set; }
+        public long Id { get; set; }
+        public long ItemId { get; set; }
         public string ItemName { get; set; } = string.Empty;
         public string? Notes { get; set; }
         public int Quantity { get; set; }

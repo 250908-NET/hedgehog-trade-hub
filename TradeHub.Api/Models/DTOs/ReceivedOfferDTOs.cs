@@ -4,7 +4,7 @@ namespace TradeHub.API.Models.DTOs
 {
     public class ReceivedOfferDto
     {
-        public int OfferId { get; set; }
+        public long OfferId { get; set; }
         public long TradeId { get; set; }
         public string TradeItemCondition { get; set; } = string.Empty;
         public string? TradeNotes { get; set; }

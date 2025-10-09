@@ -5,7 +5,7 @@ namespace TradeHub.API.Models;
 
 public class Offer
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
     public long UserId { get; set; } // fk to User
     public User User { get; set; } = null!; // navigation property
@@ -32,7 +32,7 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.HasKey(o => o.Id);
 
         builder.Property(o => o.UserId).IsRequired();
-        builder.HasOne(o => o.User).WithMany().HasForeignKey(o => o.UserId);
+        builder.HasOne(o => o.User).WithMany(u => u.Offers).HasForeignKey(o => o.UserId);
 
         builder.Property(o => o.TradeId).IsRequired();
         builder

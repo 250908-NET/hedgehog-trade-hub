@@ -41,6 +41,7 @@ public class Item(
     public string Tags { get; set; } = tags; // can be empty string (for now)
     public Condition Condition { get; set; } = condition;
     public Availability Availability { get; set; } = availability;
+    public ICollection<OfferItem> OfferItems { get; set; } = []; // navigation
     public byte[] RowVersion { get; set; } = []; // concurrency
 }
 
