@@ -121,7 +121,8 @@ public class Program
 
         app.UseAuthorization();
 
-        app.MapControllers();
+        // prepend "/api" to all routes
+        app.MapGroup("/api").MapControllers();
 
         app.Run();
     }

@@ -16,7 +16,7 @@ namespace TradeHub.Test.Integration;
 public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> factory)
     : IntegrationTestBase(factory)
 {
-    #region GET /items
+    #region GET /api/items
 
     [Fact]
     public async Task GetAllItems_ShouldReturnOkAndListOfItems_WhenItemsExist()
@@ -48,7 +48,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items");
+        var response = await client.GetAsync("/api/items");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -109,7 +109,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items?page=2&pageSize=1");
+        var response = await client.GetAsync("/api/items?page=2&pageSize=1");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -152,7 +152,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items?minValue=20");
+        var response = await client.GetAsync("/api/items?minValue=20");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -195,7 +195,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items?maxValue=10");
+        var response = await client.GetAsync("/api/items?maxValue=10");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -238,7 +238,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items?condition=UsedGood");
+        var response = await client.GetAsync("/api/items?condition=UsedGood");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -281,7 +281,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items?availability=Available");
+        var response = await client.GetAsync("/api/items?availability=Available");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -334,7 +334,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items?search=Item 1");
+        var response = await client.GetAsync("/api/items?search=Item 1");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -388,7 +388,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
 
         // Act
         var response = await client.GetAsync(
-            "/items?page=1&pageSize=10&minValue=20&maxValue=30&condition=UsedGood&availability=Available&search=Used"
+            "/api/items?page=1&pageSize=10&minValue=20&maxValue=30&condition=UsedGood&availability=Available&search=Used"
         );
 
         // Assert
@@ -417,7 +417,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
 
     #endregion
 
-    #region GET /items/{id}
+    #region GET /api/items/{id}
 
     [Fact]
     public async Task GetItemById_ShouldReturnOkAndItem_WhenItemExists()
@@ -443,7 +443,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items/1");
+        var response = await client.GetAsync("/api/items/1");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -467,7 +467,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.GetAsync("/items/999");
+        var response = await client.GetAsync("/api/items/999");
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -475,7 +475,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
 
     #endregion
 
-    #region POST /items
+    #region POST /api/items
 
     [Fact]
     public async Task CreateItem_ShouldReturnOkAndCreatedItem_WhenDtoIsValid()
@@ -511,7 +511,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.PostAsJsonAsync("/items", createDto);
+        var response = await client.PostAsJsonAsync("/api/items", createDto);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -522,7 +522,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
 
     #endregion
 
-    #region PUT /items/{id}
+    #region PUT /api/items/{id}
 
     [Fact]
     public async Task UpdateItem_ShouldReturnOkAndUpdatedItem_WhenSuccessful()
@@ -549,7 +549,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.PutAsJsonAsync("/items/1", updateDto);
+        var response = await client.PutAsJsonAsync("/api/items/1", updateDto);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -574,7 +574,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.PutAsJsonAsync("/items/999", updateDto);
+        var response = await client.PutAsJsonAsync("/api/items/999", updateDto);
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -596,7 +596,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.PutAsJsonAsync("/items/1", updateDto);
+        var response = await client.PutAsJsonAsync("/api/items/1", updateDto);
 
         // Assert
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
@@ -604,7 +604,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
 
     #endregion
 
-    #region DELETE /items/{id}
+    #region DELETE /api/items/{id}
 
     [Fact]
     public async Task DeleteItem_ShouldReturnOkAndTrue_WhenSuccessful()
@@ -619,7 +619,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.DeleteAsync("/items/1");
+        var response = await client.DeleteAsync("/api/items/1");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -642,7 +642,7 @@ public class ItemControllerMockedEndpointsTests(WebApplicationFactory<Program> f
         });
 
         // Act
-        var response = await client.DeleteAsync("/items/999");
+        var response = await client.DeleteAsync("/api/items/999");
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
