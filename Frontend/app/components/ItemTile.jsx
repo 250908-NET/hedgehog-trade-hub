@@ -16,7 +16,7 @@ export default function ItemTile({ item }) {
       </div>
       <div className="flex flex-col">
         <p className="font-bold">{item.name}</p>
-        <p className="text-sm text-neutral-400">{item.price}</p>
+        <p className="text-sm text-neutral-400">{item.owner}</p>
       </div>
     </Tile>
   );

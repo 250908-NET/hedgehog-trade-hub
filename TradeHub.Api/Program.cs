@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using TradeHub.API.Middleware;
 using TradeHub.API.Models;
+using TradeHub.API.Repository;
 using TradeHub.API.Repository.Interfaces;
 using TradeHub.API.Services;
 using TradeHub.API.Services.Interfaces;
@@ -93,14 +94,23 @@ public class Program
 
         builder.Services.AddOpenApi();
 
+        builder.Services.AddScoped<IItemRepository, ItemRepository>();
+        builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+        builder.Services.AddScoped<IOfferItemRepository, OfferItemRepository>();
+        builder.Services.AddScoped<ITradeRepository, TradeRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+        builder.Services.AddScoped<IItemService, ItemService>();
+        builder.Services.AddScoped<IOfferService, OfferService>();
+        builder.Services.AddScoped<IOfferItemService, OfferItemService>();
+        builder.Services.AddScoped<ITradeService, TradeService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IUserService, UserService>();
 
         // register HttpClient for the LLM service
         builder.Services.AddHttpClient<ILLMService, MultiLLMService>();
         // builder.Services.AddHttpClient();
         // builder.Services.AddScoped<ILLMService, MultiLLMService>();
-        builder.Services.AddScoped<ITokenService, TokenService>();
-        builder.Services.AddScoped<IUserService, UserService>();
 
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
