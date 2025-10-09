@@ -15,6 +15,9 @@ export default function HomePage() {
     e.preventDefault(); // prevent reload on form submission
     try {
       const results = await searchItems(searchQuery);
+      if (results.length === 0) {
+        setMessage("No items found.");
+      }
       setItems(results);
     } catch (error) {
       console.error("Error searching items:", error);
