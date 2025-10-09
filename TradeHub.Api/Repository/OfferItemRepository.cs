@@ -3,16 +3,11 @@ using TradeHub.API.Models;
 using TradeHub.API.Models.DTOs;
 using TradeHub.API.Repository.Interfaces;
 
-namespace TradeHub.API.Repository.Implementations
+namespace TradeHub.API.Repository
 {
-    public class OfferItemRepository : IOfferItemRepository
+    public class OfferItemRepository(TradeHubContext context) : IOfferItemRepository
     {
-        private readonly TradeHubContext _context;
-
-        public OfferItemRepository(TradeHubContext context)
-        {
-            _context = context;
-        }
+        private readonly TradeHubContext _context = context;
 
         public async Task<OfferItem> AddItemToOfferAsync(int offerId, OfferItemCreateDto dto)
         {
@@ -21,7 +16,7 @@ namespace TradeHub.API.Repository.Implementations
                 OfferId = offerId,
                 ItemId = dto.ItemId,
                 Quantity = dto.Quantity,
-                Notes = dto.Notes
+                Notes = dto.Notes,
             };
 
             _context.OfferItems.Add(offerItem);
@@ -35,10 +30,10 @@ namespace TradeHub.API.Repository.Implementations
 
         public async Task<IEnumerable<OfferItem>> GetItemsByOfferAsync(int offerId)
         {
-            return await _context.OfferItems
-                                 .Include(oi => oi.Item) // include item details
-                                 .Where(oi => oi.OfferId == offerId)
-                                 .ToListAsync();
+            return await _context
+                .OfferItems.Include(oi => oi.Item) // include item details
+                .Where(oi => oi.OfferId == offerId)
+                .ToListAsync();
         }
 
         public async Task<bool> RemoveItemAsync(int offerItemId)
@@ -53,4 +48,3 @@ namespace TradeHub.API.Repository.Implementations
         }
     }
 }
-
