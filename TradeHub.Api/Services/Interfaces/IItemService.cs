@@ -1,7 +1,7 @@
-using TradeHub.Api.Models;
-using TradeHub.Api.Models.DTOs;
+using TradeHub.API.Models;
+using TradeHub.API.Models.DTOs;
 
-namespace TradeHub.Api.Services.Interfaces;
+namespace TradeHub.API.Services.Interfaces;
 
 public interface IItemService
 {

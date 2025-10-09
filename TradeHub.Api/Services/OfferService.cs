@@ -1,30 +1,26 @@
-using TradeHub.Api.Models;
+using TradeHub.API.Models;
 using TradeHub.API.Models.DTOs;
-using TradeHub.Api.Repository.Interfaces;
-using TradeHub.Api.Services.Interfaces;
+using TradeHub.API.Repository.Interfaces;
+using TradeHub.API.Services.Interfaces;
 
-namespace TradeHub.Api.Services;
+namespace TradeHub.API.Services;
 
-public class OfferService : IOfferService
+public class OfferService(IOfferRepository repository) : IOfferService
 {
-    private readonly IOfferRepository _repository;
+    private readonly IOfferRepository _repository =
+        repository ?? throw new ArgumentNullException(nameof(repository));
 
-    public OfferService(IOfferRepository repository)
-    {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-    }
-
-    public async Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(int tradeId)
+    public async Task<IEnumerable<Offer>> GetAllOffersInTradeAsync(long tradeId)
     {
         return await _repository.GetAllOffersInTradeAsync(tradeId);
     }
 
-    public async Task<Offer?> GetOfferAsync(int offerId)
+    public async Task<Offer?> GetOfferAsync(long offerId)
     {
         return await _repository.GetOfferAsync(offerId);
     }
 
-    public async Task<Offer> CreateOfferAsync(OfferDTO offerDto)
+    public async Task<Offer> CreateOfferAsync(CreateOfferDTO offerDto)
     {
         return await _repository.CreateOfferAsync(offerDto);
     }
@@ -34,8 +30,23 @@ public class OfferService : IOfferService
         return await _repository.UpdateOfferAsync(offerDto);
     }
 
-    public async Task<bool> DeleteOfferAsync(int offerId)
+    public async Task<bool> DeleteOfferAsync(long offerId)
     {
         return await _repository.DeleteOfferAsync(offerId);
+    }
+
+    public async Task<IEnumerable<ReceivedOfferDto>> GetReceivedOffersAsync(long userId)
+    {
+        return await _repository.GetReceivedOffersAsync(userId);
+    }
+
+    public Task<OfferItemViewDto> AddItemToOfferAsync(long offerId, OfferItemCreateDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<OfferItemViewDto>> GetOfferItemsAsync(long offerId)
+    {
+        throw new NotImplementedException();
     }
 }

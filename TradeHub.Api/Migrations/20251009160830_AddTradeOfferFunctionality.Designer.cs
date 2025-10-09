@@ -12,8 +12,8 @@ using TradeHub.API.Models;
 namespace TradeHub.API.Migrations
 {
     [DbContext(typeof(TradeHubContext))]
-    [Migration("20251007192043_InitAuthClean")]
-    partial class InitAuthClean
+    [Migration("20251009160830_AddTradeOfferFunctionality")]
+    partial class AddTradeOfferFunctionality
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,7 +158,7 @@ namespace TradeHub.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.Item", b =>
+            modelBuilder.Entity("TradeHub.API.Models.Item", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -166,11 +166,13 @@ namespace TradeHub.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("Availability")
-                        .HasColumnType("int");
+                    b.Property<string>("Availability")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Condition")
-                        .HasColumnType("int");
+                    b.Property<string>("Condition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -185,7 +187,8 @@ namespace TradeHub.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(127)
+                        .HasColumnType("nvarchar(127)");
 
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
@@ -203,7 +206,11 @@ namespace TradeHub.API.Migrations
                     b.Property<long?>("TradeId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
                     b.Property<decimal>("Value")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -212,19 +219,26 @@ namespace TradeHub.API.Migrations
 
                     b.HasIndex("TradeId");
 
-                    b.ToTable("Items");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Items", (string)null);
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.Offer", b =>
+            modelBuilder.Entity("TradeHub.API.Models.Offer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -247,7 +261,36 @@ namespace TradeHub.API.Migrations
                     b.ToTable("Offers");
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.Trade", b =>
+            modelBuilder.Entity("TradeHub.API.Models.OfferItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ItemId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("OfferId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("OfferId");
+
+                    b.ToTable("OfferItems");
+                });
+
+            modelBuilder.Entity("TradeHub.API.Models.Trade", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -256,10 +299,22 @@ namespace TradeHub.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
                     b.Property<long>("InitiatedId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("ItemCondition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OwnerReputation")
+                        .HasColumnType("int");
 
                     b.Property<long>("ReceivedId")
                         .HasColumnType("bigint");
@@ -276,7 +331,7 @@ namespace TradeHub.API.Migrations
                     b.ToTable("Trades");
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.User", b =>
+            modelBuilder.Entity("TradeHub.API.Models.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -325,9 +380,6 @@ namespace TradeHub.API.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<byte>("Role")
-                        .HasColumnType("tinyint");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -362,7 +414,7 @@ namespace TradeHub.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<long>", b =>
                 {
-                    b.HasOne("TradeHub.Api.Models.User", null)
+                    b.HasOne("TradeHub.API.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -371,7 +423,7 @@ namespace TradeHub.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<long>", b =>
                 {
-                    b.HasOne("TradeHub.Api.Models.User", null)
+                    b.HasOne("TradeHub.API.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -386,7 +438,7 @@ namespace TradeHub.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TradeHub.Api.Models.User", null)
+                    b.HasOne("TradeHub.API.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -395,37 +447,41 @@ namespace TradeHub.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<long>", b =>
                 {
-                    b.HasOne("TradeHub.Api.Models.User", null)
+                    b.HasOne("TradeHub.API.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.Item", b =>
+            modelBuilder.Entity("TradeHub.API.Models.Item", b =>
                 {
-                    b.HasOne("TradeHub.Api.Models.User", "Owner")
-                        .WithMany("OwnedItems")
+                    b.HasOne("TradeHub.API.Models.User", "Owner")
+                        .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TradeHub.Api.Models.Trade", null)
+                    b.HasOne("TradeHub.API.Models.Trade", null)
                         .WithMany("TradeItems")
                         .HasForeignKey("TradeId");
+
+                    b.HasOne("TradeHub.API.Models.User", null)
+                        .WithMany("OwnedItems")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.Offer", b =>
+            modelBuilder.Entity("TradeHub.API.Models.Offer", b =>
                 {
-                    b.HasOne("TradeHub.Api.Models.Trade", "Trade")
+                    b.HasOne("TradeHub.API.Models.Trade", "Trade")
                         .WithMany("Offers")
                         .HasForeignKey("TradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TradeHub.Api.Models.User", "User")
+                    b.HasOne("TradeHub.API.Models.User", "User")
                         .WithMany("Offers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -436,15 +492,34 @@ namespace TradeHub.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.Trade", b =>
+            modelBuilder.Entity("TradeHub.API.Models.OfferItem", b =>
                 {
-                    b.HasOne("TradeHub.Api.Models.User", "InitiatedUser")
+                    b.HasOne("TradeHub.API.Models.Item", "Item")
+                        .WithMany("OfferItems")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TradeHub.API.Models.Offer", "Offer")
+                        .WithMany("OfferItems")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Offer");
+                });
+
+            modelBuilder.Entity("TradeHub.API.Models.Trade", b =>
+                {
+                    b.HasOne("TradeHub.API.Models.User", "InitiatedUser")
                         .WithMany("InitiatedTrades")
                         .HasForeignKey("InitiatedId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TradeHub.Api.Models.User", "ReceivedUser")
+                    b.HasOne("TradeHub.API.Models.User", "ReceivedUser")
                         .WithMany("ReceivedTrades")
                         .HasForeignKey("ReceivedId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -455,14 +530,24 @@ namespace TradeHub.API.Migrations
                     b.Navigation("ReceivedUser");
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.Trade", b =>
+            modelBuilder.Entity("TradeHub.API.Models.Item", b =>
+                {
+                    b.Navigation("OfferItems");
+                });
+
+            modelBuilder.Entity("TradeHub.API.Models.Offer", b =>
+                {
+                    b.Navigation("OfferItems");
+                });
+
+            modelBuilder.Entity("TradeHub.API.Models.Trade", b =>
                 {
                     b.Navigation("Offers");
 
                     b.Navigation("TradeItems");
                 });
 
-            modelBuilder.Entity("TradeHub.Api.Models.User", b =>
+            modelBuilder.Entity("TradeHub.API.Models.User", b =>
                 {
                     b.Navigation("InitiatedTrades");
 

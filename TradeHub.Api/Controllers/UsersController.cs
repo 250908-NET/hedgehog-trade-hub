@@ -3,7 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TradeHub.Api.Models;
+using TradeHub.API.Models;
 using TradeHub.DTO;
 
 [ApiController]

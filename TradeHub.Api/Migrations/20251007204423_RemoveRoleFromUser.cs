@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace TradeHub.Api.Migrations
+namespace TradeHub.API.Migrations
 {
     /// <inheritdoc />
     public partial class RemoveRoleFromUser : Migration

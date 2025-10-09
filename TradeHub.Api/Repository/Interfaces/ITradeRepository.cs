@@ -1,6 +1,6 @@
-using TradeHub.Api.Models;
+using TradeHub.API.Models;
 
-namespace TradeHub.Api.Repository.Interfaces;
+namespace TradeHub.API.Repository.Interfaces;
 
 public interface ITradeRepository
 {
@@ -8,6 +8,6 @@ public interface ITradeRepository
     Task<List<Trade>> GetTradesByUser(int userId);
     Task<Trade?> GetTradeByIdAsync(int tradeId);
     Task<Trade> CreateTradeAsync(Trade trade);
-    Task<Trade> UpdateTradeAsync(Trade trade);
+    Task<Trade?> UpdateTradeAsync(Trade trade);
     Task DeleteTradeAsync(int tradeId);
 }

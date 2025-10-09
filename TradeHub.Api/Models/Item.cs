@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace TradeHub.Api.Models;
+namespace TradeHub.API.Models;
 
 public enum Condition
 {
@@ -41,6 +41,7 @@ public class Item(
     public string Tags { get; set; } = tags; // can be empty string (for now)
     public Condition Condition { get; set; } = condition;
     public Availability Availability { get; set; } = availability;
+    public ICollection<OfferItem> OfferItems { get; set; } = []; // navigation
     public byte[] RowVersion { get; set; } = []; // concurrency
 }
 
@@ -68,6 +69,6 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
 
         builder.Property(i => i.Availability).HasConversion<Availability>().IsRequired();
 
-        builder.Property(o => o.RowVersion).IsRowVersion();
+        builder.Property(i => i.RowVersion).IsRowVersion();
     }
 }

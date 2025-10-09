@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TradeHub.Api.Models;
+using TradeHub.API.Models;
 
 #nullable disable
 
-namespace TradeHub.Api.Migrations
+namespace TradeHub.API.Migrations
 {
     [DbContext(typeof(TradeHubContext))]
     [Migration("20251006011748_AddItemsFunctionality")]

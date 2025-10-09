@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using TradeHub.Api.Models;
-using TradeHub.Api.Models.DTOs;
-using TradeHub.Api.Services.Interfaces;
+using TradeHub.API.Models;
+using TradeHub.API.Models.DTOs;
+using TradeHub.API.Services.Interfaces;
 
-namespace TradeHub.Api.Controllers;
+namespace TradeHub.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]

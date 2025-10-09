@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
-using TradeHub.Api.Models;
-using TradeHub.Api.Models.DTOs;
+using TradeHub.API.Models;
+using TradeHub.API.Models.DTOs;
 using Xunit; // Ensure Xunit is imported for [MemberData]
 
 namespace TradeHub.Test.Validation;
