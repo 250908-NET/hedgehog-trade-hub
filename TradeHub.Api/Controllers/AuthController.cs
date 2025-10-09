@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TradeHub.Api.Models;
-using TradeHub.DTO;
+using TradeHub.Api.Models.DTOs;
 
 [ApiController]
 [Route("[controller]")]
@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDto dto)
+    public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
 
@@ -40,16 +40,16 @@ public class AuthController : ControllerBase
 
         _logger.LogInformation("User logged in: {Email}", dto.Email);
 
-        return Ok(new AuthResponseDto
+        return Ok(new AuthResponseDTO
         {
             Token = token,
-            Email = user.Email,
+            Email = user.Email ?? string.Empty,
             Roles = roles.ToList()
         });
     }
 
     [HttpPost("register/user")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto dto)
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO dto)
     {
         var user = new User
         {
@@ -78,34 +78,34 @@ public class AuthController : ControllerBase
         return Ok(new { message = "User registered successfully" });
     }
     
-    [HttpPost("register/Admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterUserDto dto)
+    [HttpPost("register/admin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] RegisterUserDTO dto)
+    {
+        var user = new User
         {
-            var user = new User
-            {
-                UserName = dto.Email,
-                Email = dto.Email,
-                Description = dto.Description,
-            };
+            UserName = dto.Email,
+            Email = dto.Email,
+            Description = dto.Description,
+        };
 
-            var result = await _userManager.CreateAsync(user, dto.Password);
+        var result = await _userManager.CreateAsync(user, dto.Password);
 
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            // Ensure "Admin" role exists
-            if (!await _roleManager.RoleExistsAsync("Admin"))
-            {
-                await _roleManager.CreateAsync(new IdentityRole<long>("Admin"));
-            }
-
-            await _userManager.AddToRoleAsync(user, "Admin");
-
-            _logger.LogInformation("Admin registered: {Email}", dto.Email);
-
-            return Ok(new { message = "Admin registered successfully" });
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
         }
+
+        // Ensure "Admin" role exists
+        if (!await _roleManager.RoleExistsAsync("Admin"))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<long>("Admin"));
+        }
+
+        await _userManager.AddToRoleAsync(user, "Admin");
+
+        _logger.LogInformation("Admin registered: {Email}", dto.Email);
+
+        return Ok(new { message = "Admin registered successfully" });
+    }
 
 }

@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using TradeHub.Api.Middleware;
 using TradeHub.Api.Models;
+using TradeHub.Api.Repository;
 using TradeHub.Api.Repository.Interfaces;
 using TradeHub.Api.Services;
 using TradeHub.Api.Services.Interfaces;
@@ -15,7 +16,7 @@ namespace TradeHub.Api;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         Env.Load(); // load .env file
 
@@ -83,18 +84,36 @@ public class Program
         // add services to container
         builder.Services.AddControllers();
 
+        // Add CORS configuration
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend", policy =>
+            {
+                policy.WithOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:4173", "http://localhost:5174")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
+            });
+        });
+
         builder.Services.AddAutoMapper(typeof(Program));
 
         builder.Services.AddOpenApi();
 
+        // Register Repositories
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IItemRepository, ItemRepository>();
+        builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+        builder.Services.AddScoped<ITradeRepository, TradeRepository>();
 
-        // register HttpClient for the LLM service
+        // Register Services
         builder.Services.AddHttpClient<ILLMService, MultiLLMService>();
-        // builder.Services.AddHttpClient();
-        // builder.Services.AddScoped<ILLMService, MultiLLMService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IItemService, ItemService>();
+        builder.Services.AddScoped<IOfferService, OfferService>();
+        builder.Services.AddScoped<ITradeService, TradeService>();
+        builder.Services.AddScoped<SeedDataService>();
 
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
@@ -102,6 +121,19 @@ public class Program
         builder.Host.UseSerilog();
 
         var app = builder.Build();
+
+        // Check for seed command line argument
+        if (args.Contains("--seed"))
+        {
+            await SeedDatabaseAsync(app);
+            return;
+        }
+
+        // Auto-seed in development if database is empty
+        if (app.Environment.IsDevelopment())
+        {
+            await TrySeedDatabaseAsync(app);
+        }
 
         app.UseMiddleware<GlobalExceptionHandler>();
 
@@ -113,10 +145,49 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        // Use CORS
+        app.UseCors("AllowFrontend");
+
         app.UseAuthorization();
 
         app.MapControllers();
 
         app.Run();
+    }
+
+    private static async Task SeedDatabaseAsync(WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        var seedService = scope.ServiceProvider.GetRequiredService<SeedDataService>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        
+        try
+        {
+            logger.LogInformation("Manual database seeding requested...");
+            await seedService.SeedAsync();
+            logger.LogInformation("Database seeding completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred during manual database seeding.");
+            throw;
+        }
+    }
+
+    private static async Task TrySeedDatabaseAsync(WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        var seedService = scope.ServiceProvider.GetRequiredService<SeedDataService>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        
+        try
+        {
+            logger.LogInformation("Checking if database needs seeding...");
+            await seedService.SeedAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Auto-seeding failed, but application will continue. Use --seed flag for manual seeding.");
+        }
     }
 }

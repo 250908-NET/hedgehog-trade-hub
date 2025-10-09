@@ -21,12 +21,12 @@ namespace TradeHub.Api.Models
 
         // Navigation properties
         [ForeignKey("InitiatedId")]
-        public User InitiatedUser { get; set; }
+        public User? InitiatedUser { get; set; }
 
         [ForeignKey("ReceivedId")]
-        public User ReceivedUser { get; set; }
+        public User? ReceivedUser { get; set; }
 
-        public ICollection<Item> TradeItems { get; set; }
-        public ICollection<Offer> Offers { get; set; }
+        public ICollection<Item>? TradeItems { get; set; }
+        public ICollection<Offer>? Offers { get; set; }
     }
 }

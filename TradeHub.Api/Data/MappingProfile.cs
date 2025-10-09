@@ -1,7 +1,6 @@
 using AutoMapper;
 using TradeHub.Api.Models;
 using TradeHub.Api.Models.DTOs;
-using TradeHub.DTO;
 
 namespace TradeHub.Api.Data;
 
@@ -47,8 +46,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Offers, opt => opt.Ignore())
             .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
-        CreateMap<RegisterUserDto, User>();
-        CreateMap<LoginDto, User>();
+        CreateMap<RegisterUserDTO, User>();
+        CreateMap<LoginDTO, User>();
         #endregion
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TradeHub.Api.Models;
-using TradeHub.DTO;
+using TradeHub.Api.Models.DTOs;
 
 [ApiController]
 [Route("[controller]")]
@@ -54,7 +54,7 @@ public class UsersController : ControllerBase
     // ---------------------------
     [HttpPost(Name = "CreateUser")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateAsync([FromBody] RegisterUserDto dto)
+    public async Task<IActionResult> CreateAsync([FromBody] RegisterUserDTO dto)
     {
         if (!ModelState.IsValid)
         {

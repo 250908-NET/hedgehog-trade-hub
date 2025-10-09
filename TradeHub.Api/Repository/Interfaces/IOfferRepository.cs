@@ -1,5 +1,5 @@
 using TradeHub.Api.Models;
-using TradeHub.API.Models.DTOs;
+using TradeHub.Api.Models.DTOs;
 
 namespace TradeHub.Api.Repository.Interfaces;
 
