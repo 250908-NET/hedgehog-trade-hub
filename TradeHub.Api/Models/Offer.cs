@@ -16,11 +16,11 @@ public class Offer
     public string? Notes { get; set; }
 
     public DateTimeOffset Created { get; set; }
-    public byte[] RowVersion { get; set; } = Array.Empty<byte>(); // concurrency
+    public byte[] RowVersion { get; set; } = []; // concurrency
 
     // when a user adding multiple items
 
-    public ICollection<OfferItem> OfferItems { get; set; } = new List<OfferItem>();
+    public ICollection<OfferItem> OfferItems { get; set; } = [];
 }
 
 // Fluent API configuration

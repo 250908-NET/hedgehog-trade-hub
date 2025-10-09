@@ -6,7 +6,6 @@ namespace TradeHub.API.Models;
 
 public class User : IdentityUser<long>
 {
-
     [Column(TypeName = "text")]
     public string Description { get; set; } = "";
 

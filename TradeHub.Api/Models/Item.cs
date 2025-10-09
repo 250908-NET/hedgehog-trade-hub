@@ -68,6 +68,6 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
 
         builder.Property(i => i.Availability).HasConversion<Availability>().IsRequired();
 
-        builder.Property(o => o.RowVersion).IsRowVersion();
+        builder.Property(i => i.RowVersion).IsRowVersion();
     }
 }
