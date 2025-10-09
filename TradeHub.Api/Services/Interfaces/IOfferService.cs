@@ -16,5 +16,5 @@ public interface IOfferService
 
     Task<IEnumerable<OfferDTO>> GetReceivedOffersAsync(long userId);
     Task<OfferItemViewDto> AddItemToOfferAsync(int offerId, OfferItemCreateDto dto);
-    Task<IEnumerable<OfferItemViewDto>> GetOfferItemsAsync(int offerId)
+    Task<IEnumerable<OfferItemViewDto>> GetOfferItemsAsync(int offerId);
 }
