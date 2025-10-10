@@ -37,7 +37,7 @@ export default function HomePage() {
     } catch (error) {
       console.error("Error searching items:", error);
       setMessage(
-        "An error occurred while searching for items: " + error.message
+        "An error occurred while searching for items: " + error.message,
       );
     }
   };
@@ -57,10 +57,7 @@ export default function HomePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button
-              id="itemSearchButton"
-              type="submit"
-            >
+            <button id="itemSearchButton" type="submit">
               {/* magnifying glass icon */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +118,9 @@ export default function HomePage() {
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
               >
-                <option value="" selected>Any Condition</option>
+                <option value="" selected>
+                  Any Condition
+                </option>
                 <option value="New">New</option>
                 <option value="Refurbished">Refurbished</option>
                 <option value="UsedLikeNew">Used (Like New)</option>
@@ -134,7 +133,9 @@ export default function HomePage() {
                 onChange={(e) => setAvailability(e.target.value)}
               >
                 <option value="">Any Availability</option>
-                <option value="Available" selected>Available</option>
+                <option value="Available" selected>
+                  Available
+                </option>
                 <option value="Unavailable">Unavailable</option>
               </select>
             </div>

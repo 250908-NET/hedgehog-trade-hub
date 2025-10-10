@@ -1,34 +1,34 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { NavLink } from "react-router";
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    username: '',
-    password: ''
+    username: "",
+    password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
-    if (error) setError('');
+    if (error) setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -36,14 +36,14 @@ export default function Login() {
       if (response.ok) {
         const data = await response.json();
         // TODO: Handle successful login (redirect, store token, etc.)
-        console.log('Login successful:', data);
+        console.log("Login successful:", data);
       } else {
         const errorData = await response.json();
-        setError(errorData.message || 'Login failed. Please try again.');
+        setError(errorData.message || "Login failed. Please try again.");
       }
     } catch (err) {
-      setError('Network error. Please check your connection and try again.');
-      console.error('Login error:', err);
+      setError("Network error. Please check your connection and try again.");
+      console.error("Login error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +57,7 @@ export default function Login() {
             Sign in to your account
           </h2>
         </div>
-        
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -77,7 +77,7 @@ export default function Login() {
                 disabled={isLoading}
               />
             </div>
-            
+
             <div>
               <label htmlFor="password" className="sr-only">
                 Password
@@ -111,20 +111,36 @@ export default function Login() {
             >
               {isLoading ? (
                 <span className="flex items-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Signing in...
                 </span>
               ) : (
-                'Sign in'
+                "Sign in"
               )}
             </button>
 
             <div className="text-center">
               <span className="text-sm text-gray-600">
-                Don't have an account?{' '}
+                Don't have an account?{" "}
                 <NavLink
                   to="/register"
                   className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
