@@ -11,8 +11,8 @@ export default function Navbar() {
         <NavLink className={getNavLinkClass} to="/">
           Home
         </NavLink>
-        <NavLink className={getNavLinkClass} to="/search">
-          Search
+        <NavLink className={getNavLinkClass} to="/trade">
+          Trades
         </NavLink>
         <NavLink className={getNavLinkClass + " ml-auto"} to="/login">
           Login
