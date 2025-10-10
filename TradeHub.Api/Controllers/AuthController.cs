@@ -1,87 +1,112 @@
-// Controllers/AuthController.cs
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TradeHub.Api.Models;
-using TradeHub.Api.Repository.Interfaces;
-
-namespace TradeHub.Api.Controllers;
+using TradeHub.Api.Models.DTOs;
 
 [ApiController]
-[Route("")]
-[Produces("application/json")]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IUserRepository _users;
-    private readonly IPasswordHasher<User> _hasher;
+    private readonly UserManager<User> _userManager;
+    private readonly RoleManager<IdentityRole<long>> _roleManager;
+    private readonly ITokenService _tokenService;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IUserRepository users, IPasswordHasher<User> hasher)
+    public AuthController(
+        UserManager<User> userManager,
+        RoleManager<IdentityRole<long>> roleManager,
+        ITokenService tokenService,
+        ILogger<AuthController> logger
+    )
     {
-        _users = users;
-        _hasher = hasher;
+        _userManager = userManager;
+        _roleManager = roleManager;
+        _tokenService = tokenService;
+        _logger = logger;
     }
 
-    /// <summary>Log in and receive an auth cookie</summary>
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest req)
+    public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
-        if (!ModelState.IsValid) return ValidationProblem(ModelState);
+        var user = await _userManager.FindByEmailAsync(dto.Email);
 
-        // Find by username first, then by email
-        var user = await _users.GetByUsernameAsync(req.UsernameOrEmail)
-                   ?? (await _users.GetAllAsync()).FirstOrDefault(u =>
-                        u.Email.Equals(req.UsernameOrEmail, StringComparison.OrdinalIgnoreCase));
-
-        if (user is null)
-            return Unauthorized(new { message = "Invalid credentials." });
-
-        var verify = _hasher.VerifyHashedPassword(user, user.PasswordHash, req.Password);
-        if (verify == PasswordVerificationResult.Failed)
-            return Unauthorized(new { message = "Invalid credentials." });
-
-        // Build claims
-        var claims = new List<Claim>
+        if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.Username),
-            new(ClaimTypes.Email, user.Email),
-            new(ClaimTypes.Role, user.Role == 1 ? "Admin" : "User")
+            return Unauthorized(new { message = "Invalid email or password" });
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var token = _tokenService.GenerateToken(user, roles);
+
+        _logger.LogInformation("User logged in: {Email}", dto.Email);
+
+        return Ok(
+            new AuthResponseDto
+            {
+                Token = token,
+                Email = user.Email ?? string.Empty,
+                Roles = [.. roles],
+            }
+        );
+    }
+
+    [HttpPost("register/user")]
+    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDTO dto)
+    {
+        var user = new User
+        {
+            UserName = dto.Email,
+            Email = dto.Email,
+            Description = dto.Description,
         };
 
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
+        var result = await _userManager.CreateAsync(user, dto.Password);
 
-        // Issue cookie
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            principal,
-            new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8)
-            });
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
 
-        return Ok(new { message = "Logged in." });
+        // Ensure "User" role exists
+        if (!await _roleManager.RoleExistsAsync("User"))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<long>("User"));
+        }
+
+        await _userManager.AddToRoleAsync(user, "User");
+
+        _logger.LogInformation("User registered: {Email}", dto.Email);
+
+        return Ok(new { message = "User registered successfully" });
     }
 
-    /// <summary>Logout (clear the cookie)</summary>
-    [HttpPost("logout")]
-    public async Task<IActionResult> Logout()
+    [HttpPost("register/Admin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] RegisterUserDTO dto)
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return Ok(new { message = "Logged out." });
+        var user = new User
+        {
+            UserName = dto.Email,
+            Email = dto.Email,
+            Description = dto.Description,
+        };
+
+        var result = await _userManager.CreateAsync(user, dto.Password);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        // Ensure "Admin" role exists
+        if (!await _roleManager.RoleExistsAsync("Admin"))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<long>("Admin"));
+        }
+
+        await _userManager.AddToRoleAsync(user, "Admin");
+
+        _logger.LogInformation("Admin registered: {Email}", dto.Email);
+
+        return Ok(new { message = "Admin registered successfully" });
     }
-
-    /// <summary>Endpoint used by cookie middleware when access is denied</summary>
-    [HttpGet("forbidden")]
-    public IActionResult ForbiddenEndpoint() => Forbid();
-}
-
-// If you DON'T already have a LoginRequest somewhere else, include this:
-public sealed class LoginRequest
-{
-    public string UsernameOrEmail { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
 }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using TradeHub.Api;
 using TradeHub.Api.Models;
+using TradeHub.Api.Utilities;
 
 namespace TradeHub.Test.Helpers;
 
@@ -22,6 +23,7 @@ public abstract class IntegrationTestBase(WebApplicationFactory<Program> factory
     protected static readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
+        Converters = { new FlexibleEnumConverterFactory() },
     };
 
     /// <summary>

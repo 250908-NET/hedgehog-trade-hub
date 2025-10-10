@@ -7,16 +7,11 @@ using TradeHub.Api.Repository.Interfaces;
 
 namespace TradeHub.Api.Services;
 
-public sealed class AdminUserService : IAdminUserService
+public sealed class AdminUserService(IUserRepository users, IPasswordHasher<User> hasher)
+    : IAdminUserService
 {
-    private readonly IUserRepository _users;
-    private readonly IPasswordHasher<User> _hasher;
-
-    public AdminUserService(IUserRepository users, IPasswordHasher<User> hasher)
-    {
-        _users = users;
-        _hasher = hasher;
-    }
+    private readonly IUserRepository _users = users;
+    private readonly IPasswordHasher<User> _hasher = hasher;
 
     public async Task<IEnumerable<UserDTO>> GetAllAsync(ClaimsPrincipal actor)
     {
@@ -36,25 +31,26 @@ public sealed class AdminUserService : IAdminUserService
     {
         EnsureAdmin(actor);
 
-        if (string.IsNullOrWhiteSpace(dto.Username) || dto.Username.Length > 32)
+        if (string.IsNullOrWhiteSpace(dto.UserName) || dto.UserName.Length > 32)
             throw new ArgumentException("Username is required and must be ≤ 32 characters.");
         if (string.IsNullOrWhiteSpace(dto.Email) || !dto.Email.Contains('@'))
             throw new ArgumentException("A valid Email is required.");
         if (string.IsNullOrWhiteSpace(dto.Password) || dto.Password.Length < 8)
             throw new ArgumentException("Password must be at least 8 characters.");
 
-        if (await _users.GetByUsernameAsync(dto.Username) is not null)
+        if (await _users.GetByUsernameAsync(dto.UserName) is not null)
             throw new InvalidOperationException("Username is already taken.");
-        var existsEmail = (await _users.GetAllAsync())
-            .Any(u => u.Email.Equals(dto.Email, StringComparison.OrdinalIgnoreCase));
-        if (existsEmail) throw new InvalidOperationException("Email is already in use.");
+        var existsEmail = (await _users.GetAllAsync()).Any(u =>
+            (u.Email ?? "").Equals(dto.Email, StringComparison.OrdinalIgnoreCase)
+        );
+        if (existsEmail)
+            throw new InvalidOperationException("Email is already in use.");
 
         var user = new User
         {
-            Username = dto.Username.Trim(),
+            UserName = dto.UserName.Trim(),
             Email = dto.Email.Trim(),
             Description = dto.Description?.Trim() ?? "",
-            Role = dto.Role
         };
         user.PasswordHash = _hasher.HashPassword(user, dto.Password);
 
@@ -66,26 +62,36 @@ public sealed class AdminUserService : IAdminUserService
     {
         EnsureAdmin(actor);
         var user = await _users.GetByIdAsync(id);
-        if (user is null) return null;
+        if (user is null)
+            return null;
 
-        if (!string.IsNullOrWhiteSpace(dto.Username) && !dto.Username.Equals(user.Username, StringComparison.Ordinal))
+        if (
+            !string.IsNullOrWhiteSpace(dto.UserName)
+            && !dto.UserName.Equals(user.UserName, StringComparison.Ordinal)
+        )
         {
-            var taken = await _users.GetByUsernameAsync(dto.Username);
+            var taken = await _users.GetByUsernameAsync(dto.UserName);
             if (taken is not null && taken.Id != user.Id)
                 throw new InvalidOperationException("Username is already taken.");
-            user.Username = dto.Username.Trim();
+            user.UserName = dto.UserName.Trim();
         }
 
-        if (!string.IsNullOrWhiteSpace(dto.Email) && !dto.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
+        if (
+            !string.IsNullOrWhiteSpace(dto.Email)
+            && !dto.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)
+        )
         {
-            var existsEmail = (await _users.GetAllAsync())
-                .Any(u => u.Email.Equals(dto.Email, StringComparison.OrdinalIgnoreCase) && u.Id != user.Id);
-            if (existsEmail) throw new InvalidOperationException("Email is already in use.");
+            var existsEmail = (await _users.GetAllAsync()).Any(u =>
+                (u.Email ?? "").Equals(dto.Email, StringComparison.OrdinalIgnoreCase)
+                && u.Id != user.Id
+            );
+            if (existsEmail)
+                throw new InvalidOperationException("Email is already in use.");
             user.Email = dto.Email.Trim();
         }
 
-        if (dto.Description is not null) user.Description = dto.Description.Trim();
-        if (dto.Role.HasValue) user.Role = dto.Role.Value;
+        if (dto.Description is not null)
+            user.Description = dto.Description.Trim();
         if (!string.IsNullOrWhiteSpace(dto.Password))
             user.PasswordHash = _hasher.HashPassword(user, dto.Password);
 
@@ -110,12 +116,12 @@ public sealed class AdminUserService : IAdminUserService
             throw new UnauthorizedAccessException("Admin privileges required.");
     }
 
-    private static UserDTO MapToDto(User u) => new UserDTO
-    {
-        Id = u.Id,
-        Username = u.Username,
-        Description = u.Description,
-        Email = u.Email,
-        Role = u.Role
-    };
+    private static UserDTO MapToDto(User u) =>
+        new()
+        {
+            Id = u.Id,
+            UserName = u.UserName ?? "",
+            Description = u.Description,
+            Email = u.Email ?? "",
+        };
 }

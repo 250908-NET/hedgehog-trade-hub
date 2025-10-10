@@ -41,6 +41,7 @@ public class Item(
     public string Tags { get; set; } = tags; // can be empty string (for now)
     public Condition Condition { get; set; } = condition;
     public Availability Availability { get; set; } = availability;
+    public ICollection<OfferItem> OfferItems { get; set; } = []; // navigation
     public byte[] RowVersion { get; set; } = []; // concurrency
 }
 
@@ -60,7 +61,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(i => i.Value).HasPrecision(18, 2).IsRequired();
 
         builder.Property(i => i.OwnerId).IsRequired();
-        builder.HasOne(i => i.Owner).WithMany().HasForeignKey(i => i.OwnerId);
+        builder.HasOne(i => i.Owner).WithMany(u => u.OwnedItems).HasForeignKey(i => i.OwnerId);
 
         builder.Property(i => i.Tags).IsRequired();
 
@@ -68,6 +69,6 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
 
         builder.Property(i => i.Availability).HasConversion<Availability>().IsRequired();
 
-        builder.Property(o => o.RowVersion).IsRowVersion();
+        builder.Property(i => i.RowVersion).IsRowVersion();
     }
 }
