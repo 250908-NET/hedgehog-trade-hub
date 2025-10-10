@@ -15,7 +15,7 @@ import { handleResponseError } from "@/utilities/errorHelper";
 // }
 
 // WHY CAN'T I USE TYPESCRIPT AAAAAAAAAAAAAAAA
-export async function searchItems({ params = {} }) {
+export async function searchItems(params = {}) {
   // assemble query
   const rawParams = {
     page: params.page || 1,

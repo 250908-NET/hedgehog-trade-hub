@@ -22,6 +22,7 @@ export default function HomePage() {
     e.preventDefault(); // prevent reload on form submission
     try {
       setMessage("Searching for items...");
+      setItems([]);
       const results = await searchItems({
         search: searchQuery,
         minValue: minValue,
@@ -34,11 +35,13 @@ export default function HomePage() {
       }
       setItems(results);
       setMessage("Search for an item!");
+      // console.log(results);
     } catch (error) {
       console.error("Error searching items:", error);
       setMessage(
         "An error occurred while searching for items: " + error.message,
       );
+      setItems([]);
     }
   };
 
@@ -118,7 +121,7 @@ export default function HomePage() {
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
               >
-                <option value="" selected>
+                <option value="">
                   Any Condition
                 </option>
                 <option value="New">New</option>
@@ -133,7 +136,7 @@ export default function HomePage() {
                 onChange={(e) => setAvailability(e.target.value)}
               >
                 <option value="">Any Availability</option>
-                <option value="Available" selected>
+                <option value="Available">
                   Available
                 </option>
                 <option value="Unavailable">Unavailable</option>
@@ -150,7 +153,7 @@ export default function HomePage() {
             <ItemTile key={item.id} orderId={item.value} item={item} />
           ))
         ) : (
-          <Tile>
+          <Tile className="w-full col-span-full">
             <p className="text-center">{message}</p>
           </Tile>
         )}
