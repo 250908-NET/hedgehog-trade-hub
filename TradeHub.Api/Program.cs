@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,7 @@ using TradeHub.API.Repository;
 using TradeHub.API.Repository.Interfaces;
 using TradeHub.API.Services;
 using TradeHub.API.Services.Interfaces;
+using TradeHub.API.Utilities;
 
 namespace TradeHub.API;
 
@@ -42,6 +44,7 @@ public class Program
                 options.UseSqlServer(connectionString);
             });
         }
+
         // Identity
         builder
             .Services.AddIdentity<User, IdentityRole<long>>(options =>
@@ -87,7 +90,14 @@ public class Program
             .AddPolicy("Admins", policy => policy.RequireClaim("Admin"));
 
         // add services to container
-        builder.Services.AddControllers();
+        builder
+            .Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                // Use the custom FlexibleEnumConverterFactory to allow both string and int for enums
+                // Serialization will still output enum names as strings.
+                options.JsonSerializerOptions.Converters.Add(new FlexibleEnumConverterFactory());
+            });
 
         builder.Services.AddAutoMapper(typeof(Program));
 
