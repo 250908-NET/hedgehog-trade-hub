@@ -81,18 +81,18 @@ public class Program
                 };
             });
 
-        builder.Services.AddAuthorization(options =>
-        {
-            options.AddPolicy("Users", policy => policy.RequireClaim("User"));
-            options.AddPolicy("Admins", policy => policy.RequireClaim("Admin"));
-        });
+        builder
+            .Services.AddAuthorizationBuilder()
+            .AddPolicy("Users", policy => policy.RequireClaim("User"))
+            .AddPolicy("Admins", policy => policy.RequireClaim("Admin"));
 
         // add services to container
         builder.Services.AddControllers();
 
         builder.Services.AddAutoMapper(typeof(Program));
 
-        builder.Services.AddOpenApi();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
         builder.Services.AddScoped<IItemRepository, ItemRepository>();
         builder.Services.AddScoped<IOfferRepository, OfferRepository>();
@@ -124,7 +124,8 @@ public class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
         app.UseHttpsRedirection();
