@@ -112,6 +112,19 @@ public class Program
         // builder.Services.AddHttpClient();
         // builder.Services.AddScoped<ILLMService, MultiLLMService>();
 
+        // Add CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowReactApp",
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173") 
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+        });
+
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
             .CreateLogger(); // read from appsettings.json
@@ -128,6 +141,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseCors("AllowReactApp");
 
         app.UseAuthorization();
 

@@ -1,8 +1,13 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 export default function Navbar() {
   const getNavLinkClass = ({ isActive }) => {
     return `hover:underline ${isActive ? "font-bold" : ""}`;
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
   };
 
   return (
@@ -14,9 +19,12 @@ export default function Navbar() {
         <NavLink className={getNavLinkClass} to="/search">
           Search
         </NavLink>
-        <NavLink className={getNavLinkClass + " ml-auto"} to="/login">
-          Login
-        </NavLink>
+        <button
+          onClick={handleLogout}
+          className="ml-auto text-white hover:underline font-semibold"
+        >
+          Logout
+        </button>
       </nav>
     </div>
   );
