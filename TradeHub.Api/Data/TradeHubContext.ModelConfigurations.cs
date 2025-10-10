@@ -13,5 +13,8 @@ public partial class TradeHubContext
         // configure value converter for Condition and Availibility enums
         modelBuilder.Entity<Item>().Property(i => i.Condition).HasConversion<string>();
         modelBuilder.Entity<Item>().Property(i => i.Availability).HasConversion<string>();
+
+        // configure value converter for TradeStatus enum
+        modelBuilder.Entity<Trade>().Property(t => t.Status).HasConversion<string>();
     }
 }

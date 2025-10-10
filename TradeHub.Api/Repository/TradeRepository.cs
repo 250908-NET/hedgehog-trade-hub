@@ -19,6 +19,7 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
     {
         var trade = await _context.Trades.FindAsync(tradeId);
 
+        // DELETE is idempotent, so don't throw an error if the trade doesn't exist
         if (trade == null)
             return;
 
@@ -56,5 +57,16 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
         _context.Entry(exisitingTrade).CurrentValues.SetValues(trade);
 
         return exisitingTrade;
+    }
+
+    public async Task<List<Trade>> GetTradesByStatusAsync(TradeStatus status)
+    {
+        return await _context
+            .Trades.Include(t => t.TradeItems)
+            .Include(t => t.InitiatedUser)
+            .Include(t => t.ReceivedUser)
+            .Include(t => t.Offers)
+            .Where(t => t.Status == status)
+            .ToListAsync();
     }
 }

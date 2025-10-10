@@ -10,5 +10,5 @@ public interface IOfferRepository
     Task<Offer> CreateOfferAsync(CreateOfferDTO offerDto);
     Task<bool> UpdateOfferAsync(OfferDTO offerDto);
     Task<bool> DeleteOfferAsync(long offerId);
-    Task<IEnumerable<ReceivedOfferDto>> GetReceivedOffersAsync(long userId);
+    Task<IEnumerable<ReceivedOfferDTO>> GetReceivedOffersAsync(long userId);
 }
