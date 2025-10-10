@@ -14,12 +14,8 @@ on:
 
   pull_request:
     branches: ["main"]
-    paths:
-      - "TradeHub.Api/**"
-      - "TradeHub.Test/**"
-      - "**/*.sln"
-      - "**/*.csproj"
-      - ".github/workflows/ci-backend.yml"
+    # always run on pull requests to prevent deadlocks
+    # not ideal, but it works for now
 
 jobs:
   build-and-test:

@@ -5,11 +5,10 @@ namespace TradeHub.Api.Services.Interfaces;
 public interface ITradeService
 {
     Task<List<Trade>> GetAllTradesAsync();
-    Task<List<Trade>> GetTradesByUserAsync(int userId);
-    Task<Trade?> GetTradeByIdAsync(int tradeId);
+    Task<List<Trade>> GetTradesByUserAsync(long userId);
+    Task<Trade?> GetTradeByIdAsync(long tradeId);
     Task<Trade> CreateTradeAsync(Trade trade);
-    Task<Trade> UpdateTradeAsync(Trade trade);
-    Task DeleteTradeAsync(int tradeId);
-
-     Task<bool> ConfirmTradeCompletionAsync(long tradeId, long userId);
+    Task<Trade?> UpdateTradeAsync(Trade trade);
+    Task DeleteTradeAsync(long tradeId);
+    Task<Trade> ConfirmTradeAsync(long tradeId, long userId);
 }

@@ -33,7 +33,8 @@ namespace TradeHub.Api.Controllers
         public async Task<ActionResult<Trade>> GetTrade(long tradeId)
         {
             var trade = await _tradeService.GetTradeByIdAsync(tradeId);
-            if (trade == null) return NotFound();
+            if (trade == null)
+                return NotFound();
             return Ok(trade);
         }
 
@@ -47,7 +48,8 @@ namespace TradeHub.Api.Controllers
         [HttpPut("{tradeId}")]
         public async Task<ActionResult<Trade>> UpdateTrade(long tradeId, [FromBody] Trade trade)
         {
-            if (tradeId != trade.Id) return BadRequest();
+            if (tradeId != trade.Id)
+                return BadRequest();
             var updatedTrade = await _tradeService.UpdateTradeAsync(trade);
             return Ok(updatedTrade);
         }
@@ -59,14 +61,13 @@ namespace TradeHub.Api.Controllers
             return NoContent();
         }
 
-        // Mark trade as completed
-        [HttpPost("{tradeId}/complete")]
-        public async Task<IActionResult> CompleteTrade(long tradeId)
-        {
-            var result = await _tradeService.MarkTradeCompletedAsync(tradeId);
-            if (!result) return NotFound();
-            return Ok(new { message = "Trade marked as completed." });
-        }
+        // // Mark trade as completed
+        // [HttpPost("{tradeId}/complete")]
+        // public async Task<IActionResult> CompleteTrade(long tradeId)
+        // {
+        //     var result = await _tradeService.MarkTradeCompletedAsync(tradeId);
+        //     if (!result) return NotFound();
+        //     return Ok(new { message = "Trade marked as completed." });
+        // }
     }
 }
-

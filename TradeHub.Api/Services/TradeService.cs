@@ -4,26 +4,22 @@ using TradeHub.Api.Services.Interfaces;
 
 namespace TradeHub.Api.Services;
 
-public class TradeService : ITradeService
+public class TradeService(ITradeRepository repository) : ITradeService
 {
-    private readonly ITradeRepository _repository;
-
-    public TradeService(ITradeRepository repository)
-    {
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-    }
+    private readonly ITradeRepository _repository =
+        repository ?? throw new ArgumentNullException(nameof(repository));
 
     public async Task<List<Trade>> GetAllTradesAsync()
     {
         return await _repository.GetAllTradesAsync();
     }
 
-    public async Task<List<Trade>> GetTradesByUserAsync(int userId)
+    public async Task<List<Trade>> GetTradesByUserAsync(long userId)
     {
         return await _repository.GetTradesByUser(userId);
     }
 
-    public async Task<Trade?> GetTradeByIdAsync(int tradeId)
+    public async Task<Trade?> GetTradeByIdAsync(long tradeId)
     {
         return await _repository.GetTradeByIdAsync(tradeId);
     }
@@ -33,47 +29,34 @@ public class TradeService : ITradeService
         return await _repository.CreateTradeAsync(trade);
     }
 
-    public async Task<Trade> UpdateTradeAsync(Trade trade)
+    public async Task<Trade?> UpdateTradeAsync(Trade trade)
     {
         return await _repository.UpdateTradeAsync(trade);
     }
 
-    public async Task DeleteTradeAsync(int tradeId)
+    public async Task DeleteTradeAsync(long tradeId)
     {
         await _repository.DeleteTradeAsync(tradeId);
     }
 
-    // to complete the trade
+    // implementaions for confirm trade
 
-public async Task<bool> ConfirmTradeCompletionAsync(long tradeId, long userId)
-{
-    var trade = await _tradeRepository.GetTradeByIdAsync(tradeId);
-    if (trade == null) return false;
-
-    // Track confirmations
-    // Example: using Status as flags: 0 = pending, 1 = initiated confirmed, 2 = received confirmed, 3 = both confirmed (completed
-
-    if (trade.InitiatedId == userId)
+    public async Task<Trade> ConfirmTradeAsync(long tradeId, long userId)
     {
-        trade.Status |= 1; 
-    }
-    else if (trade.ReceivedId == userId)
-    {
-        trade.Status |= 2;
-    }
-    else
-    {
-        return false; // user not part of trade
-    }
+        var trade =
+            await _repository.GetTradeByIdAsync(tradeId) ?? throw new Exception("Trade not found");
 
-    // If both bits set, mark as completed (status = 3)
-    if (trade.Status == 3)
-    {
-        // fully completed
+        // only trade participants can confirm
+        if (userId != trade.InitiatedId && userId != trade.ReceivedId)
+            throw new Exception("User not part of this trade");
+
+        // to update the confirmation
+        if (userId == trade.InitiatedId)
+            trade.InitiatedConfirmed = true;
+        else if (userId == trade.ReceivedId)
+            trade.ReceivedConfirmed = true;
+
+        return await _repository.UpdateTradeAsync(trade)
+            ?? throw new Exception("Failed to update trade");
     }
-
-    await _tradeRepository.UpdateTradeAsync(trade);
-    return true;
-}
-
 }

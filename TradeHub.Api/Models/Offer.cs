@@ -5,13 +5,22 @@ namespace TradeHub.Api.Models;
 
 public class Offer
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
+
     public long UserId { get; set; } // fk to User
     public User User { get; set; } = null!; // navigation property
-    public long  TradeId { get; set; } // fk to Trade
+
+    public long TradeId { get; set; } // fk to Trade
     public Trade Trade { get; set; } = null!; // navigation property
-    public DateTimeOffset Created { get; set; }
-    public byte[] RowVersion { get; set; } = Array.Empty <byte>(); // concurrency
+
+    public string? Notes { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; }
+    public byte[] RowVersion { get; set; } = []; // concurrency
+
+    // when a user adding multiple items
+
+    public ICollection<OfferItem> OfferItems { get; set; } = [];
 }
 
 // Fluent API configuration
@@ -19,16 +28,17 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
 {
     public void Configure(EntityTypeBuilder<Offer> builder)
     {
-        builder.ToTable("Offers");
-        builder.HasKey(o => o.Id);
-
         builder.Property(o => o.UserId).IsRequired();
-        builder.HasOne(o => o.User).WithMany().HasForeignKey(o => o.UserId);
+        builder.HasOne(o => o.User).WithMany(u => u.Offers).HasForeignKey(o => o.UserId);
 
         builder.Property(o => o.TradeId).IsRequired();
-        builder.HasOne(o => o.Trade).WithMany().HasForeignKey(o => o.TradeId);
+        builder
+            .HasOne(o => o.Trade)
+            .WithMany(t => t.Offers)
+            .HasForeignKey(o => o.TradeId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(o => o.Created).HasDefaultValueSql("SYSDATETIMEOFFSET()");
+        builder.Property(o => o.CreatedAt).HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
         builder.Property(o => o.RowVersion).IsRowVersion();
     }

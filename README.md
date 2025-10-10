@@ -1,10 +1,10 @@
 # Hedgehog Trade Hub
 
-A hub for users to trade items. 
+TradeHub is a sleek, intuitive platform designed to facilitate seamless peer-to-peer exchange of items. Whether you’re trading digital assets, collectibles, gaming items, or real-world goods, TradeHub offers a secure, user-friendly environment to negotiate, swap, and track trades. A user-friendly frontend written in Javascript with React allows for a easy and convenient user experience, while a controller-based API written in C# leveraging ASP.NET and EF Core running on a Kestrel server for full CRUD functionality. User data is stored in a SQL Server database in a Docker container, and user sessions are secured using JWTs and cookies for authorization and authentication. To start trading, users can create an account to create trades and add items to a trade, and when another user wants to trade for an item, they can create an offer and add their own items to it. As a bonus, users can choose to have the value of their item estimated by an LLM service, if they aren't sure of the exact value themselves.
 
 ## Progress Tracking
 
-https://trello.com/b/m2zDpKVQ/project-management
+https://github.com/orgs/250908-NET/projects/2
 
 ## Endpoints
 
@@ -64,13 +64,13 @@ https://trello.com/b/m2zDpKVQ/project-management
 
 - [X] Your API must be written in C# for .NET
 - [X] Your API must use the ASP.NET framework
-- [ ] Your API must exemplify the principles of REST
+- [X] Your API must exemplify the principles of REST
 - [X] Your API must implement the Repository pattern for data persistance (multiple namespaces, interface)
-- [ ] Your API must implement SQL Server and Entity Framework Core to provide data persistance
-- [ ] Your API should fulfill all common CRUD functions
+- [X] Your API must implement SQL Server and Entity Framework Core to provide data persistance
+- [X] Your API should fulfill all common CRUD functions
 - [X] Your API should include proper exception handling
 - [X] Your API should include logging with Serilog
-- [ ] Your API should include validation for any data being handled
+- [X] Your API should include validation for any data being handled
 - [ ] Your API should include at least 50% unit test coverage
   - To run: `dotnet test --collect:"XPlat Code Coverage" --results-directory ./CodeCoverage`
   - To generate report: `reportgenerator -reports:./CodeCoverage/**/*.cobertura.xml -targetdir:./CodeCoverage/Report -reporttypes:Html`
@@ -79,14 +79,14 @@ https://trello.com/b/m2zDpKVQ/project-management
 
 ### Frontend
 
-- [ ] Your frontend must be written in "vanilla JavaScript", with HTML5, CSS3, and JavaScript
-- [ ] Your frontend must interact with your API for data persistence
-- [ ] Your frontend may use the React library.
-    - If you choose to use React, your frontend must include at least three components, with at least one nested component. (At least one parent-child relationship, and at least one other unrelated component).
-        - [ ] Your components should include at least one component that implements `useState`.
-        - [ ] Your components should include at least one component with props.
-        - [ ] Your components should include at least one component that implements the `Context` hook.
-- [ ] Your frontend __may__ be built on the Node.js or Next.js frameworks.
+- [X] Your frontend must be written in "vanilla JavaScript", with HTML5, CSS3, and JavaScript
+- [X] Your frontend must interact with your API for data persistence
+- [X] Your frontend may use the React library.
+    - [X] If you choose to use React, your frontend must include at least three components, with at least one nested component. (At least one parent-child relationship, and at least one other unrelated component).
+    - [X] Your components should include at least one component that implements `useState`.
+    - [ ] Your components should include at least one component with props.
+    - [ ] Your components should include at least one component that implements the `Context` hook.
+- [X] Your frontend __may__ be built on the Node.js or Next.js frameworks.
 
 ### Non-Functional Requiremnts
 
@@ -98,7 +98,7 @@ https://trello.com/b/m2zDpKVQ/project-management
     - [X] an ERD (Entity Relationship Diagram) of the Database
     - [ ] unit test coverage reporting
     - [X] API endpoint documentation
-- [ ] Your project team should conduct a daily stand-up meeting
+- [X] Your project team should conduct a daily stand-up meeting
     - [ ] meeting notes should be kept to record development progress
 
 ### Project Presentation
