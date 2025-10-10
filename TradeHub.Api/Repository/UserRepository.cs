@@ -1,5 +1,5 @@
-using TradeHub.API.Models;
 using Microsoft.EntityFrameworkCore;
+using TradeHub.API.Models;
 using TradeHub.API.Repository.Interfaces;
 
 public class UserRepository : IUserRepository
@@ -10,6 +10,7 @@ public class UserRepository : IUserRepository
     {
         _context = context;
     }
+
     public async Task AddAsync(User user)
     {
         await _context.Users.AddAsync(user);
@@ -42,11 +43,12 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByIdAsync(long id)
     {
-        return await _context.Users.Include(u => u.OwnedItems)
-                                    .Include(u => u.InitiatedTrades)
-                                     .Include(u => u.ReceivedTrades)
-                                      .Include(u => u.Offers)
-                                       .FirstOrDefaultAsync(user => user.Id == id);
+        return await _context
+            .Users.Include(u => u.OwnedItems)
+            .Include(u => u.InitiatedTrades)
+            .Include(u => u.ReceivedTrades)
+            .Include(u => u.Offers)
+            .FirstOrDefaultAsync(user => user.Id == id);
     }
 
     public async Task<User?> GetByUsernameAsync(string username)
@@ -58,6 +60,5 @@ public class UserRepository : IUserRepository
     {
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
-
     }
 }

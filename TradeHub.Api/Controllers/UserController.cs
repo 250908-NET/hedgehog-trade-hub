@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TradeHub.API.Models;
-using TradeHub.DTO;
+using TradeHub.API.Models.DTOs;
 
 namespace TradeHub.API.Controllers;
 
@@ -26,7 +26,7 @@ public class UserController(
 
     [Authorize]
     [HttpGet("{id}", Name = "GetUser")]
-    public async Task<ActionResult<UserDto>> GetAsync(long id)
+    public async Task<ActionResult<UserDTO>> GetAsync(long id)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
         if (user == null)
@@ -41,7 +41,7 @@ public class UserController(
         if (!isAdmin && user.Email != currentUserEmail)
             return Unauthorized("You are not authorized to view other users.");
 
-        var userDto = _mapper.Map<UserDto>(user);
+        var userDto = _mapper.Map<UserDTO>(user);
         _logger.LogInformation("Retrieved user with ID {UserId}", id);
         return Ok(userDto);
     }
@@ -51,7 +51,7 @@ public class UserController(
     // ---------------------------
     [HttpPost(Name = "CreateUser")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> CreateAsync([FromBody] RegisterUserDto dto)
+    public async Task<IActionResult> CreateAsync([FromBody] RegisterUserDTO dto)
     {
         if (!ModelState.IsValid)
         {
@@ -68,7 +68,7 @@ public class UserController(
         // Optionally assign default role
         await _userManager.AddToRoleAsync(user, "User");
 
-        var userDto = _mapper.Map<UserDto>(user);
+        var userDto = _mapper.Map<UserDTO>(user);
         _logger.LogInformation("Admin created new user with ID {UserId}", user.Id);
 
         return CreatedAtRoute("GetUser", new { id = user.Id }, userDto);
@@ -79,7 +79,7 @@ public class UserController(
     // ---------------------------
     [Authorize]
     [HttpPut("{id}", Name = "UpdateUser")]
-    public async Task<IActionResult> UpdateAsync(long id, [FromBody] UserDto dto)
+    public async Task<IActionResult> UpdateAsync(long id, [FromBody] UserDTO dto)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
         if (user == null)
@@ -102,7 +102,7 @@ public class UserController(
             return BadRequest(result.Errors);
 
         _logger.LogInformation("Updated user with ID {UserId}", id);
-        return Ok(_mapper.Map<UserDto>(user));
+        return Ok(_mapper.Map<UserDTO>(user));
     }
 
     // ---------------------------
