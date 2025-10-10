@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace TradeHub.API.Models;
+namespace TradeHub.Api.Models;
 
 public class Offer
 {

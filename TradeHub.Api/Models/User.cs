@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
-namespace TradeHub.API.Models;
+namespace TradeHub.Api.Models;
 
 public class User : IdentityUser<long>
 {

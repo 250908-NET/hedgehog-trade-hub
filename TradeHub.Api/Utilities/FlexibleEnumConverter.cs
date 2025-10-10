@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TradeHub.API.Utilities;
+namespace TradeHub.Api.Utilities;
 
 /// <summary>
 /// A JsonConverterFactory that provides a FlexibleEnumConverter for any enum type.

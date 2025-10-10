@@ -1,8 +1,8 @@
-using TradeHub.API.Models;
-using TradeHub.API.Repository.Interfaces;
-using TradeHub.API.Services.Interfaces;
+using TradeHub.Api.Models;
+using TradeHub.Api.Repository.Interfaces;
+using TradeHub.Api.Services.Interfaces;
 
-namespace TradeHub.API.Services;
+namespace TradeHub.Api.Services;
 
 public class TradeService(ITradeRepository repository) : ITradeService
 {

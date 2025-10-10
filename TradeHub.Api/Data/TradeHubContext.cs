@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TradeHub.API.Models;
+using TradeHub.Api.Models;
 
-namespace TradeHub.API.Models;
+namespace TradeHub.Api.Models;
 
 public partial class TradeHubContext : IdentityDbContext<User, IdentityRole<long>, long>
 {

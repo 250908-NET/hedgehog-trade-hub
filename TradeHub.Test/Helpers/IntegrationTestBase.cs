@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using TradeHub.API;
-using TradeHub.API.Models;
-using TradeHub.API.Utilities;
+using TradeHub.Api;
+using TradeHub.Api.Models;
+using TradeHub.Api.Utilities;
 
 namespace TradeHub.Test.Helpers;
 

@@ -2,8 +2,8 @@ using DotNetEnv;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using TradeHub.API.Services;
-using TradeHub.API.Utilities;
+using TradeHub.Api.Services;
+using TradeHub.Api.Utilities;
 using Xunit;
 
 namespace TradeHub.Test.Services;

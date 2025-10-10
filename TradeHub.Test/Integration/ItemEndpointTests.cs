@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
-using TradeHub.API;
-using TradeHub.API.Models;
-using TradeHub.API.Models.DTOs;
-using TradeHub.API.Services.Interfaces;
-using TradeHub.API.Utilities;
+using TradeHub.Api;
+using TradeHub.Api.Models;
+using TradeHub.Api.Models.DTOs;
+using TradeHub.Api.Services.Interfaces;
+using TradeHub.Api.Utilities;
 using TradeHub.Test.Helpers;
 
 namespace TradeHub.Test.Integration;

@@ -1,5 +1,5 @@
 // for adding items to the offer
-namespace TradeHub.API.Models.DTOs
+namespace TradeHub.Api.Models.DTOs
 {
     public class OfferItemCreateDto
     {

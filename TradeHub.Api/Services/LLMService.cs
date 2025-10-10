@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using TradeHub.API.Services.Interfaces;
-using TradeHub.API.Utilities;
+using TradeHub.Api.Services.Interfaces;
+using TradeHub.Api.Utilities;
 
-namespace TradeHub.API.Services;
+namespace TradeHub.Api.Services;
 
 public class MultiLLMService(
     HttpClient httpClient,

@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace TradeHub.API.Utilities;
+namespace TradeHub.Api.Utilities;
 
 public static partial class StringExtensions
 {

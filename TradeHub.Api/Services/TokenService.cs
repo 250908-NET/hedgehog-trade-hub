@@ -2,9 +2,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using TradeHub.API.Models;
+using TradeHub.Api.Models;
 
-namespace TradeHub.API.Services;
+namespace TradeHub.Api.Services;
 
 public class TokenService(IConfiguration configuration) : ITokenService
 {

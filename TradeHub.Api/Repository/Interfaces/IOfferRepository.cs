@@ -1,7 +1,7 @@
-using TradeHub.API.Models;
-using TradeHub.API.Models.DTOs;
+using TradeHub.Api.Models;
+using TradeHub.Api.Models.DTOs;
 
-namespace TradeHub.API.Repository.Interfaces;
+namespace TradeHub.Api.Repository.Interfaces;
 
 public interface IOfferRepository
 {

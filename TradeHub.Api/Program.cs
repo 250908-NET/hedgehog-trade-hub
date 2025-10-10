@@ -1,47 +1,43 @@
 using System.Text;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using TradeHub.API.Middleware;
-using TradeHub.API.Models;
-using TradeHub.API.Repository;
-using TradeHub.API.Repository.Interfaces;
-using TradeHub.API.Services;
-using TradeHub.API.Services.Interfaces;
-using TradeHub.API.Utilities;
+using TradeHub.Api.Middleware;
+using TradeHub.Api.Models;
+using TradeHub.Api.Repository;
+using TradeHub.Api.Repository.Interfaces;
+using TradeHub.Api.Services;
+using TradeHub.Api.Services.Interfaces;
+using TradeHub.Api.Utilities;
 
-namespace TradeHub.API;
+namespace TradeHub.Api;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
-        Env.Load(); // load .env file
-
+        Env.Load();
         var builder = WebApplication.CreateBuilder(args);
 
-        // register DbContext
-        // this code runs before Moq is able to intercept it in tests, so it needs to be skipped when in testing environment
+        // DbContext (skip when Testing)
         if (!builder.Environment.IsEnvironment("Testing"))
         {
-            builder.Services.AddDbContext<TradeHubContext>(options =>
-            {
-                // load connection string from environment variable
-                string? connectionString = builder.Configuration.GetValue<string>(
-                    "DB_CONNECTION_STRING"
-                );
-                if (string.IsNullOrEmpty(connectionString))
-                {
-                    throw new InvalidOperationException(
-                        "Connection string 'DB_CONNECTION_STRING' not found in configuration."
-                    );
-                }
+            var connectionString =
+                builder.Configuration.GetValue<string>("DB_CONNECTION_STRING")
+                ?? Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
-                options.UseSqlServer(connectionString);
-            });
+            if (string.IsNullOrWhiteSpace(connectionString))
+                throw new InvalidOperationException(
+                    "Connection string 'DB_CONNECTION_STRING' not found."
+                );
+
+            builder.Services.AddDbContext<TradeHubContext>(options =>
+                options.UseSqlServer(connectionString)
+            );
         }
 
         // Identity
@@ -116,10 +112,50 @@ public class Program
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserService, UserService>();
 
-        // register HttpClient for the LLM service
-        builder.Services.AddHttpClient<ILLMService, MultiLLMService>();
-        // builder.Services.AddHttpClient();
-        // builder.Services.AddScoped<ILLMService, MultiLLMService>();
+        // Cookie auth
+        builder
+            .Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.Cookie.Name = "tradehub_auth";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.LoginPath = "/login";
+                options.AccessDeniedPath = "/forbidden";
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromHours(8);
+            });
+
+        // Authorization
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
+        });
+
+        // CORS
+        builder.Services.AddCors(o =>
+            o.AddDefaultPolicy(p =>
+                p.WithOrigins("http://localhost:5173", "http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+            )
+        );
+
+        // ---------- DI registrations ----------
+        // Identity password hasher (generic)
+        builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+        // Repositories
+
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IItemRepository, ItemRepository>();
+        builder.Services.AddScoped<ITradeRepository, TradeRepository>();
+        builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+
+        // Services
+        builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 
         // Add CORS
         builder.Services.AddCors(options =>
@@ -156,9 +192,8 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseCors("AllowReactApp");
-
+        app.UseAuthentication();
         app.UseAuthorization();
-
         app.MapControllers();
 
         app.Run();

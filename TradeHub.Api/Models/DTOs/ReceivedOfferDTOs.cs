@@ -1,6 +1,6 @@
 // to send trade, offers, items to the  frontend
 
-namespace TradeHub.API.Models.DTOs
+namespace TradeHub.Api.Models.DTOs
 {
     public class ReceivedOfferDTO
     {

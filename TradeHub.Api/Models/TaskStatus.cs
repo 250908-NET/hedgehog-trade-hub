@@ -1,4 +1,4 @@
-namespace TradeHub.API.Models
+namespace TradeHub.Api.Models
 {
     public enum TradeStatus : byte
     {

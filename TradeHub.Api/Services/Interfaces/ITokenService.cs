@@ -1,4 +1,4 @@
-using TradeHub.API.Models;
+using TradeHub.Api.Models;
 
 public interface ITokenService
 {

@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text.Json;
-using TradeHub.API.Utilities;
+using TradeHub.Api.Utilities;
 
-namespace TradeHub.API.Middleware;
+namespace TradeHub.Api.Middleware;
 
 public class GlobalExceptionHandler(RequestDelegate next, ILogger<GlobalExceptionHandler> logger)
 {

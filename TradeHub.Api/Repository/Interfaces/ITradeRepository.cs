@@ -1,6 +1,6 @@
-using TradeHub.API.Models;
+using TradeHub.Api.Models;
 
-namespace TradeHub.API.Repository.Interfaces;
+namespace TradeHub.Api.Repository.Interfaces;
 
 public interface ITradeRepository
 {
