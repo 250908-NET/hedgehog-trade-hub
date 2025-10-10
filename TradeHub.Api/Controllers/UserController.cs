@@ -6,27 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 using TradeHub.API.Models;
 using TradeHub.DTO;
 
+namespace TradeHub.API.Controllers;
+
 [ApiController]
 [Route("[controller]")]
-public class UsersController : ControllerBase
+public class UserController(
+    ILogger<UserController> logger,
+    IMapper mapper,
+    UserManager<User> userManager
+) : ControllerBase
 {
-    private readonly ILogger<UsersController> _logger;
-    private readonly IMapper _mapper;
-    private readonly UserManager<User> _userManager;
-
-    public UsersController(
-        ILogger<UsersController> logger,
-        IMapper mapper,
-        UserManager<User> userManager)
-    {
-        _logger = logger;
-        _mapper = mapper;
-        _userManager = userManager;
-    }
+    private readonly ILogger<UserController> _logger = logger;
+    private readonly IMapper _mapper = mapper;
+    private readonly UserManager<User> _userManager = userManager;
 
     // ---------------------------
     // GET: /users/{id}
     // ---------------------------
+
     [Authorize]
     [HttpGet("{id}", Name = "GetUser")]
     public async Task<ActionResult<UserDto>> GetAsync(long id)
