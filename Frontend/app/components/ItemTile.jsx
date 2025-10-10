@@ -16,7 +16,7 @@ export default function ItemTile({ item }) {
       </div>
       <div className="flex flex-col">
         <p className="font-bold">{item.name}</p>
-        <p className="text-sm text-neutral-400">{item.condition}</p>
+        <p className="text-sm text-neutral-400">{item.condition}, {item.availability}</p>
       </div>
     </Tile>
   );

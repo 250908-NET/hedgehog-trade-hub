@@ -23,7 +23,7 @@ export async function searchItems({ params = {} }) {
     minValue: params.minValue,
     maxValue: params.maxValue,
     condition: params.condition,
-    availability: params.availability,
+    availability: params.availability || "Available",
     search: params.search,
   };
   const queryString = buildQueryString(rawParams);
@@ -37,7 +37,7 @@ export async function searchItems({ params = {} }) {
     }
 
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     console.error("Error searching items:", error);
