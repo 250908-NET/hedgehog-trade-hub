@@ -1,8 +1,8 @@
+// Controllers/AdminUsersController.cs
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using TradeHub.Api.Services;              // IAdminUserService
-using TradeHub.Api.Models.DTOs;          // UserDTO, CreateUserDTO, UpdateUserDTO
+using TradeHub.Api.Services;            // IAdminUserService
+using TradeHub.Api.Models.DTOs;         // UserDTO, CreateUserDTO, UpdateUserDTO
 
 namespace TradeHub.Api.Controllers;
 
@@ -13,7 +13,10 @@ public class AdminUsersController : ControllerBase
 {
     private readonly IAdminUserService _svc;
 
-    public AdminUsersController(IAdminUserService svc) => _svc = svc;
+    public AdminUsersController(IAdminUserService svc)
+    {
+        _svc = svc;
+    }
 
     /// <summary>Get all users.</summary>
     [HttpGet]
@@ -35,6 +38,7 @@ public class AdminUsersController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(UserDTO), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<UserDTO>> Create([FromBody] CreateUserDTO req)
     {
         try
@@ -68,7 +72,6 @@ public class AdminUsersController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            // e.g., duplicate username/email, or self-delete protection etc.
             return Conflict(new { message = ex.Message });
         }
         catch (ArgumentException ex)
@@ -91,7 +94,6 @@ public class AdminUsersController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            // e.g., prevent admin deleting themselves
             return Conflict(new { message = ex.Message });
         }
     }
