@@ -60,12 +60,12 @@ export default function HomePage() {
         </form>
       </LogoTile>
 
-      <div className="container mx-auto grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4 py-8">
+      <div className="container mx-auto grid grid-cols-[repeat(auto-fit,240px))] justify-center gap-4 py-8">
         {/* render item tiles or error message if no items */}
         {
           items.length > 0
             ? items.map((item) => <ItemTile key={item.id} orderId={item.value} item={item} />)
-            : <Tile><p>{message}</p></Tile>
+            : <Tile><p className="text-center">{message}</p></Tile>
         }
       </div>
     </>
