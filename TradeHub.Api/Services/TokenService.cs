@@ -4,32 +4,35 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TradeHub.API.Models;
 
-public class TokenService : ITokenService
+namespace TradeHub.API.Services;
+
+public class TokenService(IConfiguration configuration) : ITokenService
 {
-    private readonly IConfiguration _configuration;
-    
-     public TokenService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+    private readonly IConfiguration _configuration = configuration;
+
     public string GenerateToken(User user, IList<string> roles)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
-        var secretKey = jwtSettings["SecretKey"];
+        var secretKey =
+            jwtSettings["SecretKey"]
+            ?? throw new InvalidOperationException("JWT SecretKey not configured.");
         var issuer = jwtSettings["Issuer"];
         var audience = jwtSettings["Audience"];
-        var expirationMinutes = int.Parse(jwtSettings["ExpirationMinutes"]);
+        var expirationMinutes = int.Parse(
+            jwtSettings["ExpirationMinutes"]
+                ?? throw new InvalidOperationException("JWT ExpirationMinutes not configured.")
+        );
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            };
+        {
+            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        };
 
         // Add roles to claims
         foreach (var role in roles)

@@ -4,7 +4,7 @@ A hub for users to trade items.
 
 ## Progress Tracking
 
-https://trello.com/b/m2zDpKVQ/project-management
+https://github.com/orgs/250908-NET/projects/2
 
 ## Endpoints
 
@@ -64,13 +64,13 @@ https://trello.com/b/m2zDpKVQ/project-management
 
 - [X] Your API must be written in C# for .NET
 - [X] Your API must use the ASP.NET framework
-- [ ] Your API must exemplify the principles of REST
+- [X] Your API must exemplify the principles of REST
 - [X] Your API must implement the Repository pattern for data persistance (multiple namespaces, interface)
-- [ ] Your API must implement SQL Server and Entity Framework Core to provide data persistance
-- [ ] Your API should fulfill all common CRUD functions
+- [X] Your API must implement SQL Server and Entity Framework Core to provide data persistance
+- [X] Your API should fulfill all common CRUD functions
 - [X] Your API should include proper exception handling
 - [X] Your API should include logging with Serilog
-- [ ] Your API should include validation for any data being handled
+- [X] Your API should include validation for any data being handled
 - [ ] Your API should include at least 50% unit test coverage
   - To run: `dotnet test --collect:"XPlat Code Coverage" --results-directory ./CodeCoverage`
   - To generate report: `reportgenerator -reports:./CodeCoverage/**/*.cobertura.xml -targetdir:./CodeCoverage/Report -reporttypes:Html`
@@ -79,14 +79,14 @@ https://trello.com/b/m2zDpKVQ/project-management
 
 ### Frontend
 
-- [ ] Your frontend must be written in "vanilla JavaScript", with HTML5, CSS3, and JavaScript
-- [ ] Your frontend must interact with your API for data persistence
-- [ ] Your frontend may use the React library.
-    - If you choose to use React, your frontend must include at least three components, with at least one nested component. (At least one parent-child relationship, and at least one other unrelated component).
-        - [ ] Your components should include at least one component that implements `useState`.
-        - [ ] Your components should include at least one component with props.
-        - [ ] Your components should include at least one component that implements the `Context` hook.
-- [ ] Your frontend __may__ be built on the Node.js or Next.js frameworks.
+- [X] Your frontend must be written in "vanilla JavaScript", with HTML5, CSS3, and JavaScript
+- [X] Your frontend must interact with your API for data persistence
+- [X] Your frontend may use the React library.
+    - [X] If you choose to use React, your frontend must include at least three components, with at least one nested component. (At least one parent-child relationship, and at least one other unrelated component).
+    - [X] Your components should include at least one component that implements `useState`.
+    - [ ] Your components should include at least one component with props.
+    - [ ] Your components should include at least one component that implements the `Context` hook.
+- [X] Your frontend __may__ be built on the Node.js or Next.js frameworks.
 
 ### Non-Functional Requiremnts
 
@@ -98,7 +98,7 @@ https://trello.com/b/m2zDpKVQ/project-management
     - [X] an ERD (Entity Relationship Diagram) of the Database
     - [ ] unit test coverage reporting
     - [X] API endpoint documentation
-- [ ] Your project team should conduct a daily stand-up meeting
+- [X] Your project team should conduct a daily stand-up meeting
     - [ ] meeting notes should be kept to record development progress
 
 ### Project Presentation

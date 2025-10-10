@@ -7,10 +7,12 @@ namespace TradeHub.API.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
+
     public UserService(IUserRepository repository)
     {
         _repository = repository;
     }
+
     public async Task<User> CreateUserAsync(User user)
     {
         await _repository.AddAsync(user);
@@ -19,7 +21,8 @@ public class UserService : IUserService
 
     public async Task<bool> DeleteUserAsync(long id)
     {
-        if (!await _repository.ExistsAsync(id)) return false;
+        if (!await _repository.ExistsAsync(id))
+            return false;
         await _repository.DeleteAsync(id);
         return true;
     }
@@ -29,14 +32,15 @@ public class UserService : IUserService
         return await _repository.GetAllAsync();
     }
 
-    public async Task<User> GetUserByIdAsync(long id)
+    public async Task<User?> GetUserByIdAsync(long id)
     {
         return await _repository.GetByIdAsync(id);
     }
 
     public async Task<bool> UpdateUserAsync(long id, User user)
     {
-        if (!await _repository.ExistsAsync(id)) return false;
+        if (!await _repository.ExistsAsync(id))
+            return false;
 
         await _repository.UpdateAsync(user);
         return true;

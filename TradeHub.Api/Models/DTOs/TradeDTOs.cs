@@ -1,10 +1,6 @@
-using TradeHub.API.Models.DTOs;
-
 namespace TradeHub.API.Models.DTOs
-
 {
-    public class Tradedto
-
+    public class TradeDTO
     {
         public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -18,6 +14,5 @@ namespace TradeHub.API.Models.DTOs
 
         public List<ItemDTO>? TradeItems { get; set; }
         public List<OfferDTO>? Offers { get; set; }
-
     }
 }
