@@ -13,7 +13,7 @@ public interface IOfferService
 
     // to receive trade proposal
 
-    Task<IEnumerable<ReceivedOfferDto>> GetReceivedOffersAsync(long userId);
+    Task<IEnumerable<ReceivedOfferDTO>> GetReceivedOffersAsync(long userId);
     Task<OfferItemViewDto> AddItemToOfferAsync(long offerId, OfferItemCreateDto dto);
     Task<IEnumerable<OfferItemViewDto>> GetOfferItemsAsync(long offerId);
 }

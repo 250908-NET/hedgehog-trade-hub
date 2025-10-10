@@ -106,14 +106,14 @@ namespace TradeHub.API.Repository
                 .FirstOrDefaultAsync(o => o.Id == offerId);
         }
 
-        public async Task<IEnumerable<ReceivedOfferDto>> GetReceivedOffersAsync(long userId)
+        public async Task<IEnumerable<ReceivedOfferDTO>> GetReceivedOffersAsync(long userId)
         {
             var offers = await _context
                 .Offers.Include(o => o.Trade)
                 .Include(o => o.OfferItems)
                 .ThenInclude(oi => oi.Item)
                 .Where(o => o.Trade.ReceivedId == userId) // only received trades
-                .Select(o => new ReceivedOfferDto
+                .Select(o => new ReceivedOfferDTO
                 {
                     OfferId = o.Id,
                     TradeId = o.TradeId,

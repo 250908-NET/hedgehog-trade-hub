@@ -12,5 +12,4 @@ public interface ITradeRepository
     Task DeleteTradeAsync(int tradeId);
 
     Task<List<Trade>> GetTradesByStatusAsync(TradeStatus status);
-
 }
