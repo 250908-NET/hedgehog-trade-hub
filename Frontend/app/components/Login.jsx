@@ -129,7 +129,7 @@ export default function Login() {
                   to="/register"
                   className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
                 >
-                  Create one here
+                  Create one here!
                 </NavLink>
               </span>
             </div>
