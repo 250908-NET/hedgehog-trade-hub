@@ -160,14 +160,17 @@ public class Program
         // Add CORS
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowReactApp",
+            options.AddPolicy(
+                "AllowReactApp",
                 policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173") 
+                    policy
+                        .WithOrigins("http://localhost:5173")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
-                });
+                }
+            );
         });
 
         Log.Logger = new LoggerConfiguration()
