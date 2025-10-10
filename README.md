@@ -1,6 +1,6 @@
 # Hedgehog Trade Hub
 
-A hub for users to trade items. 
+TradeHub is a sleek, intuitive platform designed to facilitate seamless peer-to-peer exchange of items. Whether you’re trading digital assets, collectibles, gaming items, or real-world goods, TradeHub offers a secure, user-friendly environment to negotiate, swap, and track trades. A user-friendly React frontend allows for a easy and convenient user experience, and a controller-based API leveraging ASP.NET and EF Core running on a Kestrel server for full CRUD functionality. User data is stored in a SQL Server database in a Docker container, and user sessions are secured using JWTs and cookies for authorization and authentication. To start trading, users can create an account to create trades and add items to a trade, and when another user wants to trade for an item, they can create an offer and add their own items to it. As a bonus, users can choose to have the value of their item estimated by an LLM service, if they aren't sure of the exact value themselves.
 
 ## Progress Tracking
 
