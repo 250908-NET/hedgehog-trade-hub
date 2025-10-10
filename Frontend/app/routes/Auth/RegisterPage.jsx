@@ -27,7 +27,7 @@ export default function RegisterPage() {
       if (!res.ok) {
         const err = await res.json().catch(() => ({ message: res.statusText }));
         throw new Error(
-          err[0]?.description || err.message || "Registration failed"
+          err[0]?.description || err.message || "Registration failed",
         );
       }
 

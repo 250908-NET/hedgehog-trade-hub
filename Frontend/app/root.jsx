@@ -45,20 +45,20 @@ export default function App() {
   if (!checked) return null;
 
   if (
-      token &&
-      (location.pathname === "/login" || location.pathname === "/register")
-    ) {
-      return <Navigate to="/" replace />;
-    }
+    token &&
+    (location.pathname === "/login" || location.pathname === "/register")
+  ) {
+    return <Navigate to="/" replace />;
+  }
 
-    return (
-      <>
-        <Navbar />
-        <main className="mt-12 container mx-auto p-4">
-          <Outlet />
-        </main>
-        <Footer />
-      </>
+  return (
+    <>
+      <Navbar />
+      <main className="mt-12 container mx-auto p-4">
+        <Outlet />
+      </main>
+      <Footer />
+    </>
   );
 }
 

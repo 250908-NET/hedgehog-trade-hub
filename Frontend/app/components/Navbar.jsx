@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink } from "react-router";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
