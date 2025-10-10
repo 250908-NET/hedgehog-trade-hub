@@ -1,28 +1,23 @@
 // Controllers/AdminUsersController.cs
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TradeHub.Api.Services;            // IAdminUserService
-using TradeHub.Api.Models.DTOs;         // UserDTO, CreateUserDTO, UpdateUserDTO
+using TradeHub.Api.Models.DTOs; // UserDTO, CreateUserDTO, UpdateUserDTO
+using TradeHub.Api.Services; // IAdminUserService
 
 namespace TradeHub.Api.Controllers;
 
 [ApiController]
 [Route("admin/users")]
 [Authorize(Policy = "AdminOnly")]
-public class AdminUsersController : ControllerBase
+public class AdminUsersController(IAdminUserService svc) : ControllerBase
 {
-    private readonly IAdminUserService _svc;
-
-    public AdminUsersController(IAdminUserService svc)
-    {
-        _svc = svc;
-    }
+    private readonly IAdminUserService _svc = svc;
 
     /// <summary>Get all users.</summary>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<UserDTO>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll()
-        => Ok(await _svc.GetAllAsync(User));
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetAll() =>
+        Ok(await _svc.GetAllAsync(User));
 
     /// <summary>Get a specific user.</summary>
     [HttpGet("{id:long}")]
