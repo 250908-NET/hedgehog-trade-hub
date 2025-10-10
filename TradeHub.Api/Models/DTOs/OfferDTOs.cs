@@ -1,4 +1,4 @@
-namespace TradeHub.API.Models.DTOs
+namespace TradeHub.Api.Models.DTOs
 {
     // to create an offer
     public class CreateOfferDTO

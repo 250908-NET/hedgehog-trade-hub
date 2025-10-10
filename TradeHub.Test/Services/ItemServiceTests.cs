@@ -1,11 +1,11 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
-using TradeHub.API.Models;
-using TradeHub.API.Models.DTOs;
-using TradeHub.API.Repository.Interfaces;
-using TradeHub.API.Services;
-using TradeHub.API.Services.Interfaces;
+using TradeHub.Api.Models;
+using TradeHub.Api.Models.DTOs;
+using TradeHub.Api.Repository.Interfaces;
+using TradeHub.Api.Services;
+using TradeHub.Api.Services.Interfaces;
 
 namespace TradeHub.Test.Services;
 
@@ -552,7 +552,7 @@ public class ItemServiceTests
         _mockItemRepository.Setup(repo => repo.GetByIdAsync(itemId)).ReturnsAsync((Item?)null);
 
         // Act & Assert
-        await Assert.ThrowsAsync<API.Utilities.NotFoundException>(() =>
+        await Assert.ThrowsAsync<Api.Utilities.NotFoundException>(() =>
             _itemService.GetItemByIdAsync(itemId)
         );
 
@@ -1141,7 +1141,7 @@ public class ItemServiceTests
         _mockItemRepository.Setup(r => r.GetByIdAsync(itemId)).ReturnsAsync((Item?)null);
 
         // Act & Assert
-        await Assert.ThrowsAsync<API.Utilities.NotFoundException>(() =>
+        await Assert.ThrowsAsync<Api.Utilities.NotFoundException>(() =>
             _itemService.UpdateItemAsync(itemId, updateDto)
         );
 
@@ -1173,10 +1173,10 @@ public class ItemServiceTests
         _mockItemRepository.Setup(r => r.GetByIdAsync(itemId)).ReturnsAsync(existingItem);
         _mockItemRepository
             .Setup(r => r.UpdateAsync(existingItem))
-            .ThrowsAsync(new API.Utilities.ConflictException("Concurrency conflict"));
+            .ThrowsAsync(new Api.Utilities.ConflictException("Concurrency conflict"));
 
         // Act & Assert
-        await Assert.ThrowsAsync<API.Utilities.ConflictException>(() =>
+        await Assert.ThrowsAsync<Api.Utilities.ConflictException>(() =>
             _itemService.UpdateItemAsync(itemId, updateDto)
         );
 
@@ -1815,7 +1815,7 @@ public class ItemServiceTests
         _mockItemRepository.Setup(r => r.GetByIdAsync(itemId)).ReturnsAsync((Item?)null);
 
         // Act & Assert
-        await Assert.ThrowsAsync<API.Utilities.NotFoundException>(() =>
+        await Assert.ThrowsAsync<Api.Utilities.NotFoundException>(() =>
             _itemService.DeleteItemAsync(itemId)
         );
 

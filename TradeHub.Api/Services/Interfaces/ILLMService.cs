@@ -1,4 +1,4 @@
-namespace TradeHub.API.Services.Interfaces;
+namespace TradeHub.Api.Services.Interfaces;
 
 public interface ILLMService
 {

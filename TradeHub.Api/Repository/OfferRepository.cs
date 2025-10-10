@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using TradeHub.API.Models;
-using TradeHub.API.Models.DTOs;
-using TradeHub.API.Repository.Interfaces;
+using TradeHub.Api.Models;
+using TradeHub.Api.Models.DTOs;
+using TradeHub.Api.Repository.Interfaces;
 
-namespace TradeHub.API.Repository
+namespace TradeHub.Api.Repository
 {
     public class OfferRepository(TradeHubContext context) : IOfferRepository
     {

@@ -1,4 +1,4 @@
-namespace TradeHub.API.Middleware;
+namespace TradeHub.Api.Middleware;
 
 public static class MiddlewareExtensions
 {

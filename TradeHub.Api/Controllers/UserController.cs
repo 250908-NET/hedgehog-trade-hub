@@ -3,10 +3,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TradeHub.API.Models;
-using TradeHub.API.Models.DTOs;
+using TradeHub.Api.Models;
+using TradeHub.Api.Models.DTOs;
 
-namespace TradeHub.API.Controllers;
+namespace TradeHub.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]

@@ -2,7 +2,7 @@
 // only for items indide an offer
 //returned when you want o display all items included in an offer
 
-namespace TradeHub.API.Models.DTOs
+namespace TradeHub.Api.Models.DTOs
 {
     public class OfferItemViewDto
     {

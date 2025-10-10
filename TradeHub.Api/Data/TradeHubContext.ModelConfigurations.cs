@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace TradeHub.API.Models;
+namespace TradeHub.Api.Models;
 
 public partial class TradeHubContext
 {

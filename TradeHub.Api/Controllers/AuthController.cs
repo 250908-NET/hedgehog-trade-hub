@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TradeHub.API.Models;
-using TradeHub.API.Models.DTOs;
+using TradeHub.Api.Models;
+using TradeHub.Api.Models.DTOs;
 
 [ApiController]
 [Route("[controller]")]

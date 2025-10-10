@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TradeHub.API.Models.DTOs
+namespace TradeHub.Api.Models.DTOs
 {
     public class RegisterUserDTO
     {
