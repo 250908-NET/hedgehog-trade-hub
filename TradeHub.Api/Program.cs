@@ -111,6 +111,7 @@ public class Program
         builder.Services.AddScoped<ITradeService, TradeService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 
         // Cookie auth
         builder
@@ -146,16 +147,6 @@ public class Program
         // ---------- DI registrations ----------
         // Identity password hasher (generic)
         builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
-        // Repositories
-
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<IItemRepository, ItemRepository>();
-        builder.Services.AddScoped<ITradeRepository, TradeRepository>();
-        builder.Services.AddScoped<IOfferRepository, OfferRepository>();
-
-        // Services
-        builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 
         // Add CORS
         builder.Services.AddCors(options =>

@@ -3,27 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using TradeHub.Api.Models;
 using TradeHub.Api.Models.DTOs;
 
+namespace TradeHub.Api.Controllers;
+
 [ApiController]
 [Route("[controller]")]
-public class AuthController : ControllerBase
+public class AuthController(
+    UserManager<User> userManager,
+    RoleManager<IdentityRole<long>> roleManager,
+    ITokenService tokenService,
+    ILogger<AuthController> logger
+) : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole<long>> _roleManager;
-    private readonly ITokenService _tokenService;
-    private readonly ILogger<AuthController> _logger;
-
-    public AuthController(
-        UserManager<User> userManager,
-        RoleManager<IdentityRole<long>> roleManager,
-        ITokenService tokenService,
-        ILogger<AuthController> logger
-    )
-    {
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _tokenService = tokenService;
-        _logger = logger;
-    }
+    private readonly UserManager<User> _userManager = userManager;
+    private readonly RoleManager<IdentityRole<long>> _roleManager = roleManager;
+    private readonly ITokenService _tokenService = tokenService;
+    private readonly ILogger<AuthController> _logger = logger;
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
