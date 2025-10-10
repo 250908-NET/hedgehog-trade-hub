@@ -54,14 +54,12 @@ export default function HomePage() {
               type="text"
               placeholder="Search for items..."
               id="itemSearchInput"
-              className="bg-neutral-700 p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-neutral-600"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <button
               id="itemSearchButton"
               type="submit"
-              className="bg-neutral-600 p-2 rounded hover:bg-neutral-500"
             >
               {/* magnifying glass icon */}
               <svg
@@ -83,9 +81,6 @@ export default function HomePage() {
               id="advancedSearchToggleButton"
               type="button"
               onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
-              className={`p-2 rounded hover:bg-neutral-500 text-sm w-full sm:w-auto ${
-                showAdvancedSearch ? "bg-neutral-500 hover:bg-neutral-600" : "bg-neutral-600 hover:bg-neutral-500"
-              }`}
             >
               {/* filter icon */}
               <svg
@@ -113,19 +108,16 @@ export default function HomePage() {
               <input
                 type="number"
                 placeholder="Min Estimated Value"
-                className="bg-neutral-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-neutral-600"
                 value={minValue}
                 onChange={(e) => setMinValue(e.target.value)}
               />
               <input
                 type="number"
                 placeholder="Max Estimated Value"
-                className="bg-neutral-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-neutral-600"
                 value={maxValue}
                 onChange={(e) => setMaxValue(e.target.value)}
               />
               <select
-                className="bg-neutral-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-neutral-600"
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
               >
@@ -138,13 +130,12 @@ export default function HomePage() {
                 <option value="UsedBad">Used (Bad)</option>
               </select>
               <select
-                className="bg-neutral-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-neutral-600"
                 value={availability}
                 onChange={(e) => setAvailability(e.target.value)}
               >
-                <option value="" selected>Any Availability</option>
-                <option value="Available">Available</option>
-                <option value="Traded">Traded</option>
+                <option value="">Any Availability</option>
+                <option value="Available" selected>Available</option>
+                <option value="Unavailable">Unavailable</option>
               </select>
             </div>
           )}
