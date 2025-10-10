@@ -1,12 +1,31 @@
 using FluentValidation.TestHelper;
-using TradeHub.Api.Models;
-using TradeHub.Api.Models.DTOs;
+using Moq;
+using TradeHub.API.Models;
+using TradeHub.API.Models.DTOs;
+using TradeHub.API.Repository.Interfaces;
 using Xunit; // Ensure Xunit is imported for [MemberData]
 
 namespace TradeHub.Test.Validation;
 
 public class ItemDTOValidationTests
 {
+    private readonly Mock<IUserRepository> _mockUserRepository; // mock repository
+    private readonly CreateItemDTOValidator _createValidator;
+    private readonly UpdateItemDTOValidator _updateValidator;
+
+    public ItemDTOValidationTests()
+    {
+        _mockUserRepository = new Mock<IUserRepository>();
+        // default behavior for owner existence: assume owner 1 exists, others don't
+        _mockUserRepository.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(new User { Id = 1 });
+        _mockUserRepository
+            .Setup(repo => repo.GetByIdAsync(It.Is<long>(id => id != 1)))
+            .ReturnsAsync((User?)null);
+
+        _createValidator = new CreateItemDTOValidator(_mockUserRepository.Object);
+        _updateValidator = new UpdateItemDTOValidator(_mockUserRepository.Object);
+    }
+
     // Helper method to generate long strings for test data
     private static string GenerateLongString(int length) => new('a', length);
 
@@ -37,10 +56,8 @@ public class ItemDTOValidationTests
         };
 
     #region CreateItemDTOValidator tests
-    private readonly CreateItemDTOValidator _validator = new();
-
     [Fact]
-    public void CreateItemDTOValidator_ShouldBeValid_WhenAllFieldsAreValid()
+    public async Task CreateItemDTOValidator_ShouldBeValid_WhenAllFieldsAreValid()
     {
         // Arrange
         var item = new CreateItemDTO(
@@ -55,14 +72,14 @@ public class ItemDTOValidationTests
         );
 
         // Act
-        var result = _validator.TestValidate(item);
+        var result = await _createValidator.TestValidateAsync(item);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
-    public void CreateItemDTOValidator_ShouldBeValid_WhenAllowedEmptyFieldsAreEmpty()
+    public async Task CreateItemDTOValidator_ShouldBeValid_WhenAllowedEmptyFieldsAreEmpty()
     {
         // Arrange
         var item = new CreateItemDTO(
@@ -77,14 +94,14 @@ public class ItemDTOValidationTests
         );
 
         // Act
-        var result = _validator.TestValidate(item);
+        var result = await _createValidator.TestValidateAsync(item);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
-    public void CreateItemDTOValidator_ShouldHaveValidationErrors_WhenRequiredFieldsAreMissing()
+    public async Task CreateItemDTOValidator_ShouldHaveValidationErrors_WhenRequiredFieldsAreMissing()
     {
         // Arrange
         var item = new CreateItemDTO(
@@ -99,7 +116,7 @@ public class ItemDTOValidationTests
         );
 
         // Act
-        var result = _validator.TestValidate(item);
+        var result = await _createValidator.TestValidateAsync(item);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name);
@@ -111,7 +128,7 @@ public class ItemDTOValidationTests
 
     [Theory]
     [MemberData(nameof(CreateItemExceedLimitsData))]
-    public void CreateItemDTOValidator_ShouldHaveValidationErrors_WhenFieldsExceedLimits(
+    public async Task CreateItemDTOValidator_ShouldHaveValidationErrors_WhenFieldsExceedLimits(
         string name,
         decimal value,
         string tags
@@ -130,7 +147,7 @@ public class ItemDTOValidationTests
         );
 
         // Act
-        var result = _validator.TestValidate(item);
+        var result = await _createValidator.TestValidateAsync(item);
 
         // Assert
         if (name != null && name.Length > 127) // Name max length is 127
@@ -139,6 +156,30 @@ public class ItemDTOValidationTests
             result.ShouldHaveValidationErrorFor(x => x.Value);
         // if (tags != null && tags.Length > 255)
         //     result.ShouldHaveValidationErrorFor(x => x.Tags);
+    }
+
+    [Fact]
+    public async Task CreateItemDTOValidator_ShouldHaveValidationError_WhenOwnerDoesNotExist()
+    {
+        // Arrange
+        var item = new CreateItemDTO(
+            Name: "Valid Name",
+            Description: "Valid Description",
+            Image: "Valid Image",
+            Value: 10.0m,
+            OwnerId: 999, // This owner is mocked to NOT exist
+            Tags: "valid,tags",
+            Condition: Condition.New,
+            Availability: Availability.Available
+        );
+
+        // Act
+        var result = await _createValidator.TestValidateAsync(item);
+
+        // Assert
+        result
+            .ShouldHaveValidationErrorFor(x => x.OwnerId)
+            .WithErrorMessage("Specified owner does not exist.");
     }
 
     #endregion
@@ -170,23 +211,21 @@ public class ItemDTOValidationTests
         };
 
     #region UpdateItemDTOValidator tests
-    private readonly UpdateItemDTOValidator _updateValidator = new();
-
     [Fact]
-    public void UpdateItemDTOValidator_ShouldBeValid_WhenAllFieldsAreNull()
+    public async Task UpdateItemDTOValidator_ShouldBeValid_WhenAllFieldsAreNull()
     {
         // Arrange
         var item = new UpdateItemDTO(null, null, null, null, null, null, null, null);
 
         // Act
-        var result = _updateValidator.TestValidate(item);
+        var result = await _updateValidator.TestValidateAsync(item);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
-    public void UpdateItemDTOValidator_ShouldBeValid_WhenAllFieldsAreValid()
+    public async Task UpdateItemDTOValidator_ShouldBeValid_WhenAllFieldsAreValid()
     {
         // Arrange
         var item = new UpdateItemDTO(
@@ -201,7 +240,7 @@ public class ItemDTOValidationTests
         );
 
         // Act
-        var result = _updateValidator.TestValidate(item);
+        var result = await _updateValidator.TestValidateAsync(item);
 
         // Assert
         result.ShouldNotHaveAnyValidationErrors();
@@ -209,7 +248,7 @@ public class ItemDTOValidationTests
 
     [Theory]
     [MemberData(nameof(UpdateItemExceedLimitsData))]
-    public void UpdateItemDTOValidator_ShouldHaveValidationErrors_WhenFieldsExceedLimits(
+    public async Task UpdateItemDTOValidator_ShouldHaveValidationErrors_WhenFieldsExceedLimits(
         string name,
         decimal value,
         string tags
@@ -228,7 +267,7 @@ public class ItemDTOValidationTests
         );
 
         // Act
-        var result = _updateValidator.TestValidate(item);
+        var result = await _updateValidator.TestValidateAsync(item);
 
         // Assert
         if (name != null && name.Length > 127) // Name max length is 127
@@ -240,16 +279,40 @@ public class ItemDTOValidationTests
     }
 
     [Fact]
-    public void UpdateItemDTOValidator_ShouldHaveValidationError_WhenNameIsEmpty()
+    public async Task UpdateItemDTOValidator_ShouldHaveValidationError_WhenNameIsEmpty()
     {
         // Arrange
         var item = new UpdateItemDTO("", null, null, null, null, null, null, null);
 
         // Act
-        var result = _updateValidator.TestValidate(item);
+        var result = await _updateValidator.TestValidateAsync(item);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name);
+    }
+
+    [Fact]
+    public async Task UpdateItemDTOValidator_ShouldHaveValidationError_WhenOwnerDoesNotExist()
+    {
+        // Arrange
+        var item = new UpdateItemDTO(
+            Name: "Valid Name",
+            Description: null,
+            Image: null,
+            Value: null,
+            OwnerId: 999, // This owner is mocked to NOT exist
+            Tags: null,
+            Condition: null,
+            Availability: null
+        );
+
+        // Act
+        var result = await _updateValidator.TestValidateAsync(item);
+
+        // Assert
+        result
+            .ShouldHaveValidationErrorFor(x => x.OwnerId)
+            .WithErrorMessage("Specified owner does not exist.");
     }
 
     #endregion

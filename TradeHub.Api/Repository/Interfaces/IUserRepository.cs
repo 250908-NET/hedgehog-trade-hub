@@ -1,11 +1,11 @@
-using TradeHub.Api.Models;
+using TradeHub.API.Models;
 
-namespace TradeHub.Api.Repository.Interfaces;
+namespace TradeHub.API.Repository.Interfaces;
 
 public interface IUserRepository
 {
-    Task<User> GetByIdAsync(long id);
-    Task<User> GetByUsernameAsync(string username);
+    Task<User?> GetByIdAsync(long id);
+    Task<User?> GetByUsernameAsync(string username);
     Task AddAsync(User user);
     Task UpdateAsync(User user);
     Task<bool> DeleteAsync(long id);

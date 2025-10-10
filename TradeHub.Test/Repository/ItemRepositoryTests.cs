@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TradeHub.Api.Models;
-using TradeHub.Api.Repository;
-using TradeHub.Api.Utilities;
+using TradeHub.API.Models;
+using TradeHub.API.Repository;
+using TradeHub.API.Utilities;
 using TradeHub.Test.Helpers;
 
 namespace TradeHub.Test.Repository;
@@ -22,7 +22,7 @@ public class ItemRepositoryTests
     {
         var user = new User
         {
-            Username = "testuser",
+            UserName = "testuser",
             Email = "test@test.com",
             PasswordHash = "password",
         };

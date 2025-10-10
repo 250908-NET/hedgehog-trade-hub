@@ -1,19 +1,14 @@
 using Microsoft.EntityFrameworkCore;
-using TradeHub.Api.Models;
-using TradeHub.Api.Repository.Interfaces;
+using TradeHub.API.Models;
+using TradeHub.API.Repository.Interfaces;
 
-namespace TradeHub.Api.Repository;
+namespace TradeHub.API.Repository;
 
-public class TradeRepository : ITradeRepository
+public class TradeRepository(TradeHubContext context) : ITradeRepository
 {
-    private readonly TradeHubContext _context;
-    public TradeRepository(TradeHubContext context)
-    {
-        _context = context;
-    }
+    private readonly TradeHubContext _context = context;
 
-
- public async Task<Trade> CreateTradeAsync(Trade trade)
+    public async Task<Trade> CreateTradeAsync(Trade trade)
     {
         _context.Trades.Add(trade);
         await _context.SaveChangesAsync();
@@ -23,10 +18,11 @@ public class TradeRepository : ITradeRepository
     public async Task DeleteTradeAsync(int tradeId)
     {
         var trade = await _context.Trades.FindAsync(tradeId);
+
+        // DELETE is idempotent, so don't throw an error if the trade doesn't exist
         if (trade == null)
-        {
-            throw new KeyNotFoundException($"Trade with Id {tradeId} not found.");
-        }
+            return;
+
         _context.Trades.Remove(trade);
         await _context.SaveChangesAsync();
     }
@@ -65,12 +61,12 @@ public class TradeRepository : ITradeRepository
 
     public async Task<List<Trade>> GetTradesByStatusAsync(TradeStatus status)
     {
-        return await _context.Trades
-          .Include(t => t.TradeItems)
-        .Include(t => t.InitiatedUser)
-        .Include(t => t.ReceivedUser)
-        .Include(t => t.Offers)
-        .Where(t => t.Status == status)
-        .ToListAsync();
+        return await _context
+            .Trades.Include(t => t.TradeItems)
+            .Include(t => t.InitiatedUser)
+            .Include(t => t.ReceivedUser)
+            .Include(t => t.Offers)
+            .Where(t => t.Status == status)
+            .ToListAsync();
     }
 }
