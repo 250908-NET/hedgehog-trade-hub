@@ -375,7 +375,7 @@ public class Program
             new(
                 "Weird Car",
                 "My friend gave me this weird car but I don't have a driver's license so I can't drive it.",
-                "/images/ti84.jpg",
+                "/images/tank.jpg",
                 1000000,
                 adminUserId,
                 "car",

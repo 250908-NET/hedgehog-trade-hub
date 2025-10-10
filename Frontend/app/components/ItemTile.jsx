@@ -4,9 +4,9 @@ export default function ItemTile({ item }) {
   return (
     <Tile>
       <div className="aspect-square bg-neutral-900 mb-2 rounded flex items-center justify-center">
-        {item.imgURL ? (
+        {item.image ? (
           <img
-            src={item.imgURL}
+            src={item.image}
             alt={item.name}
             className="w-full h-full object-contain"
           />
