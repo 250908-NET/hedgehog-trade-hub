@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from "react-router";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -125,12 +125,12 @@ export default function Login() {
             <div className="text-center">
               <span className="text-sm text-gray-600">
                 Don't have an account?{' '}
-                <Link
+                <NavLink
                   to="/register"
                   className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
                 >
                   Create one here
-                </Link>
+                </NavLink>
               </span>
             </div>
           </div>
