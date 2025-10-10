@@ -1,7 +1,6 @@
-// to send trade, offers, items to the  frontend
-
 namespace TradeHub.Api.Models.DTOs
 {
+    // to send trade, offers, items to the frontend
     public class ReceivedOfferDTO
     {
         public long OfferId { get; set; }
@@ -15,6 +14,8 @@ namespace TradeHub.Api.Models.DTOs
         public List<OfferItemViewDto> Items { get; set; } = [];
 
         //status, e.g., Pending, Accepted, Rejected
-        public TradeStatus Status { get; set; }
+        public bool InitiatedConfirmed { get; set; }
+        public bool ReceivedConfirmed { get; set; }
+        public bool IsCompleted { get; set; }
     }
 }

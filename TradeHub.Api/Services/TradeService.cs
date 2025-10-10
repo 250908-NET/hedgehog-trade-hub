@@ -14,12 +14,12 @@ public class TradeService(ITradeRepository repository) : ITradeService
         return await _repository.GetAllTradesAsync();
     }
 
-    public async Task<List<Trade>> GetTradesByUserAsync(int userId)
+    public async Task<List<Trade>> GetTradesByUserAsync(long userId)
     {
         return await _repository.GetTradesByUser(userId);
     }
 
-    public async Task<Trade?> GetTradeByIdAsync(int tradeId)
+    public async Task<Trade?> GetTradeByIdAsync(long tradeId)
     {
         return await _repository.GetTradeByIdAsync(tradeId);
     }
@@ -34,14 +34,14 @@ public class TradeService(ITradeRepository repository) : ITradeService
         return await _repository.UpdateTradeAsync(trade);
     }
 
-    public async Task DeleteTradeAsync(int tradeId)
+    public async Task DeleteTradeAsync(long tradeId)
     {
         await _repository.DeleteTradeAsync(tradeId);
     }
 
     // implementaions for confirm trade
 
-    public async Task<Trade> ConfirmTradeAsync(int tradeId, int userId)
+    public async Task<Trade> ConfirmTradeAsync(long tradeId, long userId)
     {
         var trade =
             await _repository.GetTradeByIdAsync(tradeId) ?? throw new Exception("Trade not found");
@@ -56,9 +56,6 @@ public class TradeService(ITradeRepository repository) : ITradeService
         else if (userId == trade.ReceivedId)
             trade.ReceivedConfirmed = true;
 
-        // to mark as completed
-        if (trade.InitiatedConfirmed && trade.ReceivedConfirmed)
-            trade.Status = TradeStatus.Completed;
         return await _repository.UpdateTradeAsync(trade)
             ?? throw new Exception("Failed to update trade");
     }

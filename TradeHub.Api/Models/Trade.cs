@@ -23,8 +23,6 @@ public class Trade
 
     public User? ReceivedUser { get; set; }
 
-    public TradeStatus Status { get; set; } = TradeStatus.Pending;
-
     // for tracking completion status
     public bool InitiatedConfirmed { get; set; } = false;
     public bool ReceivedConfirmed { get; set; } = false;

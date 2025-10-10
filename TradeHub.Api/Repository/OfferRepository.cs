@@ -121,7 +121,9 @@ namespace TradeHub.Api.Repository
                     TradeNotes = o.Trade.Notes,
                     OwnerReputation = o.Trade.OwnerReputation,
                     OfferCreated = o.CreatedAt,
-                    Status = o.Trade.Status,
+                    InitiatedConfirmed = o.Trade.InitiatedConfirmed,
+                    ReceivedConfirmed = o.Trade.ReceivedConfirmed,
+                    IsCompleted = o.Trade.IsCompleted,
                     Items = o
                         .OfferItems.Select(oi => new OfferItemViewDto
                         {

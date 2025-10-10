@@ -5,11 +5,12 @@ namespace TradeHub.Api.Repository.Interfaces;
 public interface ITradeRepository
 {
     Task<List<Trade>> GetAllTradesAsync();
-    Task<List<Trade>> GetTradesByUser(int userId);
-    Task<Trade?> GetTradeByIdAsync(int tradeId);
+    Task<List<Trade>> GetTradesByUser(long userId);
+    Task<Trade?> GetTradeByIdAsync(long tradeId);
     Task<Trade> CreateTradeAsync(Trade trade);
     Task<Trade?> UpdateTradeAsync(Trade trade);
-    Task DeleteTradeAsync(int tradeId);
+    Task DeleteTradeAsync(long tradeId);
 
-    Task<List<Trade>> GetTradesByStatusAsync(TradeStatus status);
+    // Task<bool> MarkTradeAsCompletedAsync(long tradeId);
+    Task<List<Trade>> GetTradesByStatusAsync(bool initiatedConfirmed, bool receivedConfirmed);
 }

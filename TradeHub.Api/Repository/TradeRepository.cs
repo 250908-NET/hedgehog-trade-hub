@@ -15,7 +15,7 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
         return trade;
     }
 
-    public async Task DeleteTradeAsync(int tradeId)
+    public async Task DeleteTradeAsync(long tradeId)
     {
         var trade = await _context.Trades.FindAsync(tradeId);
 
@@ -32,7 +32,7 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
         return await _context.Trades.Include(t => t.TradeItems).ToListAsync();
     }
 
-    public async Task<Trade?> GetTradeByIdAsync(int tradeId)
+    public async Task<Trade?> GetTradeByIdAsync(long tradeId)
     {
         return await _context
             .Trades.Include(t => t.InitiatedUser)
@@ -40,7 +40,7 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
             .FirstOrDefaultAsync(t => t.Id == tradeId);
     }
 
-    public async Task<List<Trade>> GetTradesByUser(int userId)
+    public async Task<List<Trade>> GetTradesByUser(long userId)
     {
         return await _context
             .Trades.Include(t => t.TradeItems)
@@ -59,14 +59,33 @@ public class TradeRepository(TradeHubContext context) : ITradeRepository
         return exisitingTrade;
     }
 
-    public async Task<List<Trade>> GetTradesByStatusAsync(TradeStatus status)
+    // // Implementation for completing a trade
+    // public async Task<bool> MarkTradeAsCompletedAsync(long tradeId)
+    // {
+    //     var trade = await _context.Trades.FindAsync(tradeId);
+    //     if (trade == null)
+    //         return false;
+
+    //     trade.Status = 1; // 1 = completed
+    //     _context.Trades.Update(trade);
+    //     await _context.SaveChangesAsync();
+    //     return true;
+    // }
+
+    public async Task<List<Trade>> GetTradesByStatusAsync(
+        bool initiatedConfirmed,
+        bool receivedConfirmed
+    )
     {
         return await _context
             .Trades.Include(t => t.TradeItems)
             .Include(t => t.InitiatedUser)
             .Include(t => t.ReceivedUser)
             .Include(t => t.Offers)
-            .Where(t => t.Status == status)
+            .Where(t =>
+                t.InitiatedConfirmed == initiatedConfirmed
+                && t.ReceivedConfirmed == receivedConfirmed
+            )
             .ToListAsync();
     }
 }
