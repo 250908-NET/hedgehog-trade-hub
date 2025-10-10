@@ -5,18 +5,14 @@ using TradeHub.Api.Services.Interfaces;
 namespace TradeHub.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class OffersController : ControllerBase
+    [Route("[controller]")]
+    public class OffersController(IOfferService offerService) : ControllerBase
     {
-        private readonly IOfferService _offerService;
-
-        public OffersController(IOfferService offerService)
-        {
-            _offerService = offerService;
-        }
+        private readonly IOfferService _offerService = offerService;
 
         // POST: api/offers
         // Create a new offer
+
         [HttpPost]
         public async Task<ActionResult<OfferDTO>> CreateOffer([FromBody] CreateOfferDTO dto)
         {

@@ -38,7 +38,9 @@ public class AuthController(
             new AuthResponseDto
             {
                 Token = token,
+                UserId = user.Id,
                 Email = user.Email ?? string.Empty,
+                Username = user.UserName ?? string.Empty,
                 Roles = [.. roles],
             }
         );
@@ -49,7 +51,7 @@ public class AuthController(
     {
         var user = new User
         {
-            UserName = dto.Email,
+            UserName = dto.Username,
             Email = dto.Email,
             Description = dto.Description,
         };
@@ -79,7 +81,7 @@ public class AuthController(
     {
         var user = new User
         {
-            UserName = dto.Email,
+            UserName = dto.Username,
             Email = dto.Email,
             Description = dto.Description,
         };

@@ -5,15 +5,10 @@ using TradeHub.Api.Services.Interfaces;
 namespace TradeHub.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class TradesController : ControllerBase
+    [Route("[controller]")]
+    public class TradesController(ITradeService tradeService) : ControllerBase
     {
-        private readonly ITradeService _tradeService;
-
-        public TradesController(ITradeService tradeService)
-        {
-            _tradeService = tradeService;
-        }
+        private readonly ITradeService _tradeService = tradeService;
 
         [HttpGet]
         public async Task<ActionResult<List<Trade>>> GetAllTrades()

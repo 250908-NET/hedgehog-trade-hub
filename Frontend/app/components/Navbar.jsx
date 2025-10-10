@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState(""); // Add state for username
 
   const getNavLinkClass = ({ isActive }) => {
     return `hover:underline ${isActive ? "font-bold" : ""}`;
@@ -10,11 +11,16 @@ export default function Navbar() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username"); // Get username from localStorage
     setIsLoggedIn(!!token);
+    setUsername(storedUsername || ""); // Set username state
 
     // Optional: listen to token changes from other tabs
     const handleStorageChange = () => {
-      setIsLoggedIn(!!localStorage.getItem("token"));
+      const newToken = localStorage.getItem("token");
+      const newUsername = localStorage.getItem("username");
+      setIsLoggedIn(!!newToken);
+      setUsername(newUsername || "");
     };
     window.addEventListener("storage", handleStorageChange);
 
@@ -23,6 +29,8 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("userid");
     window.location.href = "/login";
   };
 
@@ -37,12 +45,18 @@ export default function Navbar() {
         </NavLink>
         <div className="ml-auto flex items-center gap-4">
           {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="text-white hover:underline font-semibold"
-            >
-              Logout
-            </button>
+            <>
+              <NavLink className={getNavLinkClass} to="/items">
+                Items
+              </NavLink>
+              <span>Welcome, {username}!</span> {/* Display username */}
+              <button
+                onClick={handleLogout}
+                className="hover:underline font-semibold"
+              >
+                Logout
+              </button>
+            </>
           ) : (
             <>
               <NavLink className={getNavLinkClass} to="/login">

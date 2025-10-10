@@ -34,12 +34,16 @@ public class ItemRepository(TradeHubContext context) : IItemRepository
             query = query.Where(i => i.Condition == condition.Value);
         if (availability != null)
             query = query.Where(i => i.Availability == availability.Value);
-        if (!string.IsNullOrEmpty(search))
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            string cleanedSearch = search.Trim().ToLower();
             query = query.Where(i =>
-                i.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
-                || i.Description.Contains(search, StringComparison.OrdinalIgnoreCase)
-                || i.Tags.Contains(search, StringComparison.OrdinalIgnoreCase)
+                // must use without overload for ef core to recognize
+                i.Name.ToLower().Contains(cleanedSearch)
+                || i.Description.ToLower().Contains(cleanedSearch)
+                || i.Tags.ToLower().Contains(cleanedSearch)
             );
+        }
 
         // apply pagination
         int skip = (Math.Max(1, page) - 1) * Math.Max(1, pageSize);

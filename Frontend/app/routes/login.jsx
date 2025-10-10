@@ -1,5 +1,5 @@
 import LogoTile from "../components/LogoTile";
-import LoginPanel from "../components/login";
+import LoginPanel from "../components/Login";
 
 export default function LoginPage() {
   return (
