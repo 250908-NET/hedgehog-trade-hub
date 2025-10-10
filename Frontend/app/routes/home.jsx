@@ -9,7 +9,7 @@ import { searchItems } from "@/services/itemService";
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [items, setItems] = useState([]); // store fetched items
-  const [message, setMessage] = useState("No items found.");
+  const [message, setMessage] = useState("Search for an item!");
 
   const handleSearch = async (e) => {
     e.preventDefault(); // prevent reload on form submission

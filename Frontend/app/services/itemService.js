@@ -1,3 +1,6 @@
+import { buildQueryString } from "@/utilities/queryHelper";
+import { handleResponseError } from "@/utilities/errorHelper";
+
 // Expected item data format:
 // {
 //   "id": 1,
@@ -11,13 +14,28 @@
 //   "availability": "Available"
 // }
 
-export async function searchItems(query) {
+// WHY CAN'T I USE TYPESCRIPT AAAAAAAAAAAAAAAA
+export async function searchItems({ params = {} }) {
+  // assemble query
+  const rawParams = {
+    page: params.page || 1,
+    pageSize: params.pageSize || 10,
+    minValue: params.minValue,
+    maxValue: params.maxValue,
+    condition: params.condition,
+    availability: params.availability,
+    search: params.search,
+  };
+  const queryString = buildQueryString(rawParams);
+
   try {
-    // Construct the URL with the 'search' query parameter
-    const response = await fetch(`/api/items?search=${encodeURIComponent(query)}`);
+    const response = await fetch(`/api/items${queryString}`);
+
+    // try to get error message
     if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+      throw await handleResponseError(response);
     }
+
     const data = await response.json();
     console.log(data);
     return data;
