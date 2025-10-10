@@ -157,6 +157,22 @@ public class Program
         // Services
         builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 
+        // Add CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "AllowReactApp",
+                policy =>
+                {
+                    policy
+                        .WithOrigins("http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                }
+            );
+        });
+
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
             .CreateLogger(); // read from appsettings.json
@@ -177,7 +193,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-        app.UseCors();
+
+        app.UseCors("AllowReactApp");
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();

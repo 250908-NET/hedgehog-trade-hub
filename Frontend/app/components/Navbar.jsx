@@ -1,8 +1,29 @@
 import { NavLink } from "react-router";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const getNavLinkClass = ({ isActive }) => {
     return `hover:underline ${isActive ? "font-bold" : ""}`;
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+
+    // Optional: listen to token changes from other tabs
+    const handleStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem("token"));
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
   };
 
   return (
@@ -14,9 +35,25 @@ export default function Navbar() {
         <NavLink className={getNavLinkClass} to="/trade">
           Trades
         </NavLink>
-        <NavLink className={getNavLinkClass + " ml-auto"} to="/login">
-          Login
-        </NavLink>
+        <div className="ml-auto flex items-center gap-4">
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="text-white hover:underline font-semibold"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <NavLink className={getNavLinkClass} to="/login">
+                Login
+              </NavLink>
+              <NavLink className={getNavLinkClass} to="/register">
+                Register
+              </NavLink>
+            </>
+          )}
+        </div>
       </nav>
     </div>
   );

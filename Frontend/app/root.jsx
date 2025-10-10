@@ -5,8 +5,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  Navigate,
 } from "react-router";
-
+import { useState, useEffect } from "react";
 import "./app.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -31,6 +32,25 @@ export function Layout({ children }) {
 }
 
 export default function App() {
+  const [token, setToken] = useState(null);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    console.log("Token:", t);
+    setToken(t);
+    setChecked(true);
+  }, []);
+
+  if (!checked) return null;
+
+  if (
+    token &&
+    (location.pathname === "/login" || location.pathname === "/register")
+  ) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <>
       <Navbar />
