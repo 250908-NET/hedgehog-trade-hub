@@ -174,6 +174,12 @@ public class Program
         // seed admin user
         await SeedAdminUserAsync(app.Services);
 
+        if (app.Environment.IsDevelopment())
+        {
+            // seed demo items
+            await SeedDemoItemsAsync(app.Services, true);
+        }
+
         app.UseMiddleware<GlobalExceptionHandler>();
 
         // Configure the HTTP request pipeline.
@@ -226,7 +232,6 @@ public class Program
             };
 
             // if this was a production app, you would be lined up against the wall and shot for doing this
-            // TODO: check if password needs to be hashed
             string adminPassword = "ThisIsTheGreatestPassword!!!1!";
             IdentityResult result = await userManager.CreateAsync(newAdminUser, adminPassword);
             if (result.Succeeded)
@@ -255,5 +260,172 @@ public class Program
                 adminUser.Id
             );
         }
+    }
+
+    /// <summary>
+    /// Seed db with demo items owned by the admin.
+    /// </summary>
+    /// <param name="clear">Whether the Items table should be cleared first</param>
+    private static async Task SeedDemoItemsAsync(IServiceProvider services, bool clear = false)
+    {
+        if (clear)
+        {
+            const int delay = 5; // seconds
+            Console.WriteLine("WARNING: This will delete all existing items!");
+
+            for (int i = delay; i > 0; i--)
+            {
+                Console.Write($"Operation will continue in {i} seconds...\r");
+                Thread.Sleep(1000);
+            }
+
+            Console.WriteLine("Continuing...                                     ");
+        }
+
+        using var scope = services.CreateScope();
+
+        TradeHubContext context = scope.ServiceProvider.GetRequiredService<TradeHubContext>();
+        UserManager<User> userManager = scope.ServiceProvider.GetRequiredService<
+            UserManager<User>
+        >();
+        ILogger<Program> logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+        logger.LogInformation("Seeding demo items...");
+
+        // find admin user
+        User? adminUser = await userManager.FindByNameAsync("admin");
+        if (adminUser == null)
+        {
+            logger.LogError("Admin user not found. Cannot seed demo items.");
+            return;
+        }
+        long adminUserId = adminUser.Id;
+
+        if (clear)
+        {
+            logger.LogWarning("Deleting all existing items to seed demo data.");
+            context.Items.RemoveRange(context.Items);
+            await context.SaveChangesAsync();
+        }
+
+        var demoItems = new List<Item>
+        {
+            /*
+            new(
+                name
+                description
+                image
+                quantity
+                owner
+                location
+                condition
+                availability
+            ),
+            */
+            new(
+                "Test Item 1",
+                "test item :)",
+                "", // no image
+                0,
+                adminUserId,
+                "",
+                Condition.New,
+                Availability.Available
+            ),
+            new(
+                "Pinecone",
+                "i think it's a pinecone? maybe?",
+                "/images/pinecone.jpg",
+                100,
+                adminUserId,
+                "",
+                Condition.UsedLikeNew,
+                Availability.Available
+            ),
+            new(
+                "This Rock I Found",
+                "it's a cool rock i guess",
+                "/images/rock.jpg",
+                20,
+                adminUserId,
+                "",
+                Condition.UsedGood,
+                Availability.Available
+            ),
+            new(
+                "Air",
+                "come get your air :)",
+                "", // no image
+                100,
+                adminUserId,
+                "air",
+                Condition.UsedAcceptable,
+                Availability.Available
+            ),
+            new(
+                "TI-84 Plus Calculator",
+                "Some assembly required.",
+                "/images/ti84.jpg",
+                20,
+                adminUserId,
+                "calculator",
+                Condition.UsedBad,
+                Availability.Available
+            ),
+            new(
+                "Weird Car",
+                "My friend gave me this weird car but I don't have a driver's license so I can't drive it.",
+                "/images/ti84.jpg",
+                1000000,
+                adminUserId,
+                "car",
+                Condition.Refurbished,
+                Availability.Available
+            ),
+            new(
+                "Succulent Hedgehog Garden Statues with Solar Lights Garden Gifts for Women Mom Lawn Ornaments for Patio Yard Decor",
+                """ 
+                Cute Design:Lovely hedgehogs with succulents and warm white lights can bring a cheerful atmosphere to your home, no matter where you place it.
+                Multiple Locations Applications:This statue is suitable for various locations, including the front yard, patio, porch, front step, balcony, flower bed, stairs, poolside, planter box decoration and garden centerpiece.
+                Perfect Gift Choice:This hedgehog statue is a perfect gift for Christmas, Easter, Mother's Day, housewarming, birthdays, anniversaries, weddings and more.
+                Auto ON/OFF:Before use this solar lights, please turn on the button located at the bottom of the statue and keep the product in the sun to ensure sufficient sunlight. It will automatically charge during the day and light up at night for 8 hours.
+                Durable Quality:Made from high-quality materials and are coated with a weather-resistant protective layer to ensure waterproofing and colorfastness. This statue is built to last and will add a touch of magic to your outdoor space for years to come.
+                """,
+                "/images/statue.jpg",
+                20,
+                adminUserId,
+                "hedgehog,statue,garden",
+                Condition.New,
+                Availability.Available
+            ),
+            new(
+                "Bow",
+                "Lightly used, but still functional. Arrows not included.",
+                "/images/bow.jpg",
+                300,
+                adminUserId,
+                "",
+                Condition.UsedAcceptable,
+                Availability.Available
+            ),
+            new(
+                "Car",
+                "Recently tuned, 3.0 liter flat-six engine with turbo. Only 12,000 miles.",
+                "/images/car.jpg",
+                20000,
+                adminUserId,
+                "car,good",
+                Condition.UsedLikeNew,
+                Availability.Unavailable
+            ),
+        };
+
+        await context.Items.AddRangeAsync(demoItems);
+        await context.SaveChangesAsync();
+
+        logger.LogInformation(
+            "Successfully seeded {ItemCount} demo items for admin user.",
+            demoItems.Count
+        );
     }
 }
