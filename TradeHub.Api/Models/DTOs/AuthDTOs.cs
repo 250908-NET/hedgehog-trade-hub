@@ -28,7 +28,9 @@ namespace TradeHub.Api.Models.DTOs
     public class AuthResponseDto
     {
         public required string Token { get; set; }
+        public required long UserId { get; set; }
         public required string Email { get; set; }
+        public string Username { get; set; } = "";
         public required List<string> Roles { get; set; }
     }
 }

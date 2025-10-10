@@ -35,6 +35,8 @@ export default function LoginPage() {
 
       const data = await res.json();
       localStorage.setItem("token", data.token);
+      localStorage.setItem("username", data.username);
+      localStorage.setItem("userId", data.userId);
       window.location.href = "/";
     } catch (err) {
       setError(err.message);
@@ -42,14 +44,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#121212] text-white">
-      <div className="bg-[#1b1b1b] p-8 rounded-2xl shadow-lg w-96 border border-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-neutral-900 text-white">
+      <div className="p-8 rounded-2xl shadow-lg w-96 border bg-neutral-800 border-gray-800">
         <h2 className="text-3xl font-bold mb-6 text-center text-amber-400">
           TradeHub Login
         </h2>
         {error && <p className="text-red-400 mb-4 text-sm">{error}</p>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} id="login">
           <AuthFormInput
             label="Email"
             type="email"
@@ -65,7 +67,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-amber-500 hover:bg-amber-600 text-black font-semibold py-2 rounded-md transition duration-200"
+            className="w-full bg-amber-500 hover:bg-amber-600 font-semibold py-2 rounded-md transition duration-200"
           >
             Log In
           </button>

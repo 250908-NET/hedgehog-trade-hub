@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +24,8 @@ export default function Login() {
     setIsLoading(true);
     setError("");
 
+    console.log("Login form data:", formData);
+
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -35,11 +37,16 @@ export default function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        // TODO: Handle successful login (redirect, store token, etc.)
+        // handle successful login (redirect, store token, etc.)
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("userid", data.userId);
+
         console.log("Login successful:", data);
       } else {
         const errorData = await response.json();
         setError(errorData.message || "Login failed. Please try again.");
+        console.error("Login error:", errorData);
       }
     } catch (err) {
       setError("Network error. Please check your connection and try again.");
@@ -58,22 +65,26 @@ export default function Login() {
           </h2>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form
+          className="mt-8 space-y-6"
+          id="login-form"
+          onSubmit={handleSubmit}
+        >
           <div className="space-y-4">
             <div>
-              <label htmlFor="username" className="sr-only">
-                Username
+              <label htmlFor="email" className="sr-only">
+                Email address
               </label>
               <input
-                id="username"
-                name="username"
-                type="text"
-                autoComplete="username"
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
                 required
-                value={formData.username}
+                value={formData.email}
                 onChange={handleInputChange}
                 className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
+                placeholder="Email address"
                 disabled={isLoading}
               />
             </div>

@@ -23,7 +23,7 @@ export async function searchItems(params = {}) {
     minValue: params.minValue,
     maxValue: params.maxValue,
     condition: params.condition,
-    availability: params.availability || "Available",
+    availability: params.availability,
     search: params.search,
   };
   const queryString = buildQueryString(rawParams);

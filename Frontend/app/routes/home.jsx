@@ -121,9 +121,7 @@ export default function HomePage() {
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
               >
-                <option value="">
-                  Any Condition
-                </option>
+                <option value="">Any Condition</option>
                 <option value="New">New</option>
                 <option value="Refurbished">Refurbished</option>
                 <option value="UsedLikeNew">Used (Like New)</option>
@@ -136,9 +134,7 @@ export default function HomePage() {
                 onChange={(e) => setAvailability(e.target.value)}
               >
                 <option value="">Any Availability</option>
-                <option value="Available">
-                  Available
-                </option>
+                <option value="Available">Available</option>
                 <option value="Unavailable">Unavailable</option>
               </select>
             </div>
