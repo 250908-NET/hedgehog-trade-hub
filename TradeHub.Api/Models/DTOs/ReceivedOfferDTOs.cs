@@ -2,7 +2,7 @@
 
 namespace TradeHub.API.Models.DTOs
 {
-    public class ReceivedOfferDto
+    public class ReceivedOfferDTO
     {
         public long OfferId { get; set; }
         public long TradeId { get; set; }
@@ -12,9 +12,9 @@ namespace TradeHub.API.Models.DTOs
         public DateTimeOffset OfferCreated { get; set; }
 
         // Items included in the offer
-        public List<OfferItemViewDto> Items { get; set; } = new List<OfferItemViewDto>();
+        public List<OfferItemViewDto> Items { get; set; } = [];
 
         //status, e.g., Pending, Accepted, Rejected
-        public byte Status { get; set; }
+        public TradeStatus Status { get; set; }
     }
 }

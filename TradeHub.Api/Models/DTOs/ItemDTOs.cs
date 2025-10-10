@@ -1,4 +1,5 @@
 using FluentValidation;
+using TradeHub.API.Repository.Interfaces;
 
 namespace TradeHub.API.Models.DTOs;
 
@@ -43,28 +44,53 @@ public record UpdateItemDTO(
 
 public class CreateItemDTOValidator : AbstractValidator<CreateItemDTO>
 {
-    public CreateItemDTOValidator()
+    private readonly IUserRepository _userRepository; // used for async validation
+
+    public CreateItemDTOValidator(IUserRepository userRepository)
     {
+        _userRepository = userRepository;
+
         RuleFor(i => i.Name).MustBeValidName();
         RuleFor(i => i.Description).NotNull().WithMessage("Description is required.");
         RuleFor(i => i.Image).NotNull().WithMessage("Image is required.");
         RuleFor(i => i.Tags).NotNull().WithMessage("Tags is required.");
         RuleFor(i => i.Value).MustBeValidValue();
-        RuleFor(i => i.OwnerId).MustBeValidOwnerId();
+        RuleFor(i => i.OwnerId)
+            .MustBeValidOwnerId()
+            .MustAsync(OwnerExistsAsync) // async method to check if owner exists
+            .WithMessage("Specified owner does not exist.");
         RuleFor(i => i.Condition).IsInEnum();
         RuleFor(i => i.Availability).IsInEnum();
+    }
+
+    private async Task<bool> OwnerExistsAsync(long ownerId, CancellationToken token)
+    {
+        return await _userRepository.GetByIdAsync(ownerId) is not null;
     }
 }
 
 public class UpdateItemDTOValidator : AbstractValidator<UpdateItemDTO>
 {
-    public UpdateItemDTOValidator()
+    private readonly IUserRepository _userRepository;
+
+    public UpdateItemDTOValidator(IUserRepository userRepository)
     {
+        _userRepository = userRepository;
+
         RuleFor(i => i.Name).MustBeValidName().When(i => i.Name is not null);
         RuleFor(i => i.Value).MustBeValidValue().When(i => i.Value is not null);
-        RuleFor(i => i.OwnerId).MustBeValidOwnerId().When(i => i.OwnerId is not null);
+        RuleFor(i => i.OwnerId)
+            .MustBeValidOwnerId()
+            .MustAsync(OwnerExistsAsync) // async method to check if owner exists
+            .WithMessage("Specified owner does not exist.")
+            .When(i => i.OwnerId is not null);
         RuleFor(i => i.Condition).IsInEnum().When(i => i.Condition is not null);
         RuleFor(i => i.Availability).IsInEnum().When(i => i.Availability is not null);
+    }
+
+    private async Task<bool> OwnerExistsAsync(long? ownerId, CancellationToken token)
+    {
+        return ownerId is null || await _userRepository.GetByIdAsync(ownerId.Value) is not null;
     }
 }
 
@@ -115,31 +141,21 @@ public static class ItemValidationRules
     /// <summary>
     /// Validate OwnerId is not empty.
     /// </summary>
-    /// <remarks>
-    /// TODO: implement checking if owner exists once UserRepository is implemented
-    /// </remarks>
     public static IRuleBuilderOptions<T, long> MustBeValidOwnerId<T>(
         this IRuleBuilder<T, long> ruleBuilder
     )
     {
         return ruleBuilder.NotEmpty().WithMessage("Owner is required.");
-        // .MustAsync(OwnerExists) // async method to check if owner exists
-        // .WithMessage("Specified owner does not exist.");
     }
 
     /// <summary>
     /// Override of <see cref="MustBeValidOwnerId{T}"/> for nullable longs.
     /// </summary>
-    /// <remarks>
-    /// TODO: implement checking if owner exists once UserRepository is implemented
-    /// </remarks>
     public static IRuleBuilderOptions<T, long?> MustBeValidOwnerId<T>(
         this IRuleBuilder<T, long?> ruleBuilder
     )
     {
         return ruleBuilder.NotEmpty().WithMessage("Owner is required.");
-        // .MustAsync(OwnerExists) // async method to check if owner exists
-        // .WithMessage("Specified owner does not exist.");
     }
 
     // TODO: figure out if there's a way to handle both TProperty and TProperty? without repeating code
